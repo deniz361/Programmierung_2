@@ -22,9 +22,15 @@ public class Tank {
      */
     public Tank(GameView gameView, double speed) {
         this.gameView = gameView;
-        position = new Position(200, GameView.HEIGHT / 2.0);
+        position = new Position(500, GameView.HEIGHT / 2.0);
         speedInPixel = speed;
-        this.tank = "     oloOO\nLLLLLOOooOO\n     ooOOo\n oOOoOOooOOo\noLLLLLLLLLLLo\nLWLWLWLWLWLWL\n LLLLLLLLLLL";
+        this.tank = "     oOoOO\n" +
+                    "LLLLLOOooOO\n" +
+                    "     ooOOo\n" +
+                    " oOOoOOooOOo\n" +
+                    "oLLLLLLLLLLLo\n" +
+                    "LWLWLWLWLWLWL\n" +
+                    " LLLLLLLLLLL";
 
     }
 
@@ -44,7 +50,7 @@ public class Tank {
      * Bewegt das Objekt.
      */
     public void updatePosition() {
-        position.right(speedInPixel);
+        position.left(speedInPixel);
     }
 
     @Override

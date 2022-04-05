@@ -34,6 +34,7 @@ public class GameLoopManager {
      */
     public void startGame() {
 
+
         while (true) { // Der "Game-Loop"
             gameObjectManager.updateGameObjects();
             gameView.printCanvas();   // Es werden maximal 120 Bilder pro Sekunde angezeigt.
