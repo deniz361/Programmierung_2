@@ -1,5 +1,6 @@
 package thd.gameobjects.movable;
 
+import thd.gameobjects.base.GameObject;
 import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
 
@@ -7,12 +8,12 @@ import thd.gameview.GameView;
 /**
  * Die Klasse zu dem Objekt Tank.
  */
-public class Tank {
+public class Tank extends GameObject {
 
-    private final Position position;
-    private double speedInPixel;
-    private final GameView gameView;
+
     private String tank;
+    private boolean flyFromLeftToRight;
+
 
 
     /**
@@ -21,7 +22,8 @@ public class Tank {
      * @param speed Die Geschwindigkeit vom Tank
      */
     public Tank(GameView gameView, double speed) {
-        this.gameView = gameView;
+        super(gameView);
+        width = 20;
         position = new Position(500, GameView.HEIGHT / 2.0);
         speedInPixel = speed;
         this.tank = "     oOoOO\n" +
@@ -38,19 +40,29 @@ public class Tank {
      *
      *  Neue Farben hinzufügen:.
      *  Zeile 1449 GameView
-     * @param size Die Größe des Spielobjekts
-     * @param rotation Um wie viel sich das Objekt drehen soll
      */
-    public void addToCanvas(int size, int rotation) {
-        gameView.addBlockImageToCanvas(tank, position.x, position.y, size, rotation);
+    @Override
+    public void addToCanvas() {
+        gameView.addBlockImageToCanvas(tank, position.x, position.y, 5, 0);
     }
 
 
     /**
      * Bewegt das Objekt.
      */
+    @Override
     public void updatePosition() {
-        position.left(speedInPixel);
+        if ((position.x + width / 2) > GameView.WIDTH) {
+            flyFromLeftToRight = false;
+        } else if ((position.x - width / 2) < 0) {
+            flyFromLeftToRight = true;
+        }
+
+        if (flyFromLeftToRight) {
+            position.right(speedInPixel);
+        } else {
+            position.left(speedInPixel);
+        }
     }
 
     @Override

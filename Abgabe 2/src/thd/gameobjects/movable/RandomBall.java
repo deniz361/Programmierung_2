@@ -1,27 +1,24 @@
 package thd.gameobjects.movable;
 
 
+import thd.gameobjects.base.GameObject;
 import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
 
 import java.awt.*;
 import java.util.Random;
 
-public class RandomBall {
+public class RandomBall extends GameObject {
 
-    private final Position position;
-    private double speedInPixel;
-    private final GameView gameView;
+
     private Position targetPosition;
-    private final int height;
-    private final int width;
     private final Color color;
     private double distance;
     private Random random;
 
 
     public RandomBall(GameView gameView, double speed, int size, Position targetPosition, Color color) {
-        this.gameView = gameView;
+        super(gameView);
         this.position = new Position();
         this.targetPosition = targetPosition;
         this.speedInPixel = speed;
@@ -32,6 +29,7 @@ public class RandomBall {
         this.random = new Random();
     }
 
+    @Override
     public void updatePosition() {
 
         distance = position.distance(targetPosition);
@@ -53,17 +51,13 @@ public class RandomBall {
     }
 
     public void calculateRandomTargetPosition() {
-        targetPosition.x = random.nextInt(width / 2, (GameView.WIDTH + 1) - width / 2);
-        targetPosition.y = random.nextInt(height / 2, (GameView.HEIGHT + 1) - height / 2);
+        targetPosition.x = random.nextDouble(width / 2, (GameView.WIDTH + 1) - width / 2);
+        targetPosition.y = random.nextDouble(height / 2, (GameView.HEIGHT + 1) - height / 2);
 
     }
-
+    @Override
     public void addToCanvas() {
         gameView.addOvalToCanvas(position.x, position.y, width, height, 2, true, color);
         gameView.addOvalToCanvas(targetPosition.x, targetPosition.y, width, height, 2, false, Color.BLACK);
-    }
-
-    public Position getPosition() {
-        return position;
     }
 }

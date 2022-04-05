@@ -34,8 +34,8 @@ class GameObjectManager {
 
 
     void updateGameObjects() {
-        tank.addToCanvas(5, 0);
-        jet.addToCanvas(5, 0);
+        tank.addToCanvas();
+        jet.addToCanvas();
         bullet.addToCanvas();
         randomBall.addToCanvas();
         followerBall.addToCanvas();

@@ -1,19 +1,17 @@
 package thd.gameobjects.movable;
 
+import thd.gameobjects.base.GameObject;
 import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
 
 import java.awt.*;
 import java.util.Random;
 
-public class FollowerBall {
+public class FollowerBall extends GameObject {
 
-    private final Position position;
-    private double speedInPixel;
-    private final GameView gameView;
+
+
     private Position targetPosition;
-    private final int height;
-    private final int width;
     private final Color color;
     private double distance;
     private Random random;
@@ -21,6 +19,7 @@ public class FollowerBall {
 
 
     public FollowerBall(GameView gameView, RandomBall followMe) {
+        super(gameView);
         this.gameView = gameView;
         this.position = new Position();
         this.followMe = followMe;
@@ -60,8 +59,8 @@ public class FollowerBall {
     }
 
     public void calculateRandomTargetPosition() {
-        targetPosition.x = random.nextInt(width / 2, (GameView.WIDTH + 1) - width / 2);
-        targetPosition.y = random.nextInt(height / 2, (GameView.HEIGHT + 1) - height / 2);
+        targetPosition.x = random.nextDouble(width / 2.0, (GameView.WIDTH + 1) - width / 2.0);
+        targetPosition.y = random.nextDouble(height / 2.0, (GameView.HEIGHT + 1) - height / 2.0);
 
     }
 
