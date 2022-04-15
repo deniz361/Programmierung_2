@@ -11,19 +11,22 @@ import java.awt.*;
 public class GameLoopManager {
     private final GameView gameView;
     private GameObjectManager gameObjectManager;
+    private Color sky;
+    private InputManager inputManager;
 
     /**
      * Erstellt GameView und die extras.
      */
     public GameLoopManager() {
-        this.gameView = new GameView();
+        gameView = new GameView();
         gameObjectManager = new GameObjectManager(gameView);
-        this.gameView.setWindowTitle("Choplifter");
-        this.gameView.setStatusText("Java Programmierung SS 2022");
-        this.gameView.setWindowIcon("choplifter icon.png");
+        inputManager = new InputManager(gameView, gameObjectManager.chopper);
+        gameView.setWindowTitle("Choplifter");
+        gameView.setStatusText("Java Programmierung SS 2022");
+        gameView.setWindowIcon("choplifter icon.png");
 
-
-        this.gameView.setBackgroundColor(Color.WHITE);
+        sky = new Color(141, 191, 224);
+        gameView.setBackgroundColor(sky);
         //this.id = gameView.playSound("weSuckenDick.wav", true);
     }
 
@@ -34,6 +37,7 @@ public class GameLoopManager {
 
 
         while (true) { // Der "Game-Loop"
+            inputManager.updateUserInputs();
             gameObjectManager.updateGameObjects();
             gameView.printCanvas();   // Es werden maximal 120 Bilder pro Sekunde angezeigt.
 

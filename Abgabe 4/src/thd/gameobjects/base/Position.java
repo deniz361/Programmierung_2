@@ -49,7 +49,7 @@ public class Position {
 
     /** Verschiebt das Objekt immer um 1 nach oben.*/
     public void up() {
-        x -= 1;
+        y -= 1;
     }
 
     /** Verschiebt das Objekt immer um 1 nach unten.*/

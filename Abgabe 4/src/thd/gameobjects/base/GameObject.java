@@ -2,6 +2,8 @@ package thd.gameobjects.base;
 
 import thd.gameview.GameView;
 
+import java.awt.*;
+
 /**Jedes Gameobject erbt von dieser Klasse.*/
 public class GameObject {
 
@@ -35,8 +37,7 @@ public class GameObject {
     }
 
     /**Fügt das Spielobject in GameView hinzu.*/
-    protected void addToCanvas() {
-
+    public void addToCanvas() {
     }
 
     /**Gibt die Position zurück.
