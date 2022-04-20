@@ -36,13 +36,9 @@ class GameObjectManager {
 
 
     void updateGameObjects() {
-        tank.addToCanvas();
-        jet.addToCanvas();
-        bullet.addToCanvas();
-        //flag.addToCanvas();
-        chopper.addToCanvas();
-        cloud.addToCanvas();
-        gameObject.addToCanvas();
+        chopper.updateStatus();
+
+
 
         gameObject.updatePosition();
         chopper.updatePosition();
@@ -50,5 +46,13 @@ class GameObjectManager {
         bullet.updatePosition();
         tank.updatePosition();
         jet.updatePosition();
+
+        tank.addToCanvas();
+        jet.addToCanvas();
+        bullet.addToCanvas();
+        //flag.addToCanvas();
+        chopper.addToCanvas();
+        cloud.addToCanvas();
+        gameObject.addToCanvas();
     }
 }

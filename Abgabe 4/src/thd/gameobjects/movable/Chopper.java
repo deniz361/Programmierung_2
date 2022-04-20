@@ -6,23 +6,23 @@ import thd.gameview.GameView;
 
 import java.awt.*;
 
-/**
- * Der Spieler steuert den Chopper.
- */
+/** Der Spieler steuert den Chopper.*/
 public class Chopper extends GameObject {
 
     private boolean shooting;
-    public static final boolean DIAGONAL_MOVEMENT_ALLOWED = false;
+    private String imageFile;
+    private double health;
+    private double gas;
 
-    /**
-     * Initialisierung von Chopper
-     */
+
+    /** Initialisierung von Chopper.*/
     public Chopper(GameView gameView) {
         super(gameView);
-        shooting = false;
+        //shooting = false;
         position.x = GameView.WIDTH / 2.0;
         position.y = GameView.HEIGHT / 2.0;
-        speedInPixel = 3;
+        speedInPixel = 1;
+        imageFile = "Chopper.png";
     }
 
     /**
@@ -54,6 +54,20 @@ public class Chopper extends GameObject {
         shooting = true;
     }
 
+    /** Erhöht die Geschwindigkeit */
+    public void faster() {
+        speedInPixel += 0.05;
+    }
+
+    /** Verringert die Geschwindigkeit */
+    public void slower() {
+        speedInPixel -= 0.05;
+    }
+
+    public void changeDirectionToRight() {
+
+    }
+
 
     /**
      * Fügt den Chopper zu GameView hinzu
@@ -61,12 +75,13 @@ public class Chopper extends GameObject {
     @Override
     public void addToCanvas() {
 
+        System.out.println(getPosition());
         gameView.addTextToCanvas("Airspeed: " + speedInPixel,0,0, 18, Color.WHITE, 0);
 
         if (shooting) {
             gameView.addTextToCanvas("O", position.x, position.y, 50, Color.BLACK, 0);
         } else {
-            gameView.addTextToCanvas("X", position.x, position.y, 50, Color.BLACK, 0);
+            gameView.addImageToCanvas(imageFile, position.x, position.y, 1.5, 0);
 
         }
     }
@@ -75,6 +90,13 @@ public class Chopper extends GameObject {
     @Override
     public void updatePosition() {
         shooting = false;
+    }
+
+    @Override
+    public void updateStatus() {
+        if (position.y >= 475) {
+            imageFile = "Empty.png";
+        }
     }
 
 

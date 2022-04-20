@@ -7,20 +7,13 @@ import java.awt.*;
 /**Jedes Gameobject erbt von dieser Klasse.*/
 public class GameObject {
 
-    /**Gameview.*/
-    public final GameView gameView;
-    /**Position des Spielobjekts.*/
-    public final Position position;
-    /**Geschwindigkeit.*/
-    public double speedInPixel;
-    /**Größe des Spielobjekts.*/
-    private double size;
-    /**Die Rotation des Spielobjekts.*/
-    private double rotation;
-    /**Die Breite des Spielobjekts.*/
-    public double width;
-    /**Die Höhe des Spielobjekts.*/
-    public double height;
+    protected final GameView gameView;
+    protected final Position position;
+    protected double speedInPixel;
+    protected double size;
+    protected double rotation;
+    protected double width;
+    protected double height;
 
     /**Mindestanforderung, das jedes GameObject haben muss.
      * @param gameView gibt gameview weier.*/
@@ -38,6 +31,10 @@ public class GameObject {
 
     /**Fügt das Spielobject in GameView hinzu.*/
     public void addToCanvas() {
+    }
+
+    public void updateStatus() {
+
     }
 
     /**Gibt die Position zurück.

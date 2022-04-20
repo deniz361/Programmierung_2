@@ -3,13 +3,15 @@ package thd.game.managers;
 import thd.gameobjects.movable.Chopper;
 import thd.gameview.GameView;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
-import static thd.gameobjects.movable.Chopper.DIAGONAL_MOVEMENT_ALLOWED;
 
 public class InputManager {
 
+    /**
+     * Die Klassen variable, um diagonales Movement zu erlauben
+     */
+    public static final boolean DIAGONAL_MOVEMENT_ALLOWED = false;
     private GameView gameView;
     private Chopper chopper;
 
@@ -37,6 +39,12 @@ public class InputManager {
                     return;
                 } else if (keyCode == KeyEvent.VK_SPACE) {
                     chopper.shoot();
+                } else if (keyCode == KeyEvent.VK_E) {
+                    chopper.faster();
+                    break;
+                } else if (keyCode == KeyEvent.VK_Q) {
+                    chopper.slower();
+                    break;
                 }
             }
         } else {
@@ -51,6 +59,12 @@ public class InputManager {
                     chopper.up();
                 } else if (keyCode == KeyEvent.VK_SPACE) {
                     chopper.shoot();
+                } else if (keyCode == KeyEvent.VK_E) {
+                    chopper.faster();
+                    break;
+                } else if (keyCode == KeyEvent.VK_Q) {
+                    chopper.slower();
+                    break;
                 }
             }
         }
