@@ -7,27 +7,27 @@ import thd.gameview.GameView;
 import thd.gameobjects.base.*;
 
 import java.awt.*;
+import java.util.LinkedList;
 
 class GameObjectManager {
 
 
-    private Tank tank;
-    private Jet jet;
-    private Bullet bullet;
+
+    private LinkedList<GameObject> gameObjects;
     protected Chopper chopper;
-    //protected Flag flag;
-    private Cloud cloud;
-    private GameObject gameObject;
 
 
     GameObjectManager(GameView gameView) {
-        gameObject = new GameObject(gameView);
-        tank = new Tank(gameView, 0.5);
-        jet = new Jet(gameView, 0.5);
-        bullet = new Bullet(gameView, 1, 100, 50);
-        //flag = new Flag(gameView);
+
+        gameObjects = new LinkedList<>();
+        gameObjects.add(new Jet(gameView, 0.5));
+        gameObjects.add(new Tank(gameView, 0.5));
+        //gameObjects.add(new Bullet(gameView, 1, 100, 50));
+        gameObjects.add(new Cloud(gameView));
+
+
+
         chopper = new Chopper(gameView);
-        cloud = new Cloud(gameView);
 
     }
 
@@ -36,23 +36,18 @@ class GameObjectManager {
 
 
     void updateGameObjects() {
+
+
+        for (GameObject gameObject : gameObjects) {
+            gameObject.updateStatus();
+            gameObject.updatePosition();
+            gameObject.addToCanvas();
+        }
+
         chopper.updateStatus();
-
-
-
-        gameObject.updatePosition();
-        chopper.updatePosition();
-        //flag.updatePosition();
-        bullet.updatePosition();
-        tank.updatePosition();
-        jet.updatePosition();
-
-        tank.addToCanvas();
-        jet.addToCanvas();
-        bullet.addToCanvas();
-        //flag.addToCanvas();
         chopper.addToCanvas();
-        cloud.addToCanvas();
-        gameObject.addToCanvas();
+        chopper.updatePosition();
+
+
     }
 }

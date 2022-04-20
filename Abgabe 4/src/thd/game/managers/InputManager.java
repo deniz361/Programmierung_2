@@ -11,7 +11,7 @@ public class InputManager {
     /**
      * Die Klassen variable, um diagonales Movement zu erlauben
      */
-    public static final boolean DIAGONAL_MOVEMENT_ALLOWED = false;
+    public static final boolean DIAGONAL_MOVEMENT_ALLOWED = true;
     private GameView gameView;
     private Chopper chopper;
 
@@ -27,12 +27,14 @@ public class InputManager {
             for (int keyCode : pressedKeys) {
                 if (keyCode == KeyEvent.VK_A) {
                     chopper.left();
+                    chopper.changeDirectionToLeft();
                     return;
                 } else if (keyCode == KeyEvent.VK_S) {
                     chopper.down();
                     return;
                 } else if (keyCode == KeyEvent.VK_D) {
                     chopper.right();
+                    chopper.changeDirectionToRight();
                     return;
                 } else if (keyCode == KeyEvent.VK_W) {
                     chopper.up();
@@ -51,10 +53,12 @@ public class InputManager {
             for (int keyCode : pressedKeys) {
                 if (keyCode == KeyEvent.VK_A) {
                     chopper.left();
+                    chopper.changeDirectionToLeft();
                 } else if (keyCode == KeyEvent.VK_S) {
                     chopper.down();
                 } else if (keyCode == KeyEvent.VK_D) {
                     chopper.right();
+                    chopper.changeDirectionToRight();
                 } else if (keyCode == KeyEvent.VK_W) {
                     chopper.up();
                 } else if (keyCode == KeyEvent.VK_SPACE) {

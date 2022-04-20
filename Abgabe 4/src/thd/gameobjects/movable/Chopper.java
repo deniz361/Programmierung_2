@@ -5,12 +5,16 @@ import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 import java.awt.*;
+import java.util.Objects;
 
 /** Der Spieler steuert den Chopper.*/
 public class Chopper extends GameObject {
 
     private boolean shooting;
     private String imageFile;
+    private String emptyImage;
+    private String imageLeft;
+    private String imageRight;
     private double health;
     private double gas;
 
@@ -18,11 +22,14 @@ public class Chopper extends GameObject {
     /** Initialisierung von Chopper.*/
     public Chopper(GameView gameView) {
         super(gameView);
-        //shooting = false;
+        shooting = false;
         position.x = GameView.WIDTH / 2.0;
         position.y = GameView.HEIGHT / 2.0;
         speedInPixel = 1;
-        imageFile = "Chopper.png";
+        imageFile = "Chopper_links.png";
+        emptyImage = "empty.png";
+        imageLeft = "Chopper_links.png";
+        imageRight = "Chopper_rechts.png";
     }
 
     /**
@@ -65,7 +72,15 @@ public class Chopper extends GameObject {
     }
 
     public void changeDirectionToRight() {
+        if (!imageFile.equals(emptyImage)) {
+            imageFile = imageRight;
+        }
+    }
 
+    public void changeDirectionToLeft() {
+        if (!imageFile.equals(emptyImage)) {
+            imageFile = imageLeft;
+        }
     }
 
 
@@ -75,7 +90,7 @@ public class Chopper extends GameObject {
     @Override
     public void addToCanvas() {
 
-        System.out.println(getPosition());
+        //System.out.println(getPosition());
         gameView.addTextToCanvas("Airspeed: " + speedInPixel,0,0, 18, Color.WHITE, 0);
 
         if (shooting) {
@@ -94,8 +109,8 @@ public class Chopper extends GameObject {
 
     @Override
     public void updateStatus() {
-        if (position.y >= 475) {
-            imageFile = "Empty.png";
+        if (position.y >= 510) {
+            imageFile = emptyImage;
         }
     }
 

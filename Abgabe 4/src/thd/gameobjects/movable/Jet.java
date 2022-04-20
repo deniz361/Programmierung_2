@@ -96,7 +96,7 @@ public class Jet extends GameObject {
      */
     @Override
     public void addToCanvas() {
-        gameView.addBlockImageToCanvas(jet, position.x, position.y, 2, 0);
+        gameView.addBlockImageToCanvas(jet, position.x, position.y, 1.5, 0);
 
         gameView.addOvalToCanvas(bezierPoint1.x, bezierPoint1.y, 10, 10, 2, false, Color.GREEN);
         gameView.addOvalToCanvas(bezierPoint2.x, bezierPoint2.y, 10, 10, 2, false, Color.GREEN);
@@ -105,10 +105,7 @@ public class Jet extends GameObject {
     }
 
 
-    /**
-     * Bewegt das Objekt.
-     */
-
+    /** Bewegt das Objekt.*/
     @Override
     public void updatePosition() {
 
