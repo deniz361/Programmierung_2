@@ -33,6 +33,7 @@ public class GameObject {
     public void addToCanvas() {
     }
 
+    /** Statusupdate. */
     public void updateStatus() {
 
     }

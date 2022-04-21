@@ -11,7 +11,7 @@ public class InputManager {
     /**
      * Die Klassen variable, um diagonales Movement zu erlauben
      */
-    public static final boolean DIAGONAL_MOVEMENT_ALLOWED = true;
+    public static final boolean DIAGONAL_MOVEMENT_ALLOWED = false;
     private GameView gameView;
     private Chopper chopper;
 

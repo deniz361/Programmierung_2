@@ -1,20 +1,20 @@
 package thd.gameobjects.movable;
 
-import thd.game.managers.InputManager;
+
 import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 import java.awt.*;
-import java.util.Objects;
+
 
 /** Der Spieler steuert den Chopper.*/
 public class Chopper extends GameObject {
 
     private boolean shooting;
     private String imageFile;
-    private String emptyImage;
-    private String imageLeft;
-    private String imageRight;
+    private final String emptyImage;
+    private final String imageLeft;
+    private final String imageRight;
     private double health;
     private double gas;
 
@@ -25,7 +25,9 @@ public class Chopper extends GameObject {
         shooting = false;
         position.x = GameView.WIDTH / 2.0;
         position.y = GameView.HEIGHT / 2.0;
-        speedInPixel = 1;
+        speedInPixel = 5;
+        health = 100.0;
+        gas = 100.0;
         imageFile = "Chopper_links.png";
         emptyImage = "empty.png";
         imageLeft = "Chopper_links.png";

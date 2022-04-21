@@ -1,7 +1,6 @@
 package thd.gameobjects.movable;
 
 import thd.gameobjects.base.GameObject;
-import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
 
 import java.awt.*;
