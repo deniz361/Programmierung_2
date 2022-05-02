@@ -6,7 +6,7 @@ import thd.gameview.GameView;
 import java.awt.event.KeyEvent;
 
 
-public class InputManager {
+class InputManager {
 
     /**
      * Die Klassen variable, um diagonales Movement zu erlauben
@@ -16,12 +16,12 @@ public class InputManager {
     private Chopper chopper;
 
 
-    public InputManager(GameView gameView, Chopper chopper) {
+    InputManager(GameView gameView, Chopper chopper) {
         this.gameView = gameView;
         this.chopper = chopper;
     }
 
-    public void updateUserInputs() {
+    void updateUserInputs() {
         Integer[] pressedKeys = gameView.getKeyCodesOfCurrentlyPressedKeys();
         if (!DIAGONAL_MOVEMENT_ALLOWED) {
             for (int keyCode : pressedKeys) {

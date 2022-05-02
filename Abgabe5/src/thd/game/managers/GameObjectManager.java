@@ -10,10 +10,12 @@ import java.util.LinkedList;
 
 class GameObjectManager {
 
-    protected LinkedList<GameObject> gameObjects;
-    protected ArrayList<GameObject> toAdd;
-    protected ArrayList<GameObject> toRemove;
-    protected Chopper chopper;
+    private final LinkedList<GameObject> gameObjects;
+
+    private final ArrayList<GameObject> toAdd;
+    private final ArrayList<GameObject> toRemove;
+    Chopper chopper;
+    private GamePlayManager gamePlayManager;
 
 
     protected GameObjectManager(GameView gameView) {
@@ -25,15 +27,15 @@ class GameObjectManager {
         gameObjects.add(new Tank(gameView, 0.5));
         //gameObjects.add(new Bullet(gameView, 1, 100, 50));
         gameObjects.add(new Cloud(gameView));
-        gameObjects.add(new CringeObject(gameView));
 
 
 
         chopper = new Chopper(gameView);
+        gamePlayManager = new GamePlayManager(gameView);
 
     }
 
-    protected void updateGameObjects() {
+    void updateGameObjects() {
         modifyGameObjectsList();
         for (GameObject gameObject : gameObjects) {
             gameObject.updateStatus();
@@ -46,11 +48,11 @@ class GameObjectManager {
         chopper.updatePosition();
     }
 
-    protected void addGameObject(GameObject gameObject) {
+    void addGameObject(GameObject gameObject) {
         toAdd.add(gameObject);
     }
 
-    protected void removeGameObject(GameObject gameObject) {
+    void removeGameObject(GameObject gameObject) {
         toRemove.add(gameObject);
     }
 

@@ -1,5 +1,6 @@
 package thd.gameobjects.base;
 
+import thd.game.managers.GamePlayManager;
 import thd.gameview.GameView;
 
 import java.awt.*;
@@ -14,14 +15,15 @@ public class GameObject {
     protected double rotation;
     protected double width;
     protected double height;
+    protected GamePlayManager gamePlayManager;
 
     /**Mindestanforderung, das jedes GameObject haben muss.
-     * @param gameView gibt gameview weier.*/
-    public GameObject(GameView gameView) {
+     * @param gameView gibt gameview weier.
+     * @param gamePlayManager ja */
+    public GameObject(GameView gameView, GamePlayManager gamePlayManager) {
         this.gameView = gameView;
         position = new Position();
-        size = 0;
-        rotation = 0;
+        this.gamePlayManager = gamePlayManager;
     }
 
     /**Aktualisiert die Position des Spielobjects.*/

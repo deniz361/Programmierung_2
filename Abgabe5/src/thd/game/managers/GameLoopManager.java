@@ -1,11 +1,11 @@
 package thd.game.managers;
 
 import thd.gameobjects.base.GameObject;
+import thd.gameobjects.movable.Tank;
 import thd.gameview.GameView;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 
 /**
@@ -17,17 +17,23 @@ public class GameLoopManager {
     private Color sky;
     private InputManager inputManager;
     private ArrayList<GameObject> createdGameObjects;
+    private Tank tank;
+    private GamePlayManager gamePlayManager;
 
     /**
      * Erstellt GameView und die extras.
      */
     public GameLoopManager() {
         gameView = new GameView();
+        gamePlayManager = new GamePlayManager(gameView);
         gameObjectManager = new GameObjectManager(gameView);
+        gamePlayManager.setGameObjectManager(gameObjectManager);
         inputManager = new InputManager(gameView, gameObjectManager.chopper);
         gameView.setWindowTitle("Choplifter");
         gameView.setStatusText("Java Programmierung SS 2022");
         gameView.setWindowIcon("choplifter icon.png");
+
+        tank = new Tank(gameView, 0.5);
 
         sky = new Color(141, 191, 224);
         gameView.setBackgroundColor(sky);
@@ -41,27 +47,12 @@ public class GameLoopManager {
      */
     public void startGame() {
         while (true) { // Der "Game-Loop"
-            updateGamePlay();
+            gamePlayManager.updateGamePlay();
             inputManager.updateUserInputs();
             gameObjectManager.updateGameObjects();
             gameView.printCanvas();   // Es werden maximal 120 Bilder pro Sekunde angezeigt.
         }
     }
 
-    protected void updateGamePlay() {
-        while (gameView.getGameTimeInMilliseconds() / 1000 == 5) {
-            gameObjectManager.addGameObject(gameObjectManager.gameObjects.get(1));
-            createdGameObjects.addAll(gameObjectManager.toAdd);
-
-        }
-
-
-        if (gameView.getGameTimeInMilliseconds() / 1000 == 7) {
-            for (GameObject o : createdGameObjects) {
-                gameObjectManager.removeGameObject(o);
-            }
-
-        }
-    }
 
 }

@@ -1,6 +1,7 @@
 package thd.gameobjects.movable;
 
 
+import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
@@ -19,13 +20,19 @@ public class Chopper extends GameObject {
     private double gas;
 
 
-    /** Initialisierung von Chopper.*/
-    public Chopper(GameView gameView) {
-        super(gameView);
+
+    /** Initialisierung von Chopper.
+     * @param gameView gamView
+     */
+    public Chopper(GameView gameView, GamePlayManager gamePlayManager) {
+        super(gameView, gamePlayManager);
         shooting = false;
         position.x = GameView.WIDTH / 2.0;
         position.y = GameView.HEIGHT / 2.0;
         speedInPixel = 5;
+        rotation = 0;
+        height = 0;
+        size = 0;
         health = 100.0;
         gas = 100.0;
         imageFile = "Chopper_links.png";
@@ -63,22 +70,24 @@ public class Chopper extends GameObject {
         shooting = true;
     }
 
-    /** Erhöht die Geschwindigkeit */
+    /** Erhöht die Geschwindigkeit. */
     public void faster() {
         speedInPixel += 0.05;
     }
 
-    /** Verringert die Geschwindigkeit */
+    /** Verringert die Geschwindigkeit. */
     public void slower() {
         speedInPixel -= 0.05;
     }
 
+    /** Der Helikopter schaut nach rechts. */
     public void changeDirectionToRight() {
         if (!imageFile.equals(emptyImage)) {
             imageFile = imageRight;
         }
     }
 
+    /** Der Helikopter schaut nach links. */
     public void changeDirectionToLeft() {
         if (!imageFile.equals(emptyImage)) {
             imageFile = imageLeft;
@@ -86,9 +95,7 @@ public class Chopper extends GameObject {
     }
 
 
-    /**
-     * Fügt den Chopper zu GameView hinzu
-     */
+    /** Fügt den Chopper zu GameView hinzu. */
     @Override
     public void addToCanvas() {
 
