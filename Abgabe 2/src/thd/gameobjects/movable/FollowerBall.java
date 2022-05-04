@@ -33,32 +33,23 @@ public class FollowerBall extends GameObject {
     }
 
 
+    @Override
     public void updatePosition() {
 
         targetPosition.x = followMe.getPosition().x;
         targetPosition.y = followMe.getPosition().y;
 
-        distance = position.distance(targetPosition);
+        double distance = position.distance(targetPosition);
 
-        if (position.x < targetPosition.x) {
+        if (distance >= speedInPixel) {
             position.right((targetPosition.x - position.x) / distance * speedInPixel);
-        } else if (position.x > targetPosition.x) {
-            position.left(-((targetPosition.x - position.x) / distance * speedInPixel));
-        }
-        if (position.y < targetPosition.y) {
             position.down((targetPosition.y - position.y) / distance * speedInPixel);
-        } else if (position.y > targetPosition.y) {
-            position.up((targetPosition.y - position.y) / distance * speedInPixel);
-        }
-
-        if (distance <= 5) {
+        } else {
             calculateRandomTargetPosition();
         }
-
-
     }
 
-    public void calculateRandomTargetPosition() {
+        public void calculateRandomTargetPosition() {
         targetPosition.x = random.nextDouble(width / 2.0, (GameView.WIDTH + 1) - width / 2.0);
         targetPosition.y = random.nextDouble(height / 2.0, (GameView.HEIGHT + 1) - height / 2.0);
 
