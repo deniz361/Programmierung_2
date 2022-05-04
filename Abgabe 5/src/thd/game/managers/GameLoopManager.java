@@ -18,16 +18,13 @@ public class GameLoopManager {
     private InputManager inputManager;
     private ArrayList<GameObject> createdGameObjects;
     private Tank tank;
-    private GamePlayManager gamePlayManager;
 
     /**
      * Erstellt GameView und die extras.
      */
     public GameLoopManager() {
         gameView = new GameView();
-        gamePlayManager = new GamePlayManager(gameView);
         gameObjectManager = new GameObjectManager(gameView);
-        gamePlayManager.setGameObjectManager(gameObjectManager);
         inputManager = new InputManager(gameView, gameObjectManager.chopper);
         gameView.setWindowTitle("Choplifter");
         gameView.setStatusText("Java Programmierung SS 2022");
@@ -47,12 +44,33 @@ public class GameLoopManager {
      */
     public void startGame() {
         while (true) { // Der "Game-Loop"
-            gamePlayManager.updateGamePlay();
+            updateGamePlay();
             inputManager.updateUserInputs();
             gameObjectManager.updateGameObjects();
             gameView.printCanvas();   // Es werden maximal 120 Bilder pro Sekunde angezeigt.
         }
     }
 
+
+    private void updateGamePlay() {
+        /*
+        while (gameView.getGameTimeInMilliseconds() / 1000 == 5) {
+            createdGameObjects.add(tank);
+            gameObjectManager.addGameObject(tank);
+
+            gameObjectManager.addGameObject(gameObjectManager.gameObjects.get(1));
+            createdGameObjects.addAll(gameObjectManager.toAdd);
+
+        }
+
+        if (gameView.getGameTimeInMilliseconds() / 1000 == 7) {
+            for (GameObject o : createdGameObjects) {
+                gameObjectManager.removeGameObject(o);
+            }
+
+        }
+         */
+
+    }
 
 }

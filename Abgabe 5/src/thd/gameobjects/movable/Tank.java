@@ -43,8 +43,8 @@ public class Tank extends GameObject {
      */
     @Override
     public void addToCanvas() {
-        gameView.addBlockImageToCanvas(tank, position.x, position.y, 2.5, 0);
-        //gameView.addImageToCanvas("tank_left.png", position.x,position.y,0.03,0);
+        //gameView.addBlockImageToCanvas(tank, position.x, position.y, 2.5, 0);
+        gameView.addImageToCanvas("tank_left.png", position.x,position.y,0.03,0);
     }
 
 

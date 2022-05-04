@@ -1,7 +1,6 @@
 package thd.gameobjects.movable;
 
 
-import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
@@ -20,12 +19,11 @@ public class Chopper extends GameObject {
     private double gas;
 
 
-
     /** Initialisierung von Chopper.
      * @param gameView gamView
      */
-    public Chopper(GameView gameView, GamePlayManager gamePlayManager) {
-        super(gameView, gamePlayManager);
+    public Chopper(GameView gameView) {
+        super(gameView);
         shooting = false;
         position.x = GameView.WIDTH / 2.0;
         position.y = GameView.HEIGHT / 2.0;

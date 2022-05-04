@@ -15,7 +15,6 @@ class GameObjectManager {
     private final ArrayList<GameObject> toAdd;
     private final ArrayList<GameObject> toRemove;
     Chopper chopper;
-    private GamePlayManager gamePlayManager;
 
 
     protected GameObjectManager(GameView gameView) {
@@ -31,7 +30,6 @@ class GameObjectManager {
 
 
         chopper = new Chopper(gameView);
-        gamePlayManager = new GamePlayManager(gameView);
 
     }
 
