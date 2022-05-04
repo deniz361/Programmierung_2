@@ -1,12 +1,11 @@
 package thd.gameobjects.movable;
 
+import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 
-/**
- * Die Klasse zu dem Objekt Tank.
- */
+/** Pictures the Tank.*/
 public class Tank extends GameObject {
 
 
@@ -16,16 +15,16 @@ public class Tank extends GameObject {
 
 
     /**
-     * Erstellt das Objekt "Tank".
-     * @param gameView Damit Gameview weitergegeben werden kann
-     * @param speed Die Geschwindigkeit vom Tank
+     * Instantiates a new Tank.
+     * @param gameView GameView for GUI uses
+     * @param gamePlayManager gameplay flow managing
      */
-    public Tank(GameView gameView, double speed) {
-        super(gameView);
+    public Tank(GameView gameView, GamePlayManager gamePlayManager) {
+        super(gameView, gamePlayManager);
         width = 20;
         position.x = 500;
         position.y = GameView.HEIGHT / 2.0;
-        speedInPixel = speed;
+        speedInPixel = 0.5;
         this.tank = "     oOoOO\n" +
                     "LLLLLOOooOO\n" +
                     "     ooOOo\n" +
@@ -34,23 +33,19 @@ public class Tank extends GameObject {
                     "LWLWLWLWLWLWL\n" +
                     " LLLLLLLLLLL";
 
+        // Neue Farben hinzufügen:.
+        // Zeile 1449 GameView
     }
 
-    /**
-     *
-     *  Neue Farben hinzufügen:.
-     *  Zeile 1449 GameView
-     */
+    /** Adds the Tank to the canvas. */
     @Override
     public void addToCanvas() {
-        //gameView.addBlockImageToCanvas(tank, position.x, position.y, 2.5, 0);
-        gameView.addImageToCanvas("tank_left.png", position.x,position.y,0.03,0);
+        gameView.addBlockImageToCanvas(tank, position.x, position.y, 2.5, 0);
+        //gameView.addImageToCanvas("tank_left.png", position.x,position.y,0.03,0);
     }
 
 
-    /**
-     * Bewegt das Objekt.
-     */
+    /** Moves the Object. */
     @Override
     public void updatePosition() {
         if ((position.x + width / 2) > GameView.WIDTH) {
@@ -66,13 +61,12 @@ public class Tank extends GameObject {
         }
     }
 
+
+    /** Maybe for debugging. */
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Tank: ");
-        //stringBuilder.append(position);
-
         return stringBuilder.toString() + position;
-        //stringBuilder.append((int) Math.round(position.x)).append(",").append((int) Math.round(position.y)).append(")");
     }
 
 

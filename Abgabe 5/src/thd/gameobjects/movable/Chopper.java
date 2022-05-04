@@ -1,13 +1,14 @@
 package thd.gameobjects.movable;
 
 
+import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 import java.awt.*;
 
 
-/** Der Spieler steuert den Chopper.*/
+/** The "main" Object, the player can control the Chopper.*/
 public class Chopper extends GameObject {
 
     private boolean shooting;
@@ -19,11 +20,12 @@ public class Chopper extends GameObject {
     private double gas;
 
 
-    /** Initialisierung von Chopper.
-     * @param gameView gamView
+    /** Initializes the Chopper.
+     * @param gameView gamView for GUI uses
+     * @param gamePlayManager gameplay flow managing
      */
-    public Chopper(GameView gameView) {
-        super(gameView);
+    public Chopper(GameView gameView, GamePlayManager gamePlayManager) {
+        super(gameView, gamePlayManager);
         shooting = false;
         position.x = GameView.WIDTH / 2.0;
         position.y = GameView.HEIGHT / 2.0;

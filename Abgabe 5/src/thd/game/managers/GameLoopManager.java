@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class GameLoopManager {
     private final GameView gameView;
     private GameObjectManager gameObjectManager;
+    private GamePlayManager gamePlayManager;
     private Color sky;
     private InputManager inputManager;
 
@@ -22,7 +23,9 @@ public class GameLoopManager {
      */
     public GameLoopManager() {
         gameView = new GameView();
-        gameObjectManager = new GameObjectManager(gameView);
+        gamePlayManager = new GamePlayManager(gameView);
+        gameObjectManager = new GameObjectManager(gameView, gamePlayManager);
+        gamePlayManager.setGameObjectManager(gameObjectManager);
         inputManager = new InputManager(gameView, gameObjectManager.chopper);
         gameView.setWindowTitle("Choplifter");
         gameView.setStatusText("Java Programmierung SS 2022");
@@ -40,6 +43,7 @@ public class GameLoopManager {
      */
     public void startGame() {
         while (true) { // Der "Game-Loop"
+            gamePlayManager.updateGamePlay();
             inputManager.updateUserInputs();
             gameObjectManager.updateGameObjects();
             gameView.printCanvas();   // Es werden maximal 120 Bilder pro Sekunde angezeigt.

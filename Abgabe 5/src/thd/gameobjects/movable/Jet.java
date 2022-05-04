@@ -1,5 +1,6 @@
 package thd.gameobjects.movable;
 
+import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.GameObject;
 import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
@@ -7,9 +8,7 @@ import thd.gameview.GameView;
 import java.awt.*;
 
 
-/**
- * Die Klasse zu dem Objekt Jet.
- */
+/** Pictures the jet. */
 public class Jet extends GameObject {
 
 
@@ -40,19 +39,19 @@ public class Jet extends GameObject {
     private int counter;
 
 
-    /** Erstellt das Objekt Jet.
-     * @param gameView Damit Gameview weitergegeben werden kann
-     * @param speed    Die Geschwindigkeit vom Jet
+    /** Instantiates a new Jet.
+     * @param gameView GameView for GUI uses
+     * @param gamePlayManager Gameplay flow managing
      */
-    public Jet(GameView gameView, double speed) {
-        super(gameView);
+    public Jet(GameView gameView, GamePlayManager gamePlayManager) {
+        super(gameView, gamePlayManager);
         counter = 0;
 
 
         position.x = 400;
         position.y = 200;
 
-        speedInPixel = speed;
+        speedInPixel = 0.5;
         leerzeichen = " ".repeat(27);
         leerzeichen2 = " ".repeat(26);
         leerzeichen3 = " ".repeat(25);
@@ -91,21 +90,21 @@ public class Jet extends GameObject {
          */
     }
 
-    /**
-     * fügt das Objekt zu Gameview hinzu.
-     */
+    /** Adds the jet to the canvas. */
     @Override
     public void addToCanvas() {
         gameView.addBlockImageToCanvas(jet, position.x, position.y, 1.5, 0);
 
+        /*
         gameView.addOvalToCanvas(bezierPoint1.x, bezierPoint1.y, 10, 10, 2, false, Color.GREEN);
         gameView.addOvalToCanvas(bezierPoint2.x, bezierPoint2.y, 10, 10, 2, false, Color.GREEN);
         gameView.addOvalToCanvas(bezierPoint3.x, bezierPoint3.y, 10, 10, 2, false, Color.GREEN);
+         */
 
     }
 
 
-    /** Bewegt das Objekt.*/
+    /** Moves the jet.*/
     @Override
     public void updatePosition() {
 
@@ -190,7 +189,10 @@ public class Jet extends GameObject {
 
     }
 
-
+    /** Calculates a specific Bezier point.
+     *  It should return a 2 Dimensional tuple
+     * @param t the point on the Bézier curve that you want to calculate
+     */
     private void calculateBezierCurve(double t) {
         resultX = (position.x - 2 * p1.x + p2.x) * Math.pow(t, 2) + (-2 * position.x + 2 * p1.x) * t + position.x;
         resultY = (position.y - 2 * p1.y + p2.y) * Math.pow(t, 2) + (-2 * position.y + 2 * p1.y) * t + position.y;

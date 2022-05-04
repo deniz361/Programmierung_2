@@ -11,7 +11,7 @@ class InputManager {
     /**
      * Die Klassen variable, um diagonales Movement zu erlauben
      */
-    public static final boolean DIAGONAL_MOVEMENT_ALLOWED = false;
+    public static final boolean DIAGONAL_MOVEMENT_ALLOWED = true;
     private GameView gameView;
     private Chopper chopper;
 
@@ -23,55 +23,42 @@ class InputManager {
 
     void updateUserInputs() {
         Integer[] pressedKeys = gameView.getKeyCodesOfCurrentlyPressedKeys();
-        if (!DIAGONAL_MOVEMENT_ALLOWED) {
-            for (int keyCode : pressedKeys) {
-                if (keyCode == KeyEvent.VK_A) {
-                    chopper.left();
-                    chopper.changeDirectionToLeft();
-                    return;
-                } else if (keyCode == KeyEvent.VK_S) {
-                    chopper.down();
-                    return;
-                } else if (keyCode == KeyEvent.VK_D) {
-                    chopper.right();
-                    chopper.changeDirectionToRight();
-                    return;
-                } else if (keyCode == KeyEvent.VK_W) {
-                    chopper.up();
-                    return;
-                } else if (keyCode == KeyEvent.VK_SPACE) {
-                    chopper.shoot();
-                } else if (keyCode == KeyEvent.VK_E) {
+        for (int keyCode : pressedKeys) {
+            if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
+                chopper.left();
+                chopper.changeDirectionToLeft();
+            }
+            if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
+                chopper.down();
+            }
+            if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
+                chopper.right();
+                chopper.changeDirectionToRight();
+            }
+            if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
+                chopper.up();
+            }
+            if (keyCode == KeyEvent.VK_SPACE) {
+                chopper.shoot();
+            }
+            if (!DIAGONAL_MOVEMENT_ALLOWED){
+                break;
+            }
+
+
+
+
+
+                /*
+                else if (keyCode == KeyEvent.VK_E) {
                     chopper.faster();
                     break;
                 } else if (keyCode == KeyEvent.VK_Q) {
                     chopper.slower();
                     break;
                 }
-            }
-        } else {
-            for (int keyCode : pressedKeys) {
-                if (keyCode == KeyEvent.VK_A) {
-                    chopper.left();
-                    chopper.changeDirectionToLeft();
-                } else if (keyCode == KeyEvent.VK_S) {
-                    chopper.down();
-                } else if (keyCode == KeyEvent.VK_D) {
-                    chopper.right();
-                    chopper.changeDirectionToRight();
-                } else if (keyCode == KeyEvent.VK_W) {
-                    chopper.up();
-                } else if (keyCode == KeyEvent.VK_SPACE) {
-                    chopper.shoot();
-                } else if (keyCode == KeyEvent.VK_E) {
-                    chopper.faster();
-                    break;
-                } else if (keyCode == KeyEvent.VK_Q) {
-                    chopper.slower();
-                    break;
-                }
-            }
+                 */
         }
     }
-
 }
+
