@@ -28,15 +28,13 @@ public class GamePlayManager {
     }
 
 
-    // Diese beiden Methoden delegieren den Aufruf an die passenden Methoden im GameObjectManager
-
     /** Erzeugt Spielobjekte */
-    void spawn(GameObject gameObject) {
+    public void spawn(GameObject gameObject) {
         gameObjectManager.addGameObject(gameObject);
     }
 
     /** Löscht Spielobjecte */
-    void destroy(GameObject gameObject) {
+    public void destroy(GameObject gameObject) {
         gameObjectManager.addGameObject(gameObject);
     }
 

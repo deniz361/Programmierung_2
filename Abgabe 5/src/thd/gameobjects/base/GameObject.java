@@ -3,8 +3,6 @@ package thd.gameobjects.base;
 import thd.game.managers.GamePlayManager;
 import thd.gameview.GameView;
 
-import java.awt.*;
-
 /**Jedes Gameobject erbt von dieser Klasse.*/
 public class GameObject {
 
@@ -17,8 +15,11 @@ public class GameObject {
     protected double height;
     protected GamePlayManager gamePlayManager;
 
-    /**Mindestanforderung, das jedes GameObject haben muss.
-     * @param gameView gibt gameview weier.*/
+    /**
+     * Mindestanforderung, das jedes GameObject haben muss.
+     *
+     * @param gameView gibt gameview weier.
+     */
     public GameObject(GameView gameView, GamePlayManager gamePlayManager) {
         this.gameView = gameView;
         position = new Position();
@@ -36,6 +37,10 @@ public class GameObject {
 
     /** Statusupdate. */
     public void updateStatus() {
+
+    }
+
+    public void changeDirectionTo(String direction) {
 
     }
 

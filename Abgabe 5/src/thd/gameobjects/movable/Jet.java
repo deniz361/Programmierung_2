@@ -5,8 +5,6 @@ import thd.gameobjects.base.GameObject;
 import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
 
-import java.awt.*;
-
 
 /** Pictures the jet. */
 public class Jet extends GameObject {

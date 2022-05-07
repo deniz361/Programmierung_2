@@ -6,16 +6,20 @@ import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 
 /** The "main" Object, the player can control the Chopper.*/
 public class Chopper extends GameObject {
 
     private boolean shooting;
+    private boolean right;
+    private final ArrayList<GameObject> createdBullets;
     private String imageFile;
     private final String emptyImage;
     private final String imageLeft;
     private final String imageRight;
+    private long shotsPerSecond;
     private double health;
     private double gas;
 
@@ -26,7 +30,6 @@ public class Chopper extends GameObject {
      */
     public Chopper(GameView gameView, GamePlayManager gamePlayManager) {
         super(gameView, gamePlayManager);
-        shooting = false;
         position.x = GameView.WIDTH / 2.0;
         position.y = GameView.HEIGHT / 2.0;
         speedInPixel = 2;
@@ -39,6 +42,10 @@ public class Chopper extends GameObject {
         emptyImage = "empty.png";
         imageLeft = "Chopper_links.png";
         imageRight = "Chopper_rechts.png";
+        createdBullets = new ArrayList<>(100);
+        shooting = false;
+        right = false;
+        shotsPerSecond = 3;
     }
 
     /**
@@ -67,7 +74,20 @@ public class Chopper extends GameObject {
 
     /** Schießt. */
     public void shoot() {
-        shooting = true;
+        if (!gameView.timerIsActive("shoot", this)) {
+            gameView.activateTimer("shoot", this, 1000L / shotsPerSecond);
+            shooting = true;
+            GameObject o = new Bullet(gameView, gamePlayManager, this);
+            createdBullets.add(o);
+            gamePlayManager.spawn(o);
+
+            if (right) {
+                o.changeDirectionTo("right");
+
+            } else {
+                o.changeDirectionTo("left");
+            }
+        }
     }
 
     /** Erhöht die Geschwindigkeit. */
@@ -84,6 +104,7 @@ public class Chopper extends GameObject {
     public void changeDirectionToRight() {
         if (!imageFile.equals(emptyImage)) {
             imageFile = imageRight;
+            right = true;
         }
     }
 
@@ -91,6 +112,7 @@ public class Chopper extends GameObject {
     public void changeDirectionToLeft() {
         if (!imageFile.equals(emptyImage)) {
             imageFile = imageLeft;
+            right = false;
         }
     }
 
@@ -98,16 +120,9 @@ public class Chopper extends GameObject {
     /** Fügt den Chopper zu GameView hinzu. */
     @Override
     public void addToCanvas() {
-
-        //System.out.println(getPosition());
         gameView.addTextToCanvas("Airspeed: " + speedInPixel,0,0, 18, Color.WHITE, 0);
 
-        if (shooting) {
-            gameView.addTextToCanvas("O", position.x, position.y, 50, Color.BLACK, 0);
-        } else {
-            gameView.addImageToCanvas(imageFile, position.x, position.y, 1.5, 0);
-
-        }
+        gameView.addImageToCanvas(imageFile, position.x, position.y, 1.5, 0);
     }
 
 
