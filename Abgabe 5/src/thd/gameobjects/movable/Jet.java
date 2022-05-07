@@ -153,6 +153,7 @@ public class Jet extends GameObject {
 
         /*
 
+        bewegt sich im kreis:
         position.y = position.y + Math.round(Math.sin(Math.toRadians(position.x * 2)));
         position.x = position.x + Math.round(Math.cos(Math.toRadians(position.y * 2)));
 

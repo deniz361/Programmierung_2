@@ -29,7 +29,7 @@ public class Chopper extends GameObject {
         shooting = false;
         position.x = GameView.WIDTH / 2.0;
         position.y = GameView.HEIGHT / 2.0;
-        speedInPixel = 5;
+        speedInPixel = 2;
         rotation = 0;
         height = 0;
         size = 0;
