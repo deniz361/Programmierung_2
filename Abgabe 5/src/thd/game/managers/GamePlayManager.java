@@ -35,7 +35,7 @@ public class GamePlayManager {
 
     /** Löscht Spielobjecte */
     public void destroy(GameObject gameObject) {
-        gameObjectManager.addGameObject(gameObject);
+        gameObjectManager.removeGameObject(gameObject);
     }
 
 
