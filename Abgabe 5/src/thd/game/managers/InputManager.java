@@ -38,6 +38,18 @@ class InputManager {
             if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
                 chopper.up();
             }
+            if (keyCode == KeyEvent.VK_E) {
+                if (!gameView.timerIsActive("faster", this)) {
+                    gameView.activateTimer("faster", this, 200);
+                    chopper.faster();
+                }
+            }
+            if (keyCode == KeyEvent.VK_Q) {
+                if (!gameView.timerIsActive("slower", this)) {
+                    gameView.activateTimer("slower", this, 200);
+                    chopper.slower();
+                }
+            }
             if (keyCode == KeyEvent.VK_SPACE) {
                 chopper.shoot();
             }

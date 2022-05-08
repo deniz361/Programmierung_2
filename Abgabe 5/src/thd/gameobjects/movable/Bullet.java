@@ -1,6 +1,7 @@
 package thd.gameobjects.movable;
 
 import thd.game.managers.GamePlayManager;
+import thd.game.utilities.WrongInput;
 import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
@@ -10,7 +11,7 @@ import java.awt.*;
 /**
  * Die Klasse zu dem Objekt Bullet.
  */
-public class Bullet extends GameObject {
+class Bullet extends GameObject {
 
     private boolean flyFromLeftToRight;
 
@@ -20,8 +21,9 @@ public class Bullet extends GameObject {
      *
      * @param gameView        gamView for GUI uses
      * @param gamePlayManager gameplay flow managing
+     * @param chopper to get the position of the chopper
      */
-    public Bullet(GameView gameView, GamePlayManager gamePlayManager, Chopper chopper) {
+    Bullet(GameView gameView, GamePlayManager gamePlayManager, Chopper chopper) {
         super(gameView, gamePlayManager);
         height = 2;
         width = 5;
@@ -35,7 +37,7 @@ public class Bullet extends GameObject {
 
     @Override
     public void updateStatus() {
-        if (position.x > GameView.WIDTH || position.y > GameView.HEIGHT) {
+        if (position.x > GameView.WIDTH || position.x + width < 0 || position.y + height < 0 || position.y > GameView.HEIGHT) {
             gamePlayManager.destroy(this);
         }
     }
@@ -48,7 +50,7 @@ public class Bullet extends GameObject {
             flyFromLeftToRight = true;
             position.x += 30;
         } else {
-            //exception!!!
+            throw new WrongInput("Wrong Input! Chose between 'left' or 'right'.");
         }
     }
 

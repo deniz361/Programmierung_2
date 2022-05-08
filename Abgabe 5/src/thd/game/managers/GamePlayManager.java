@@ -7,13 +7,14 @@ import thd.gameview.GameView;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+/** Manages the flow of the game. */
 public class GamePlayManager {
 
-    private GameView gameView;
+    private final GameView gameView;
     private GameObjectManager gameObjectManager;
-    private Tank tank;
     private final ArrayList<GameObject> createdTanks;
-    private Random random;
+    private final Random random;
 
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
@@ -28,12 +29,14 @@ public class GamePlayManager {
     }
 
 
-    /** Erzeugt Spielobjekte */
+    /** Spawns game objects.
+     * @param gameObject game object to spawn */
     public void spawn(GameObject gameObject) {
         gameObjectManager.addGameObject(gameObject);
     }
 
-    /** Löscht Spielobjecte */
+    /** Destroys game objects.
+     * @param gameObject game object to destroy */
     public void destroy(GameObject gameObject) {
         gameObjectManager.removeGameObject(gameObject);
     }
@@ -41,7 +44,7 @@ public class GamePlayManager {
 
 
 
-    void spawnAndDestroy() {
+    private void spawnAndDestroy() {
         if (!gameView.timerIsActive("spawn", this)) {
             gameView.activateTimer("spawn", this, 1000);
             GameObject o = new Tank(gameView,this);
@@ -59,7 +62,7 @@ public class GamePlayManager {
     /** Um den GameObjectManager als Instanzvariable hinzuzufügen.
      * @param gameObjectManager der GameObjectManager
      */
-    public void setGameObjectManager(GameObjectManager gameObjectManager) {
+    void setGameObjectManager(GameObjectManager gameObjectManager) {
         this.gameObjectManager = gameObjectManager;
     }
 

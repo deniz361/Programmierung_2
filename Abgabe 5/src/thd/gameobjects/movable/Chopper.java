@@ -19,7 +19,7 @@ public class Chopper extends GameObject {
     private final String emptyImage;
     private final String imageLeft;
     private final String imageRight;
-    private long shotsPerSecond;
+    private double shotsPerSecond;
     private double health;
     private double gas;
 
@@ -75,7 +75,7 @@ public class Chopper extends GameObject {
     /** Schießt. */
     public void shoot() {
         if (!gameView.timerIsActive("shoot", this)) {
-            gameView.activateTimer("shoot", this, 1000L / shotsPerSecond);
+            gameView.activateTimer("shoot", this, (long) (1000 / shotsPerSecond));
             shooting = true;
             GameObject o = new Bullet(gameView, gamePlayManager, this);
             createdBullets.add(o);
@@ -92,12 +92,12 @@ public class Chopper extends GameObject {
 
     /** Erhöht die Geschwindigkeit. */
     public void faster() {
-        speedInPixel += 0.05;
+        speedInPixel += 0.5;
     }
 
     /** Verringert die Geschwindigkeit. */
     public void slower() {
-        speedInPixel -= 0.05;
+        speedInPixel -= 0.5;
     }
 
     /** Der Helikopter schaut nach rechts. */

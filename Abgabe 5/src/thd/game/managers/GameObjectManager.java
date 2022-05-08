@@ -1,5 +1,6 @@
 package thd.game.managers;
 
+import thd.game.utilities.TooManyGameObjectsException;
 import thd.gameobjects.movable.*;
 import thd.gameobjects.unmovable.Cloud;
 import thd.gameview.GameView;
@@ -13,7 +14,6 @@ class GameObjectManager {
     private final LinkedList<GameObject> gameObjects;
     private final ArrayList<GameObject> toAdd;
     private final ArrayList<GameObject> toRemove;
-    protected Chopper chopper;
 
 
     protected GameObjectManager(GameView gameView, GamePlayManager gamePlayManager) {
@@ -23,26 +23,17 @@ class GameObjectManager {
         gameObjects = new LinkedList<>();
         gameObjects.add(new Jet(gameView, gamePlayManager));
         gameObjects.add(new Tank(gameView, gamePlayManager));
-        //gameObjects.add(new Bullet(gameView, 1, 100, 50));
         gameObjects.add(new Cloud(gameView, gamePlayManager));
-
-
-
-        chopper = new Chopper(gameView, gamePlayManager);
-
+        gameObjects.add(new Chopper(gameView, gamePlayManager));
     }
 
-    void updateGameObjects() {
+    void updateGameObjects() throws TooManyGameObjectsException{
         modifyGameObjectsList();
         for (GameObject gameObject : gameObjects) {
             gameObject.updateStatus();
             gameObject.updatePosition();
             gameObject.addToCanvas();
         }
-
-        chopper.updateStatus();
-        chopper.addToCanvas();
-        chopper.updatePosition();
     }
 
     void addGameObject(GameObject gameObject) {
@@ -53,10 +44,18 @@ class GameObjectManager {
         toRemove.add(gameObject);
     }
 
-    private void modifyGameObjectsList() {
+    private void modifyGameObjectsList() throws TooManyGameObjectsException{
         gameObjects.addAll(toAdd);
         gameObjects.removeAll(toRemove);
         toAdd.clear();
         toRemove.clear();
+
+        if (gameObjects.size() > 300) {
+            throw new TooManyGameObjectsException("Too many game Objects");
+        }
+    }
+
+    LinkedList<GameObject> getGameObjects() {
+        return gameObjects;
     }
 }

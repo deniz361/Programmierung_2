@@ -139,8 +139,10 @@ public class Tank extends GameObject {
         return stringBuilder.toString() + position;
     }
 
+    /*
     public void setSpawnpoint(double x, double y) {
         position.x = x;
         position.y = y;
     }
+     */
 }
