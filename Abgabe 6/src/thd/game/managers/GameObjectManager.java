@@ -9,7 +9,8 @@ import thd.gameobjects.base.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-class GameObjectManager {
+/** Manages alle the Game Objects. */
+public class GameObjectManager {
 
     private final LinkedList<GameObject> gameObjects;
     private final ArrayList<GameObject> toAdd;
@@ -24,19 +25,36 @@ class GameObjectManager {
         gameObjects.add(new Jet(gameView, gamePlayManager));
         gameObjects.add(new Tank(gameView, gamePlayManager));
         gameObjects.add(new Cloud(gameView, gamePlayManager));
-        gameObjects.add(new Chopper(gameView, gamePlayManager));
+        gameObjects.add(new Chopper(gameView, gamePlayManager, this));
     }
 
-    void updateGameObjects() throws TooManyGameObjectsException{
+    void updateGameObjects() {
         modifyGameObjectsList();
+        ArrayList<CollidableGameObject> collidables = new ArrayList<>(gameObjects.size());
         for (GameObject gameObject : gameObjects) {
             gameObject.updateStatus();
             if (gameObject instanceof AutoMovable) {
                 ((AutoMovable) gameObject).updatePosition();
             }
             gameObject.addToCanvas();
+            if (gameObject instanceof CollidableGameObject) {
+                collidables.add((CollidableGameObject) gameObject);
+            }
+        }
+        detectCollisionsAndNotifyGameObjects(collidables);
+    }
+
+    private void detectCollisionsAndNotifyGameObjects(ArrayList<CollidableGameObject> collidables) {
+        for (int index = 0; index < collidables.size(); index++) {
+            for (int other = index + 1; other < collidables.size(); other++) {
+                if (collidables.get(index).collidesWith(collidables.get(other))) {
+                    collidables.get(index).reactToCollision(collidables.get(other));
+                    collidables.get(other).reactToCollision(collidables.get(index));
+                }
+            }
         }
     }
+
 
     void addGameObject(GameObject gameObject) {
         toAdd.add(gameObject);
@@ -57,7 +75,10 @@ class GameObjectManager {
         }
     }
 
-    LinkedList<GameObject> getGameObjects() {
+
+    /** Returns all GameObjects.
+     * @return all game objects */
+    public LinkedList<GameObject> getGameObjects() {
         return gameObjects;
     }
 }

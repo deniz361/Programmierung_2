@@ -1,7 +1,6 @@
 package thd.game.managers;
 
 import thd.gameobjects.base.GameObject;
-import thd.gameobjects.movable.Tank;
 import thd.gameview.GameView;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class GamePlayManager {
 
     /** Steuert den Spielverlauf.*/
     void updateGamePlay() {
-        spawnAndDestroy();
+        //spawnAndDestroy();
     }
 
 
@@ -43,7 +42,7 @@ public class GamePlayManager {
 
 
 
-
+/*
     private void spawnAndDestroy() {
         if (!gameView.timerIsActive("spawn", this)) {
             gameView.activateTimer("spawn", this, 1000);
@@ -59,6 +58,9 @@ public class GamePlayManager {
             destroy(o);
         }
     }
+
+ */
+
     /** Um den GameObjectManager als Instanzvariable hinzuzufügen.
      * @param gameObjectManager der GameObjectManager
      */

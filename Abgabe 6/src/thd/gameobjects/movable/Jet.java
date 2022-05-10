@@ -2,13 +2,13 @@ package thd.gameobjects.movable;
 
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.AutoMovable;
-import thd.gameobjects.base.GameObject;
+import thd.gameobjects.base.CollidableGameObject;
 import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
 
 
 /** Pictures the jet. */
-public class Jet extends GameObject implements AutoMovable {
+public class Jet extends CollidableGameObject implements AutoMovable {
 
 
     //Jet design
@@ -36,6 +36,7 @@ public class Jet extends GameObject implements AutoMovable {
     private Position bezierPoint2;
     private Position bezierPoint3;
     private int counter;
+    private double blocksize;
 
 
     /** Instantiates a new Jet.
@@ -59,11 +60,21 @@ public class Jet extends GameObject implements AutoMovable {
         leerzeichen6 = " ".repeat(7);
         leerzeichen7 = " ".repeat(14);
 
-        jet = leerzeichen + "LL  \n" + leerzeichen2 + "LCL\n" + leerzeichen3 + "LccL\n" + leerzeichen4 + "LLLLLLL      LCCCL\n" + leerzeichen5 + "LLWWWWWWWL" +
-                "    LccCCL\n" + leerzeichen6 + "LLWWWWWWLLLLLLLLCCCCCL\n    LLLCCLLLLLLCCCCCCCCCCCCCCLL\n LLLCCCCCCCCCLLLLLLLLLLLLLLCCCL\nLCCCCCCCCCCCLWWWWWWWWWWWWWLLLL\n" +
-                "LLLLLLLLLLLLLLRRRRRRRRLLLL\n" + leerzeichen7 + "LLLLLLLL";
+        jet = leerzeichen + "LL  \n"
+                + leerzeichen2 + "LCL\n"
+                + leerzeichen3 + "LccL\n"
+                + leerzeichen4 + "LLLLLLL      LCCCL\n"
+                + leerzeichen5 + "LLWWWWWWWL" + "    LccCCL\n"
+                + leerzeichen6 + "LLWWWWWWLLLLLLLLCCCCCL\n" +
+                "    LLLCCLLLLLLCCCCCCCCCCCCCCLL\n" +
+                " LLLCCCCCCCCCLLLLLLLLLLLLLLCCCL\n" +
+                "LCCCCCCCCCCCLWWWWWWWWWWWWWLLLL\n" +
+                "LLLLLLLLLLLLLLRRRRRRRRLLLL\n"
+                + leerzeichen7 + "LLLLLLLL";
 
-
+        blocksize = 2;
+        height = 11 * blocksize;
+        width = 31 * blocksize;
         //Bezier
         p1 = new Position(100, 300);
         p2 = new Position(400, 400);
@@ -80,19 +91,29 @@ public class Jet extends GameObject implements AutoMovable {
         bezierPoint3 = new Position(resultX, resultY);
 
 
-        /*
-        p1 = new Position(position.x - 200, position.y + 100);
-        p2 = new Position(position.x, position.y + 200);
+        //hit box
+        hitBoxOffsetX = 0;
+        hitBoxOffsetY = 0;
+        hitBoxHeight = height;
+        hitBoxWidth = width;
+    }
 
-
-
-         */
+    /**
+     * If a game object is collided with something, it is able to react to the collision.
+     *
+     * @param other The other GameObject that is involved in the collision.
+     */
+    @Override
+    public void reactToCollision(CollidableGameObject other) {
+        if (other.getClass() == Bullet.class) {
+            gamePlayManager.destroy(this);
+        }
     }
 
     /** Adds the jet to the canvas. */
     @Override
     public void addToCanvas() {
-        gameView.addBlockImageToCanvas(jet, position.x, position.y, 1.5, 0);
+        gameView.addBlockImageToCanvas(jet, position.x, position.y, blocksize, 0);
 
         /*
         gameView.addOvalToCanvas(bezierPoint1.x, bezierPoint1.y, 10, 10, 2, false, Color.GREEN);

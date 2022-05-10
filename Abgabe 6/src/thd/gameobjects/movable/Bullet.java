@@ -3,7 +3,7 @@ package thd.gameobjects.movable;
 import thd.game.managers.GamePlayManager;
 import thd.game.utilities.WrongInput;
 import thd.gameobjects.base.AutoMovable;
-import thd.gameobjects.base.GameObject;
+import thd.gameobjects.base.CollidableGameObject;
 import thd.gameview.GameView;
 
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.awt.*;
 /**
  * Die Klasse zu dem Objekt Bullet.
  */
-class Bullet extends GameObject implements AutoMovable {
+class Bullet extends CollidableGameObject implements AutoMovable {
 
     private boolean flyFromLeftToRight;
 
@@ -32,6 +32,11 @@ class Bullet extends GameObject implements AutoMovable {
         position.x = chopper.getPosition().x + 10;
         position.y = chopper.getPosition().y + 26;
         flyFromLeftToRight = true;
+
+        hitBoxOffsetX = 0;
+        hitBoxOffsetY = 0;
+        hitBoxHeight = height;
+        hitBoxWidth = width;
 
     }
 
@@ -76,5 +81,17 @@ class Bullet extends GameObject implements AutoMovable {
     public void addToCanvas() {
         //gameView.addOvalToCanvas(position.x, position.y, width, height, 5, false, Color.darkGray);
         gameView.addRectangleToCanvas(position.x, position.y, width, height, 0, true, Color.BLACK);
+    }
+
+    /**
+     * If a game object is collided with something, it is able to react to the collision.
+     *
+     * @param other The other GameObject that is involved in the collision.
+     */
+    @Override
+    public void reactToCollision(CollidableGameObject other) {
+        if (other.getClass() == Jet.class || other.getClass() == Tank.class) {
+            gamePlayManager.destroy(this);
+        }
     }
 }

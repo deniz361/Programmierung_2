@@ -3,12 +3,14 @@ package thd.gameobjects.base;
 
 import thd.gameview.GameView;
 
+import java.util.Objects;
+
 /**
  * Ändert die Position von den Spielobjekten.
  * {@link GameView}
  * @see GameView
  */
-public class Position {
+public class Position implements Cloneable{
 
     /**Die x Koordinate des Spielobjekts.*/
     public double x;
@@ -95,11 +97,48 @@ public class Position {
     }
 
 
+    /** Checks if 2 positions are the same.
+     * @return returns true, if the position is the same and false if not
+     */
+    @Override
+    public boolean equals(Object o) {
+        Position other = (Position) o;
+        boolean check = false;
+        if (this == other) {
+            return true;
+
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+
+        return check;
+        //return this.x == other.x && this.y == other.y;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x,y,distance);
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Position (");
         stringBuilder.append((int) Math.round(x)).append(", ").append((int) Math.round(y)).append(")");
 
         return stringBuilder.toString();
+    }
+
+
+    @Override
+    public Position clone() {
+        Position clone = null;
+        try {
+            clone = (Position) super.clone();
+
+        } catch (CloneNotSupportedException ignored) {
+        }
+        return clone;
     }
 }

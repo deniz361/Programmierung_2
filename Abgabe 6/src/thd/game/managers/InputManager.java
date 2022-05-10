@@ -24,6 +24,9 @@ class InputManager {
     void updateUserInputs() {
         Integer[] pressedKeys = gameView.getKeyCodesOfCurrentlyPressedKeys();
         for (int keyCode : pressedKeys) {
+            if (chopper.exploded) {
+                break;
+            }
             if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
                 chopper.left();
                 chopper.changeDirectionToLeft();
@@ -56,6 +59,7 @@ class InputManager {
             if (!DIAGONAL_MOVEMENT_ALLOWED){
                 break;
             }
+
 
 
 

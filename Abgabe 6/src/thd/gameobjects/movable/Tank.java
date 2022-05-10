@@ -2,7 +2,7 @@ package thd.gameobjects.movable;
 
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.AutoMovable;
-import thd.gameobjects.base.GameObject;
+import thd.gameobjects.base.CollidableGameObject;
 import thd.gameview.GameView;
 
 import java.util.Random;
@@ -11,7 +11,7 @@ import java.util.Random;
 /**
  * Pictures the Tank.
  */
-public class Tank extends GameObject implements AutoMovable {
+public class Tank extends CollidableGameObject implements AutoMovable {
 
 
     private final String tankLeft;
@@ -19,10 +19,18 @@ public class Tank extends GameObject implements AutoMovable {
     private double blockSize;
     private final Random random;
     private final double yStart;
-    private boolean goal;
     private final double yGoal;
     private final double xStart;
     private boolean flyFromLeftToRight;
+
+    // Hit boxen
+    /*
+    private double hitBoxOffsetX;
+    private double hitBoxOffsetY;
+    private double hitBoxWidth;
+    private double hitBoxHeight;
+
+     */
 
 
     /**
@@ -35,7 +43,7 @@ public class Tank extends GameObject implements AutoMovable {
         super(gameView, gamePlayManager);
         random = new Random();
         blockSize = 3;
-        width = 12 * blockSize;
+        width = 13 * blockSize;
         height = 7 * blockSize;
         xStart = random.nextInt(100, 851);
         yStart = GameView.HEIGHT + height + 15;  //gameview height ist 540
@@ -59,10 +67,16 @@ public class Tank extends GameObject implements AutoMovable {
                         "oLLLLLLLLLLLo\n" +
                         "LWLWLWLWLWLWL\n" +
                         " LLLLLLLLLLL";
-        goal = false;
 
         // Neue Farben hinzufügen:.
         // Zeile 1449 GameView
+
+        //hit boxen
+        hitBoxOffsetX = 0;
+        hitBoxOffsetY = 0;
+        hitBoxHeight = height;
+        hitBoxWidth = width;
+
     }
 
     /**
@@ -145,10 +159,16 @@ public class Tank extends GameObject implements AutoMovable {
         return stringBuilder.toString() + position;
     }
 
-    /*
-    public void setSpawnpoint(double x, double y) {
-        position.x = x;
-        position.y = y;
-    }
+    /**
+     * If a game object is collided with something, it is able to react to the collision.
+     *
+     * @param other The other GameObject that is involved in the collision.
      */
+    @Override
+    public void reactToCollision(CollidableGameObject other) {
+        if (other.getClass() == Bullet.class) {
+            gamePlayManager.destroy(this);
+        }
+    }
+
 }
