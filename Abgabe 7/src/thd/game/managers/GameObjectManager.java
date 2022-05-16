@@ -2,6 +2,7 @@ package thd.game.managers;
 
 import thd.game.utilities.TooManyGameObjectsException;
 import thd.gameobjects.movable.*;
+import thd.gameobjects.unmovable.Base;
 import thd.gameobjects.unmovable.Cloud;
 import thd.gameview.GameView;
 import thd.gameobjects.base.*;
@@ -13,6 +14,7 @@ import java.util.LinkedList;
 public class GameObjectManager {
 
     private final LinkedList<GameObject> gameObjects;
+    private final LinkedList<GameObject> backgroundObjects;
     private final ArrayList<GameObject> toAdd;
     private final ArrayList<GameObject> toRemove;
 
@@ -22,13 +24,20 @@ public class GameObjectManager {
         toAdd = new ArrayList<>(120);
         toRemove = new ArrayList<>(120);
         gameObjects = new LinkedList<>();
+        backgroundObjects = new LinkedList<>();
+
+
+        backgroundObjects.add(new Cloud(gameView, gamePlayManager));
+        backgroundObjects.add(new Base(gameView, gamePlayManager));
         gameObjects.add(new Jet(gameView, gamePlayManager));
         gameObjects.add(new Tank(gameView, gamePlayManager));
-        gameObjects.add(new Cloud(gameView, gamePlayManager));
-        gameObjects.add(new Chopper(gameView, gamePlayManager, this));
-    }
+        gameObjects.add(new Chopper(gameView, gamePlayManager, this));}
 
     void updateGameObjects() {
+        for (GameObject backgroundObject : backgroundObjects) {
+            backgroundObject.addToCanvas();
+        }
+
         modifyGameObjectsList();
         ArrayList<CollidableGameObject> collidables = new ArrayList<>(gameObjects.size());
         for (GameObject gameObject : gameObjects) {
@@ -75,10 +84,27 @@ public class GameObjectManager {
         }
     }
 
+    /**
+     * Moves the background
+     * @param shiftX shift in x
+     * @param shiftY shift in y
+     */
+    void moveWorld(double shiftX, double shiftY) {
+        for (GameObject background : backgroundObjects) {
+            background.worldHasMoved(shiftX, shiftY);
+        }
+    }
+
 
     /** Returns all GameObjects.
      * @return all game objects */
     public LinkedList<GameObject> getGameObjects() {
         return gameObjects;
+    }
+
+    /** Returns all background GameObjects.
+     * @return all background game objects */
+    public LinkedList<GameObject> getBackgroundObjects() {
+        return backgroundObjects;
     }
 }

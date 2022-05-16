@@ -57,4 +57,18 @@ public abstract class CollidableGameObject extends GameObject {
      * @param other The other GameObject that is involved in the collision.
      */
     public abstract void reactToCollision(CollidableGameObject other);
+
+
+    /**
+     * Verschiebung der Spielwelt
+     * @param shiftX Verschiebung in X-Richtung
+     * @param shiftY Verschiebung in Y-Richtung
+     */
+    @Override
+    public void worldHasMoved(double shiftX, double shiftY) {
+        super.worldHasMoved(shiftX, shiftY);
+        hitBox.x -= shiftX;
+        hitBox.y -= shiftY;
+    }
+
 }

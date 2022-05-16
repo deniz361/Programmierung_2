@@ -24,7 +24,7 @@ public class GameLoopManager {
         gamePlayManager = new GamePlayManager(gameView);
         gameObjectManager = new GameObjectManager(gameView, gamePlayManager);
         gamePlayManager.setGameObjectManager(gameObjectManager);
-        inputManager = new InputManager(gameView, (Chopper) gameObjectManager.getGameObjects().get(3));
+        inputManager = new InputManager(gameView, (Chopper) gameObjectManager.getGameObjects().get(2));
         gameView.setWindowTitle("Choplifter");
         gameView.setStatusText("Java Programmierung SS 2022");
         gameView.setWindowIcon("choplifter icon.png");

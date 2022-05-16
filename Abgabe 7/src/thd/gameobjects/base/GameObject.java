@@ -28,12 +28,27 @@ public abstract class GameObject {
     }
 
 
+    /**
+     * Verschiebung der Spielwelt
+     * @param shiftX Verschiebung in X-Richtung
+     * @param shiftY Verschiebung in Y-Richtung
+     */
+    public void worldHasMoved(double shiftX, double shiftY) {
+        position.x -= shiftX;
+        position.y -= shiftY;
+    }
+
+
 
     /**Fügt das Spielobject in GameView hinzu.*/
     public abstract void addToCanvas();
 
-    /** Statusupdate. */
-    public abstract void updateStatus();
+    /**
+     * Statusupdate.
+     */
+    public void updateStatus() {
+
+    }
 
 
     /**

@@ -84,17 +84,17 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * aufgerufen.
      */
     public void left() {
-
-        if (collidesWith((CollidableGameObject) gameObjectManager.getGameObjects().get(0))) {
-            position.right(speedInPixel);
-        } else {
-            position.left();
-        }
-
+        /*
         if (position.x < - 6) {
             position.right();
         } else {
             position.left();
+        }
+         */
+        if (position.x > GameView.WIDTH / 2d - 350) {
+            position.left(speedInPixel);
+        } else {
+            gamePlayManager.moveWorldToRight(speedInPixel);
         }
     }
 
@@ -103,12 +103,19 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      */
     public void right() {
 
-
+        if (position.x < GameView.WIDTH - 70 - width) {
+            position.right(speedInPixel);
+        } else {
+            gamePlayManager.moveWorldToLeft(speedInPixel);
+        }
+        /*
         if (position.x + width > GameView.WIDTH) {
             position.left();
         } else {
             position.x += speedInPixel;
         }
+
+         */
     }
 
     /**

@@ -41,6 +41,21 @@ public class GamePlayManager {
     }
 
 
+    /**
+     * Moves the world to left
+     * @param pixels how fast it moves
+     */
+    public void moveWorldToLeft(double pixels) {
+        gameObjectManager.moveWorld(pixels, 0);
+    }
+
+    /**
+     * Moves the world to right
+     * @param pixels how fast it moves
+     */
+    public void moveWorldToRight(double pixels) {
+        gameObjectManager.moveWorld(-pixels, 0);
+    }
 
 /*
     private void spawnAndDestroy() {

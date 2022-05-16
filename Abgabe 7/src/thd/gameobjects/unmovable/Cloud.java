@@ -13,23 +13,19 @@ public class Cloud extends GameObject {
      * @param gamePlayManager Gameplay flow managing */
     public Cloud(GameView gameView, GamePlayManager gamePlayManager) {
         super(gameView, gamePlayManager);
-
+        position.x = 100;
+        position.y = 100;
     }
 
 
     /** Adds the clouds to the canvas. */
     @Override
     public void addToCanvas() {
-        gameView.addImageToCanvas("Cloud.png",100,100,2,0);
-        gameView.addImageToCanvas("Cloud.png",300,50,2,0);
-        gameView.addImageToCanvas("Cloud.png",400,100,2,0);
-        gameView.addImageToCanvas("Cloud.png",600,50,2,0);
-        gameView.addImageToCanvas("Cloud.png",700,100,2,0);
-
-    }
-
-    @Override
-    public void updateStatus() {
+        gameView.addImageToCanvas("Cloud.png",position.x, position.y,2,0);
+        gameView.addImageToCanvas("Cloud.png",position.x + 200,position.y -50,2,0);
+        gameView.addImageToCanvas("Cloud.png",position.x + 300,position.y,2,0);
+        gameView.addImageToCanvas("Cloud.png",position.x + 500,position.y - 50,2,0);
+        gameView.addImageToCanvas("Cloud.png",position.x + 600,position.y,2,0);
 
     }
 }
