@@ -60,7 +60,7 @@ public abstract class CollidableGameObject extends GameObject {
 
 
     /**
-     * Verschiebung der Spielwelt
+     * Verschiebung der Spielwelt.
      * @param shiftX Verschiebung in X-Richtung
      * @param shiftY Verschiebung in Y-Richtung
      */

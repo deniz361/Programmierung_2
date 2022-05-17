@@ -4,6 +4,10 @@ import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
+
+/**
+ * The Base.
+ */
 public class Base extends GameObject {
 
     private double blocksize;

@@ -144,7 +144,7 @@ public class Position implements Cloneable, Comparable<Position>{
 
 
     /**
-     * Compares the Position depending on their distance to the Position(0,0)
+     * Compares the Position depending on their distance to the Position(0,0).
      * @param o the other object to be comared
      * @return x < 0 if o is nearer to (0,0),
      * x > 0 if o is further away from (0,0),

@@ -42,7 +42,7 @@ public class GamePlayManager {
 
 
     /**
-     * Moves the world to left
+     * Moves the world to left.
      * @param pixels how fast it moves
      */
     public void moveWorldToLeft(double pixels) {
@@ -50,7 +50,7 @@ public class GamePlayManager {
     }
 
     /**
-     * Moves the world to right
+     * Moves the world to right.
      * @param pixels how fast it moves
      */
     public void moveWorldToRight(double pixels) {

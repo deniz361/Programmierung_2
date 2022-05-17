@@ -10,7 +10,7 @@ import thd.gameobjects.base.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/** Manages alle the Game Objects. */
+/** Manages all the Game Objects. */
 public class GameObjectManager {
 
     private final LinkedList<GameObject> gameObjects;
@@ -20,7 +20,6 @@ public class GameObjectManager {
 
 
     protected GameObjectManager(GameView gameView, GamePlayManager gamePlayManager) {
-
         toAdd = new ArrayList<>(120);
         toRemove = new ArrayList<>(120);
         gameObjects = new LinkedList<>();
@@ -98,7 +97,7 @@ public class GameObjectManager {
 
     /** Returns all GameObjects.
      * @return all game objects */
-    public LinkedList<GameObject> getGameObjects() {
+    LinkedList<GameObject> getGameObjects() {
         return gameObjects;
     }
 
