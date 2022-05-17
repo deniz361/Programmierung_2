@@ -10,7 +10,7 @@ import java.util.Objects;
  * {@link GameView}
  * @see GameView
  */
-public class Position implements Cloneable{
+public class Position implements Cloneable, Comparable<Position>{
 
     /**Die x Koordinate des Spielobjekts.*/
     public double x;
@@ -140,5 +140,19 @@ public class Position implements Cloneable{
         } catch (CloneNotSupportedException ignored) {
         }
         return clone;
+    }
+
+
+    /**
+     * Compares the Position depending on their distance to the Position(0,0)
+     * @param o the other object to be comared
+     * @return x < 0 if o is nearer to (0,0),
+     * x > 0 if o is further away from (0,0),
+     * x = 0 if they have the same distance
+     */
+    @Override
+    public int compareTo(Position o) {
+        Position comparator = new Position();
+        return Double.compare(this.distance(comparator), o.distance(comparator));
     }
 }
