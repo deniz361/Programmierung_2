@@ -17,10 +17,6 @@ public class Position implements Cloneable, Comparable<Position> {
     /**Die y Koordinate des Spielobjekts.*/
     public double y;
 
-    private double distance;
-    private double distanceInX;
-    private double distanceInY;
-
 
     /** Der Konstruktor mit Parameter.
      * @param x Individuelle x Koordinate
@@ -28,14 +24,11 @@ public class Position implements Cloneable, Comparable<Position> {
     public Position(double x, double y) {
         this.x = x;
         this.y = y;
-        distance = 0;
     }
 
     /** Konstruktor ohne Parameter. */
     public Position() {
-        x = 0.0;
-        y = 0.0;
-        distance = 0;
+        this(0, 0);
     }
 
 
@@ -88,12 +81,10 @@ public class Position implements Cloneable, Comparable<Position> {
      * @param other Die Position des anderen Objekts
      * @return gibt den direkten Weg von einem Objekt zu dem anderen Objekt zurück*/
     public double distance(Position other) {
-        distanceInX = Math.pow(this.x - other.x, 2);
-        distanceInY = Math.pow(this.y - other.y, 2);
+        var distanceInX = Math.pow(this.x - other.x, 2);
+        var distanceInY = Math.pow(this.y - other.y, 2);
 
-        distance = Math.sqrt(distanceInX + distanceInY);
-
-        return distance;
+        return Math.sqrt(distanceInX + distanceInY);
     }
 
 
@@ -102,24 +93,21 @@ public class Position implements Cloneable, Comparable<Position> {
      */
     @Override
     public boolean equals(Object o) {
-        Position other = (Position) o;
-        boolean check = false;
-        if (this == other) {
+        if (o == this) {
             return true;
-
         }
-        if (other == null || getClass() != other.getClass()) {
+
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
 
-        return check;
-        //return this.x == other.x && this.y == other.y;
-
+        Position other = (Position) o;
+        return x == other.x && y == other.y;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x,y,distance);
+        return Objects.hash(x,y);
     }
 
     @Override
