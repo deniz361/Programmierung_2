@@ -1,8 +1,8 @@
 package thd.gameobjects.movable;
 
 
+import thd.game.managers.*;
 import thd.game.managers.GamePlayManager;
-import thd.game.managers.GameObjectManager;
 import thd.gameobjects.base.AutoMovable;
 import thd.gameobjects.base.CollidableGameObject;
 import thd.gameobjects.base.GameObject;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class Chopper extends CollidableGameObject implements AutoMovable {
 
 
+    private final GameObjectManager gameObjectManager;
     private boolean right;
     private final ArrayList<GameObject> createdBullets;
     private String imageFile;
@@ -27,7 +28,7 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
     private double health;
     private double gas;
     private double blocksize;
-    private GameObjectManager gameObjectManager;
+
 
     private enum Status {STANDARD, DAMAGED, EXPLODING, EXPLODED}
 
@@ -221,8 +222,6 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
 
     @Override
     public void updateStatus() {
-
-
         switch (status) {
             case EXPLODED:
                 imageFile = "Chopper exploded.png";

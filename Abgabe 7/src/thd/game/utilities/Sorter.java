@@ -2,7 +2,6 @@ package thd.game.utilities;
 
 import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,14 +22,15 @@ class Sorter {
         }
 
         Sorter sorter = new Sorter();
+
+        sorter.naturalOrder(positions);
+        System.out.println(positions);
         sorter.xOrder(positions);
         System.out.println(positions);
         sorter.yOrder(positions);
         System.out.println(positions);
-        sorter.naturalOrder(positions);
-        System.out.println(positions);
         sorter.centricOrder(positions);
-        System.out.println(positions);
+        System.out.println();
     }
 
 
@@ -39,24 +39,24 @@ class Sorter {
     }
 
     void xOrder(ArrayList<Position> positions) {
-        class Xcompare implements Comparator<Position> {
+        class CompareX implements Comparator<Position> {
             @Override
             public int compare(Position o1, Position o2) {
                 return Double.compare(o1.x, o2.x);
             }
         }
-        Xcompare xCompare = new Xcompare();
+        CompareX xCompare = new CompareX();
         positions.sort(xCompare);
     }
 
     void yOrder(ArrayList<Position> positions) {
-        Comparator<Position> xCompare = new Comparator<>() {
+        Comparator<Position> compareY = new Comparator<>() {
             @Override
             public int compare(Position o1, Position o2) {
                 return Double.compare(o1.y, o2.y);
             }
         };
-        positions.sort(xCompare);
+        positions.sort(compareY);
     }
 
     void centricOrder(ArrayList<Position> positions) {

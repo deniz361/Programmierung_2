@@ -10,7 +10,7 @@ import java.util.Objects;
  * {@link GameView}
  * @see GameView
  */
-public class Position implements Cloneable, Comparable<Position>{
+public class Position implements Cloneable, Comparable<Position> {
 
     /**Die x Koordinate des Spielobjekts.*/
     public double x;
