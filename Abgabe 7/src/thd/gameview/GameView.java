@@ -1359,7 +1359,7 @@ public class GameView {
             new Thread(() -> {
                 try {
                     AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Objects.requireNonNull(GameView.class.getResource(
-                            "/resources/" + sound)));
+                            "/thd/gameobjects/unmovable/resources/" + sound)));
                     Clip clip = AudioSystem.getClip();
                     clip.open(audioInputStream);
                     clip.addLineListener(event -> {
@@ -1557,7 +1557,7 @@ public class GameView {
             BufferedImage image = imageMap.get(hash);
             if (image == null) {
                 try {
-                    image = ImageIO.read(GameView.class.getResource("/resources/" + imageFileName));
+                    image = ImageIO.read(GameView.class.getResource("/thd/gameobjects/unmovable/resources/" + imageFileName));
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.err.println("Symbolfile \"" + imageFileName + "\" konnte nicht gefunden werden!");
@@ -1640,7 +1640,7 @@ public class GameView {
         void setWindowIcon(String windowIcon) {
             Image fensterSymbol = null;
             try {
-                fensterSymbol = new ImageIcon(GameView.class.getResource("/resources/" + windowIcon)).getImage();
+                fensterSymbol = new ImageIcon(GameView.class.getResource("/thd/gameobjects/unmovable/resources/" + windowIcon)).getImage();
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("Symbolfile \"" + windowIcon + "\" konnte nicht gefunden werden!");
@@ -1651,7 +1651,7 @@ public class GameView {
         // Maus Cursor
         void setMouseCursor(String cursor, boolean centered) {
             try {
-                Image im = new ImageIcon(GameView.class.getResource("/resources/" + cursor)).getImage();
+                Image im = new ImageIcon(GameView.class.getResource("/thd/gameobjects/unmovable/resources/" + cursor)).getImage();
                 SwingUtilities.invokeLater(() -> paintingPanel.setCursor(createCursor(im, centered)));
             } catch (Exception e) {
                 System.out.println("Cursor-Datei konnte nicht gefunden werden!");

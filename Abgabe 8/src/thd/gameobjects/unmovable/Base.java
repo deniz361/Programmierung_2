@@ -19,9 +19,9 @@ public class Base extends GameObject {
         super(gameView, gamePlayManager);
         position.x = 700;
         position.y = 350;
-        blocksize = 2;
-        width = 59 * blocksize;
-        height = 46 * blocksize;
+        size = 2;
+        width = 59 * size;
+        height = 46 * size;
     }
 
 
@@ -30,6 +30,6 @@ public class Base extends GameObject {
      */
     @Override
     public void addToCanvas() {
-        gameView.addImageToCanvas("Base - Choplifter.png",position.x, position.y, blocksize,rotation);
+        gameView.addImageToCanvas("Base - Choplifter.png",position.x, position.y, size,rotation);
     }
 }

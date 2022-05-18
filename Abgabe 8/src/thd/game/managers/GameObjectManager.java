@@ -2,6 +2,7 @@ package thd.game.managers;
 
 import thd.game.utilities.TooManyGameObjectsException;
 import thd.gameobjects.movable.*;
+import thd.gameobjects.unmovable.Background;
 import thd.gameobjects.unmovable.Base;
 import thd.gameobjects.unmovable.Cloud;
 import thd.gameobjects.unmovable.LandingPlace;
@@ -26,7 +27,7 @@ public class GameObjectManager {
         gameObjects = new LinkedList<>();
         backgroundObjects = new LinkedList<>();
 
-
+        backgroundObjects.add(new Background(gameView, gamePlayManager));
         backgroundObjects.add(new Cloud(gameView, gamePlayManager));
         backgroundObjects.add(new LandingPlace(gameView,gamePlayManager));
         backgroundObjects.add(new Base(gameView, gamePlayManager));

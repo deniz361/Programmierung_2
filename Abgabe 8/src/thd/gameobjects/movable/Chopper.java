@@ -54,7 +54,7 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         position.y = GameView.HEIGHT / 2.0;
         speedInPixel = 2;
         rotation = 0;
-        size = 0;
+        size = 1.5;
         health = 100.0;
         gas = 100.0;
         imageFile = "Chopper_links.png";
@@ -66,9 +66,8 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         shotsPerSecond = 3;
 
         //hit box
-        blocksize = 1.5;
-        height = 21 * blocksize;
-        width = 47.5 * blocksize;
+        height = 21 * size;
+        width = 47.5 * size;
 
         hitBoxOffsetX = 7;
         hitBoxOffsetY = 4;
@@ -86,13 +85,8 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * aufgerufen.
      */
     public void left() {
-        /*
-        if (position.x < - 6) {
-            position.right();
-        } else {
-            position.left();
-        }
-         */
+
+
         if (position.x > GameView.WIDTH / 2d - 350) {
             position.left(speedInPixel);
         } else {
@@ -104,7 +98,10 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * Siehe left().
      */
     public void right() {
+        if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x < 630 && position.x == 820) {
 
+            return;
+        }
         if (position.x < GameView.WIDTH - 70 - width) {
             position.right(speedInPixel);
         } else {
@@ -124,8 +121,6 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * Siehe left().
      */
     public void up() {
-
-
         if (position.y < -5) {
             position.down();
         } else {
@@ -210,7 +205,7 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
     public void addToCanvas() {
         gameView.addTextToCanvas("Airspeed: " + speedInPixel, 0, 0, 18, Color.WHITE, 0);
 
-        gameView.addImageToCanvas(imageFile, position.x, position.y, blocksize, 0);
+        gameView.addImageToCanvas(imageFile, position.x, position.y, size, 0);
     }
 
 

@@ -36,7 +36,6 @@ public class Jet extends CollidableGameObject implements AutoMovable {
     private Position bezierPoint2;
     private Position bezierPoint3;
     private int counter;
-    private double blocksize;
 
 
     /** Instantiates a new Jet.
@@ -72,9 +71,9 @@ public class Jet extends CollidableGameObject implements AutoMovable {
                 "LLLLLLLLLLLLLLRRRRRRRRLLLL\n"
                 + leerzeichen7 + "LLLLLLLL";
 
-        blocksize = 2;
-        height = 11 * blocksize;
-        width = 31 * blocksize;
+        size = 2;
+        height = 11 * size;
+        width = 31 * size;
         //Bezier
         p1 = new Position(100, 300);
         p2 = new Position(400, 400);
@@ -113,7 +112,7 @@ public class Jet extends CollidableGameObject implements AutoMovable {
     /** Adds the jet to the canvas. */
     @Override
     public void addToCanvas() {
-        gameView.addBlockImageToCanvas(jet, position.x, position.y, blocksize, 0);
+        gameView.addBlockImageToCanvas(jet, position.x, position.y, size, 0);
 
         /*
         gameView.addOvalToCanvas(bezierPoint1.x, bezierPoint1.y, 10, 10, 2, false, Color.GREEN);

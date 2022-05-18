@@ -42,9 +42,9 @@ public class Tank extends CollidableGameObject implements AutoMovable {
     public Tank(GameView gameView, GamePlayManager gamePlayManager) {
         super(gameView, gamePlayManager);
         random = new Random();
-        blockSize = 3;
-        width = 13 * blockSize;
-        height = 7 * blockSize;
+        size = 3;
+        width = 13 * size;
+        height = 7 * size;
         xStart = random.nextInt(100, 851);
         yStart = GameView.HEIGHT + height + 15;  //gameview height ist 540
         yGoal = random.nextDouble(350, 450);
@@ -85,9 +85,9 @@ public class Tank extends CollidableGameObject implements AutoMovable {
     @Override
     public void addToCanvas() {
         if (flyFromLeftToRight) {
-            gameView.addBlockImageToCanvas(tankRight, position.x, position.y, blockSize, 0);
+            gameView.addBlockImageToCanvas(tankRight, position.x, position.y, size, 0);
         } else {
-            gameView.addBlockImageToCanvas(tankLeft, position.x, position.y, blockSize, 0);
+            gameView.addBlockImageToCanvas(tankLeft, position.x, position.y, size, 0);
         }
         //gameView.addImageToCanvas("tank_left.png", position.x,position.y,0.03,0);
     }
