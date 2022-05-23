@@ -1,6 +1,9 @@
 package thd.game.managers;
 
 import thd.gameobjects.base.GameObject;
+import thd.gameobjects.base.Position;
+import thd.gameobjects.movable.Chopper;
+import thd.gameobjects.movable.Tank;
 import thd.gameview.GameView;
 
 import java.util.ArrayList;
@@ -13,18 +16,16 @@ public class GamePlayManager {
     private final GameView gameView;
     private GameObjectManager gameObjectManager;
     private final ArrayList<GameObject> createdTanks;
-    private final Random random;
 
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
         createdTanks = new ArrayList<>(100);
-        random = new Random();
     }
 
 
     /** Steuert den Spielverlauf.*/
     void updateGamePlay() {
-        //spawnAndDestroy();
+        spawnTanks();
     }
 
 
@@ -57,24 +58,27 @@ public class GamePlayManager {
         gameObjectManager.moveWorld(-pixels, 0);
     }
 
-/*
-    private void spawnAndDestroy() {
+
+
+    private void spawnTanks() {
         if (!gameView.timerIsActive("spawn", this)) {
-            gameView.activateTimer("spawn", this, 1000);
+            gameView.activateTimer("spawn", this, 10000);
             GameObject o = new Tank(gameView,this);
             createdTanks.add(o);
             spawn(o);
         }
-
-        if (!gameView.timerIsActive("destroy", this)) {
-            gameView.activateTimer("destroy", this, 1500);
-            GameObject o = createdTanks.get(random.nextInt(createdTanks.size()));
-            createdTanks.remove(o);
-            destroy(o);
-        }
     }
 
- */
+    public void chopperHasBeenHit() {
+        Chopper chopper = (Chopper) gameObjectManager.getGameObjects().get(0);
+        chopper.decreaseHealth();
+    }
+
+    public Position getPositonChopper() {
+        Chopper chopper = (Chopper) gameObjectManager.getGameObjects().get(0);
+        return chopper.getPosition();
+    }
+
 
     /** Um den GameObjectManager als Instanzvariable hinzuzufügen.
      * @param gameObjectManager der GameObjectManager

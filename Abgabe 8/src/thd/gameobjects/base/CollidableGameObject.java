@@ -35,7 +35,7 @@ public abstract class CollidableGameObject extends GameObject {
         hitBox.width = (int) hitBoxWidth;
         hitBox.height = (int) hitBoxHeight;
         // Nur vorübergehend: Die Hitbox wird angezeigt. Bitte diese Zeile nach der Abgabe auskommentieren/löschen.
-        gameView.addRectangleToCanvas(hitBox.x, hitBox.y, hitBox.width, hitBox.height, 1, false, Color.RED);
+        // gameView.addRectangleToCanvas(hitBox.x, hitBox.y, hitBox.width, hitBox.height, 1, false, Color.RED);
     }
 
 

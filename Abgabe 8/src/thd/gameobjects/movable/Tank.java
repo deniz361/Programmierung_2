@@ -3,8 +3,10 @@ package thd.gameobjects.movable;
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.AutoMovable;
 import thd.gameobjects.base.CollidableGameObject;
+import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -16,12 +18,17 @@ public class Tank extends CollidableGameObject implements AutoMovable {
 
     private final String tankLeft;
     private final String tankRight;
-    private double blockSize;
     private final Random random;
     private final double yStart;
     private final double yGoal;
     private final double xStart;
     private boolean flyFromLeftToRight;
+    public boolean doNotDisturb;
+
+
+    // shoot
+    private double shotsPerSecond;
+    ArrayList<GameObject> createdBullets;
 
     // Hit boxen
     /*
@@ -47,9 +54,10 @@ public class Tank extends CollidableGameObject implements AutoMovable {
         height = 7 * size;
         xStart = random.nextInt(100, 851);
         yStart = GameView.HEIGHT + height + 15;  //gameview height ist 540
-        yGoal = random.nextDouble(350, 450);
+        yGoal = random.nextDouble(400, 500);
         position.x = xStart;
         position.y = yStart;
+        doNotDisturb = true;
         tankLeft =
                 "     oOoOO\n" +
                         "LLLLLOOooOO\n" +
@@ -76,6 +84,10 @@ public class Tank extends CollidableGameObject implements AutoMovable {
         hitBoxOffsetY = 0;
         hitBoxHeight = height;
         hitBoxWidth = width;
+
+        //shoot
+        shotsPerSecond = 1;
+        createdBullets = new ArrayList<>();
 
     }
 
@@ -107,6 +119,7 @@ public class Tank extends CollidableGameObject implements AutoMovable {
             goIntoScene();
             speedInPixel = 0.25;
         } else {
+            doNotDisturb = false;
             speedInPixel = 0.5;
             if ((position.x + width) > GameView.WIDTH) {  //gameview width is 960
                 flyFromLeftToRight = false;
@@ -117,8 +130,10 @@ public class Tank extends CollidableGameObject implements AutoMovable {
 
             if (flyFromLeftToRight) {
                 position.right(speedInPixel);
+                shoot();
             } else {
                 position.left(speedInPixel);
+                shoot();
             }
         }
 
@@ -127,6 +142,7 @@ public class Tank extends CollidableGameObject implements AutoMovable {
 
 
     private void goIntoScene() {
+        doNotDisturb = true;
         if (xStart > 475) {
             leftCurve();
             flyFromLeftToRight = false;
@@ -148,6 +164,28 @@ public class Tank extends CollidableGameObject implements AutoMovable {
 
     private void parabel() {
         position.y = -0.005 * Math.pow(position.x - xStart, 2) + yStart;
+    }
+
+    public void shoot() {
+        if (!gameView.timerIsActive("shootTank", this)) {
+            gameView.activateTimer("shootTank", this, (long) (1000 / shotsPerSecond));
+            GameObject o = new BulletEnemy(gameView, gamePlayManager, this.position.x, this.position.y);
+            createdBullets.add(o);
+            gamePlayManager.spawn(o);
+
+            if (flyFromLeftToRight) {
+                o.changeDirectionTo("right");
+
+            } else {
+                o.changeDirectionTo("left");
+            }
+        }
+
+        for (GameObject o : createdBullets) {
+            if (o.outOfGame()) {
+                gamePlayManager.destroy(o);
+            }
+        }
     }
 
     /**

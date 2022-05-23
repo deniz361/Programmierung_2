@@ -20,15 +20,16 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
 
     private final GameObjectManager gameObjectManager;
     private boolean right;
-    private final ArrayList<GameObject> createdBullets;
+    private ArrayList<GameObject> createdBullets;
     private String imageFile;
     private final String emptyImage;
     private final String imageLeft;
+    private boolean chopperMovesLeft;
+    private boolean chopperMovesRight;
     private final String imageRight;
-    private double shotsPerSecond;
+    private final double shotsPerSecond;
     private double health;
     private double gas;
-    private double blocksize;
 
 
     private enum Status {STANDARD, DAMAGED, EXPLODING, EXPLODED}
@@ -60,7 +61,9 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         imageFile = "Chopper_links.png";
         emptyImage = "empty.png";
         imageLeft = "Chopper_links.png";
+        chopperMovesLeft = false;
         imageRight = "Chopper_rechts.png";
+        chopperMovesRight = false;
         createdBullets = new ArrayList<>(100);
         right = false;
         shotsPerSecond = 3;
@@ -76,6 +79,9 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
 
         status = Status.STANDARD;
         exploded = false;
+
+        //health
+        health = 3;
     }
 
 
@@ -85,9 +91,14 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * aufgerufen.
      */
     public void left() {
-
-
+        if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x > 3300 && position.x <= 132.0) {
+            return;
+        }
         if (position.x > GameView.WIDTH / 2d - 350) {
+            if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
+                gameView.activateTimer("faster", this, 200);
+                faster();
+            }
             position.left(speedInPixel);
         } else {
             gamePlayManager.moveWorldToRight(speedInPixel);
@@ -98,11 +109,14 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * Siehe left().
      */
     public void right() {
-        if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x < 630 && position.x == 820) {
-
+        if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x < 630 && position.x > 810) {
             return;
         }
         if (position.x < GameView.WIDTH - 70 - width) {
+            if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
+                gameView.activateTimer("faster", this, 200);
+                faster();
+            }
             position.right(speedInPixel);
         } else {
             gamePlayManager.moveWorldToLeft(speedInPixel);
@@ -124,7 +138,11 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         if (position.y < -5) {
             position.down();
         } else {
-            position.y -= speedInPixel;
+            if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
+                gameView.activateTimer("faster", this, 200);
+                faster();
+            }
+            position.up(speedInPixel);
         }
     }
 
@@ -132,13 +150,15 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * Siehe left().
      */
     public void down() {
-
-
         if (position.y >= 510) {
             imageFile = emptyImage;
             status = Status.EXPLODED;
         } else {
-            position.y += speedInPixel;
+            if (!gameView.timerIsActive("slower", this) && speedInPixel > 1) {
+                gameView.activateTimer("slower", this, 200);
+                slower();
+            }
+            position.down(speedInPixel);
         }
     }
 
@@ -157,6 +177,12 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
 
             } else {
                 o.changeDirectionTo("left");
+            }
+        }
+
+        for (GameObject o : createdBullets) {
+            if (o.outOfGame()) {
+                gamePlayManager.destroy(o);
             }
         }
     }
@@ -196,6 +222,10 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
             hitBoxOffsetX = 7;
         }
     }
+    /** When the chopper gets hit by an enemy bullet his health decreases by 1*/
+    public void decreaseHealth() {
+        health -= 1;
+    }
 
 
     /**
@@ -208,15 +238,15 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         gameView.addImageToCanvas(imageFile, position.x, position.y, size, 0);
     }
 
-
     /**
-     * updated the Position.
+     * updates the position.
      */
     @Override
     public void updatePosition() {
 
-
     }
+
+
 
     @Override
     public void updateStatus() {
@@ -237,11 +267,20 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
     }
 
     /**
-     * If a game object is collided with something, it is able to react to the collision.
+     * If a game object collides with something, it is able to react to the collision.
      *
      * @param other The other GameObject that is involved in the collision.
      */
     @Override
     public void reactToCollision(CollidableGameObject other) {
+    }
+
+
+    /**
+     * For the bullets from the enemy.
+     * @return returns the center of the Position
+     */
+    public double getCenter() {
+        return 0.0;
     }
 }

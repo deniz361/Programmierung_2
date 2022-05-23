@@ -14,6 +14,7 @@ public abstract class GameObject {
     protected double rotation;
     protected double width;
     protected double height;
+    protected double gameWidth;
 
     /**
      * Mindestanforderung, das jedes GameObject haben muss.
@@ -25,6 +26,7 @@ public abstract class GameObject {
         this.gameView = gameView;
         position = new Position();
         this.gamePlayManager = gamePlayManager;
+        gameWidth = (1840 * 2) - 100;    //größe des Hintergrunds ist 1840, der Hintergrund ist 2-mal Nebeneinander. -100, damit er nicht komplett zum Rand geht
     }
 
 
@@ -36,6 +38,14 @@ public abstract class GameObject {
     public void worldHasMoved(double shiftX, double shiftY) {
         position.x -= shiftX;
         position.y -= shiftY;
+    }
+
+    /**
+     * Um herauszufinden, ob ein GameObject noch im Spielfenster ist.
+     * @return gibt "true" zurück, wenn das GameObject nicht mehr im Spiel ist
+     */
+    public boolean outOfGame() {
+        return position.x > GameView.WIDTH || position.x < 0 || position.y < 0 || position.y > GameView.HEIGHT;
     }
 
 

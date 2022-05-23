@@ -67,7 +67,7 @@ public class Position implements Cloneable, Comparable<Position> {
     /** Verschiebt das Objekt nach oben.
      * @param range Um wie viel das Objekt nach oben verschoben werden soll*/
     public void up(double range) {
-        y += range;
+        y -= range;
     }
 
     /** Verschiebt das Objekt nach unten.

@@ -31,9 +31,10 @@ public class GameObjectManager {
         backgroundObjects.add(new Cloud(gameView, gamePlayManager));
         backgroundObjects.add(new LandingPlace(gameView,gamePlayManager));
         backgroundObjects.add(new Base(gameView, gamePlayManager));
+        gameObjects.add(new Chopper(gameView, gamePlayManager, this));
         gameObjects.add(new Jet(gameView, gamePlayManager));
         gameObjects.add(new Tank(gameView, gamePlayManager));
-        gameObjects.add(new Chopper(gameView, gamePlayManager, this));}
+        }
 
     void updateGameObjects() {
         for (GameObject backgroundObject : backgroundObjects) {
@@ -94,6 +95,15 @@ public class GameObjectManager {
     void moveWorld(double shiftX, double shiftY) {
         for (GameObject background : backgroundObjects) {
             background.worldHasMoved(shiftX, shiftY);
+        }
+        for (GameObject foreground : gameObjects) {
+            if (!(foreground instanceof Chopper)) {
+                if (foreground instanceof Tank) {
+                    if (!((Tank) foreground).doNotDisturb) {
+                        foreground.worldHasMoved(shiftX,shiftY);
+                    }
+                }
+            }
         }
     }
 

@@ -12,7 +12,7 @@ public class LandingPlace extends GameObject {
     public boolean landed;
 
     /**
-     * Mindestanforderung, ddie jedes GameObject haben muss.
+     * Mindestanforderung, die jedes GameObject haben muss.
      * @param gameView        to interact with game view.
      * @param gamePlayManager to control the game flow.
      */
