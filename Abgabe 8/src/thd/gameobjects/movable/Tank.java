@@ -119,6 +119,7 @@ public class Tank extends CollidableGameObject implements AutoMovable {
             goIntoScene();
             speedInPixel = 0.25;
         } else {
+            System.out.println(getPosition());
             doNotDisturb = false;
             speedInPixel = 0.5;
             if ((position.x + width) > GameView.WIDTH) {  //gameview width is 960

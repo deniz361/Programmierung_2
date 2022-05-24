@@ -25,7 +25,7 @@ public class GamePlayManager {
 
     /** Steuert den Spielverlauf.*/
     void updateGamePlay() {
-        spawnTanks();
+        //spawnTanks();
     }
 
 

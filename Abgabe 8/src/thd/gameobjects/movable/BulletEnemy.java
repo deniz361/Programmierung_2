@@ -36,7 +36,7 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
         flyFromLeftToRight = false;
 
 
-        //Operation AutoAim
+        //AutoAim
         positionChopperX = gamePlayManager.getPositonChopper().x;
         positionChopperY = gamePlayManager.getPositonChopper().y;
     }
@@ -73,6 +73,8 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
     }
 
 
+
+
     /**
      * updates the position.
      */
@@ -86,9 +88,6 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
             position.up(speedInPixel);
         }
     }
-
-    //Operation autoaim
-
 
 
 }
