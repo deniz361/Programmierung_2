@@ -20,8 +20,8 @@ public class GameObjectManager {
     private final ArrayList<GameObject> toAdd;
     private final ArrayList<GameObject> toRemove;
 
-    protected Chopper chopper;
-    protected Background background;
+    Chopper chopper;
+    Background background;
 
     protected GameObjectManager(GameView gameView, GamePlayManager gamePlayManager) {
         toAdd = new ArrayList<>(120);
@@ -98,8 +98,8 @@ public class GameObjectManager {
      * @param shiftY shift in y
      */
     void moveWorld(double shiftX, double shiftY) {
-        for (GameObject background : backgroundObjects) {
-            background.worldHasMoved(shiftX, shiftY);
+        for (GameObject o : backgroundObjects) {
+            o.worldHasMoved(shiftX, shiftY);
         }
         for (GameObject foreground : gameObjects) {
             if (!(foreground instanceof Chopper)) {

@@ -5,11 +5,11 @@ import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 
-/** The landing place for the Chopper */
+/** The landing place for the Chopper. */
 public class LandingPlace extends GameObject {
 
-    /** Wenn der Chopper auf dem Landeplatz landet, steigen die Passagiere aus */
-    public boolean landed;
+    /** Wenn der Chopper auf dem Landeplatz landet, steigen die Passagiere aus. */
+    private boolean landed;
 
     /**
      * Mindestanforderung, die jedes GameObject haben muss.

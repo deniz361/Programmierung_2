@@ -4,6 +4,8 @@ import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
+
+/** The Background. */
 public class Background extends GameObject {
 
     private String backgroundImage;
@@ -32,8 +34,9 @@ public class Background extends GameObject {
     }
 
 
-    /** Changes the background image. */
-    public void setBackgroundImage(String image) {
-        this.backgroundImage = image;
+    /** Changes the background image.
+     * @param backgroundImage the new background image */
+    public void setBackgroundImage(String backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
 }

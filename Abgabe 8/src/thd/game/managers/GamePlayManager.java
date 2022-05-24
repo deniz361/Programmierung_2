@@ -21,8 +21,8 @@ public class GamePlayManager {
     private final GameView gameView;
     private GameObjectManager gameObjectManager;
     private final ArrayList<GameObject> createdTanks;
-    final LevelManager levelManager;
-    Level currentLevel;
+    private final LevelManager levelManager;
+    private Level currentLevel;
 
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
@@ -36,15 +36,21 @@ public class GamePlayManager {
      * Steuert den Spielverlauf.
      */
     void updateGamePlay() {
+
+        /*
         if (!gameView.timerIsActive("level", this)) {
             gameView.activateTimer("level", this, 2000);
             currentLevel = levelManager.nextLevel();
+            if (levelManager.levels.size() - 1 < levelManager.currentLevel) {
+                levelManager.resetLevelCounter();
+            }
             setGameObjectManager(gameObjectManager);
-            //spawnTanks();
         }
+         */
+        spawnTanks();
     }
 
-    void initializeLevel() {
+    private void initializeLevel() {
         for (GameObject o : gameObjectManager.getGameObjects()) {
             if (!(o instanceof Chopper)) {
                 destroy(o);
@@ -52,13 +58,14 @@ public class GamePlayManager {
         }
 
         if (currentLevel instanceof Level1) {
-            gameObjectManager.chopper.resetPosition();
+            gameObjectManager.chopper.reset();
             gameObjectManager.background.setBackgroundImage("background.png");
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
-        } if (currentLevel instanceof Level2) {
+        }
+        if (currentLevel instanceof Level2) {
 
-            gameObjectManager.chopper.resetPosition();
+            gameObjectManager.chopper.reset();
             gameObjectManager.background.setBackgroundImage("background_level2.png");
 
 
@@ -68,7 +75,6 @@ public class GamePlayManager {
 
 
     }
-
 
 
     /**
@@ -118,12 +124,16 @@ public class GamePlayManager {
         }
     }
 
+
+    /** Was passieren soll, wenn der Chopper von einer Kugel getroffen wird. */
     public void chopperHasBeenHit() {
         Chopper chopper = (Chopper) gameObjectManager.getGameObjects().get(0);
         chopper.decreaseHealth();
     }
 
-    public Position getPositonChopper() {
+    /** Gibt die Position des Choppers zurück, wichtig, um zu berechnen, wo die Gegner hin schießen müssen.
+     * @return gibt die Position des Choppers zurück. */
+    public Position positonChopper() {
         Chopper chopper = (Chopper) gameObjectManager.getGameObjects().get(0);
         return chopper.getPosition();
     }

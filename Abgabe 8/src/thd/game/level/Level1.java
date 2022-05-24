@@ -1,9 +1,14 @@
 package thd.game.level;
 
+/** Level 1. */
 public class Level1 extends Level {
 
-    Difficulty difficulty;
+    private Difficulty difficulty;
 
+    /**
+     * Level 1.
+     * @param difficulty easy, standard oder hard
+     */
     public Level1(Difficulty difficulty) {
         super(difficulty);
         this.difficulty = difficulty;
@@ -16,17 +21,27 @@ public class Level1 extends Level {
 
     private void numberOfEnemies() {
         switch (difficulty) {
-            case EASY -> numberOfEnemies = 10;
-            case STANDARD -> numberOfEnemies = 20;
-            case HARD -> numberOfEnemies = 30;
+            case EASY: numberOfEnemies = 10;
+                break;
+            case STANDARD: numberOfEnemies = 20;
+                break;
+            case HARD: numberOfEnemies = 30;
+                break;
+            default:
+
         }
     }
 
     private void shotsPerSecond() {
         switch (difficulty) {
-            case EASY -> shotsPerSecond = 1;
-            case STANDARD -> shotsPerSecond = 1.2;
-            case HARD -> shotsPerSecond = 1.5;
+            case EASY: shotsPerSecond = 1;
+                break;
+            case STANDARD: shotsPerSecond = 1.2;
+                break;
+            case HARD: shotsPerSecond = 1.5;
+                break;
+            default:
+
         }
     }
 }

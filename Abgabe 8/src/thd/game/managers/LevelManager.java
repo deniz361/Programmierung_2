@@ -1,22 +1,24 @@
 package thd.game.managers;
 
 import thd.game.level.Level;
-import thd.game.level.Level.*;
 import thd.game.level.Level1;
 import thd.game.level.Level2;
-import thd.game.utilities.NoMoreLevelAvailableException;
 
 import java.util.LinkedList;
 
 
 /**
- * Manages the different Levels
+ * Manages the different Levels.
  */
 public class LevelManager {
-    protected final LinkedList<Level> levels;
-    protected int currentLevel;
+    LinkedList<Level> levels;
 
-    LevelManager(Difficulty difficulty) {
+    int currentLevel;
+
+    /** Der Konstruktor.
+     * @param difficulty Der Schwierigkeitsgrat, der das Spiel haben soll
+     */
+    public LevelManager(Level.Difficulty difficulty) {
         levels = new LinkedList<>();
         levels.add(new Level1(difficulty));
         levels.add(new Level2(difficulty));
@@ -26,13 +28,13 @@ public class LevelManager {
 
 
     /**
-     * Checks, if there is another level
+     * Checks, if there is another level.
+     * @return gibt true zurück, wenn es ein weiteres Level gibt. Gibt false zurück,
+     * wenn es kein neues Level gibt
      */
     boolean hasNextLevel() {
-        if (levels.size() - 1 < currentLevel) {
-            resetLevelCounter();
-        }
-        return true;
+        return levels.size() > currentLevel;
+
 
     }
 
@@ -41,7 +43,7 @@ public class LevelManager {
             currentLevel++;
             return levels.get(currentLevel - 1);
         } else {
-            throw new NoMoreLevelAvailableException("There are no more Levels");
+            throw new NoMoreLevelsAvailableException("There are no more Levels");
         }
     }
 

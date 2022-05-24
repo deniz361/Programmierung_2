@@ -23,12 +23,14 @@ public class Tank extends CollidableGameObject implements AutoMovable {
     private final double yGoal;
     private final double xStart;
     private boolean flyFromLeftToRight;
+
+    /** don't move the Tank while it's driving into the scene. */
     public boolean doNotDisturb;
 
 
     // shoot
     private double shotsPerSecond;
-    ArrayList<GameObject> createdBullets;
+    private ArrayList<GameObject> createdBullets;
 
     // Hit boxen
     /*
@@ -166,7 +168,9 @@ public class Tank extends CollidableGameObject implements AutoMovable {
         position.y = -0.005 * Math.pow(position.x - xStart, 2) + yStart;
     }
 
-    public void shoot() {
+
+    /** shoots.*/
+    private void shoot() {
         if (!gameView.timerIsActive("shootTank", this)) {
             gameView.activateTimer("shootTank", this, (long) (1000 / shotsPerSecond));
             GameObject o = new BulletEnemy(gameView, gamePlayManager, this.position.x, this.position.y);

@@ -6,7 +6,6 @@ import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.AutoMovable;
 import thd.gameobjects.base.CollidableGameObject;
 import thd.gameobjects.base.GameObject;
-import thd.gameobjects.unmovable.LandingPlace;
 import thd.gameview.GameView;
 
 import java.awt.*;
@@ -223,12 +222,16 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
             hitBoxOffsetX = 7;
         }
     }
-    /** When the chopper gets hit by an enemy bullet his health decreases by 1*/
+    /** When the chopper gets hit by an enemy bullet his health decreases by 1. */
     public void decreaseHealth() {
         health -= 1;
     }
 
-    public void resetPosition() {
+
+    /**
+     * setzt alles Wichtige vom Chopper zurück.
+     */
+    public void reset() {
         position.x = 620;
         position.y = 400;
         status = Status.STANDARD;
@@ -283,10 +286,4 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
     @Override
     public void reactToCollision(CollidableGameObject other) {
     }
-
-
-    /**
-     * For the bullets from the enemy.
-     * @return returns the center of the Position
-     */
 }

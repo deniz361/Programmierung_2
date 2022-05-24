@@ -14,7 +14,7 @@ public abstract class GameObject {
     protected double rotation;
     protected double width;
     protected double height;
-    protected double gameWidth;
+    private double gameWidth;
 
     /**
      * Mindestanforderung, das jedes GameObject haben muss.

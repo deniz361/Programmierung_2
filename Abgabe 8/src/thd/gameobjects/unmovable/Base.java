@@ -10,11 +10,12 @@ import thd.gameview.GameView;
  */
 public class Base extends GameObject {
 
-    private double blocksize;
-
-    /** Instantiates the clouds.
-     * @param gameView GameView for GUI uses
-     * @param gamePlayManager Gameplay flow managing */
+    /**
+     * Instantiates the clouds.
+     *
+     * @param gameView        GameView for GUI uses
+     * @param gamePlayManager Gameplay flow managing
+     */
     public Base(GameView gameView, GamePlayManager gamePlayManager) {
         super(gameView, gamePlayManager);
         position.x = 700;
@@ -30,6 +31,6 @@ public class Base extends GameObject {
      */
     @Override
     public void addToCanvas() {
-        gameView.addImageToCanvas("Base - Choplifter.png",position.x, position.y, size,rotation);
+        gameView.addImageToCanvas("Base - Choplifter.png", position.x, position.y, size, rotation);
     }
 }

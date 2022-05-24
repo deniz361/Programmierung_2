@@ -4,11 +4,14 @@ import thd.game.managers.GamePlayManager;
 import thd.game.utilities.WrongInput;
 import thd.gameobjects.base.AutoMovable;
 import thd.gameobjects.base.CollidableGameObject;
-import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 import java.awt.*;
 
+
+/** Die Kugeln von den Gegnern. Die Kugeln vom Gegner und von Chopper müssen getrennt sein, weil die Bullets vom
+ * Chopper beim Abschießen die Hit-box vom Chopper berühren.
+ */
 public class BulletEnemy extends CollidableGameObject implements AutoMovable {
 
 
@@ -21,6 +24,8 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
      *
      * @param gameView        to interact with game view.
      * @param gamePlayManager to control the game flow.
+     * @param spawnPositionX wo die Kugel spawnen soll.
+     * @param spawnPositionY wo die Kugel spawnen soll.
      */
     public BulletEnemy(GameView gameView, GamePlayManager gamePlayManager, double spawnPositionX, double spawnPositionY) {
         super(gameView, gamePlayManager);
@@ -37,8 +42,8 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
 
 
         //AutoAim
-        positionChopperX = gamePlayManager.getPositonChopper().x;
-        positionChopperY = gamePlayManager.getPositonChopper().y;
+        positionChopperX = gamePlayManager.positonChopper().x;
+        positionChopperY = gamePlayManager.positonChopper().y;
     }
 
     /**
