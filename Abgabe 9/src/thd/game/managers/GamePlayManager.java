@@ -117,11 +117,12 @@ public class GamePlayManager {
 
     private void spawnTanks() {
         if (!gameView.alarmIsSet("spawn", this)) {
+            gameView.setAlarm("spawn", this, 5000);
+        } else if (gameView.alarm("spawn", this)) {
             GameObject o = new Tank(gameView, this);
             createdTanks.add(o);
             spawn(o);
         }
-        gameView.activateTimer("spawn", this, 10000);
     }
 
 
