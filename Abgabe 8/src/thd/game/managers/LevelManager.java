@@ -30,7 +30,7 @@ public class LevelManager {
      */
     boolean hasNextLevel() {
         if (levels.size() - 1 < currentLevel) {
-            currentLevel = 0;
+            resetLevelCounter();
         }
         return true;
 
@@ -43,6 +43,10 @@ public class LevelManager {
         } else {
             throw new NoMoreLevelAvailableException("There are no more Levels");
         }
+    }
+
+    void resetLevelCounter() {
+        currentLevel = 0;
     }
 
 

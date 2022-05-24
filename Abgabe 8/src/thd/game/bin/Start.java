@@ -7,8 +7,4 @@ class Start {
         var gameLoopManager = new GameLoopManager();
         gameLoopManager.startGame();
     }
-
-    /*
-    https://git.bischofmartin.de/school
-     */
 }

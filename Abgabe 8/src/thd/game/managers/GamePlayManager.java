@@ -40,7 +40,6 @@ public class GamePlayManager {
             gameView.activateTimer("level", this, 2000);
             currentLevel = levelManager.nextLevel();
             setGameObjectManager(gameObjectManager);
-            System.out.println(currentLevel.getClass());
             //spawnTanks();
         }
     }
