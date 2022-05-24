@@ -51,8 +51,8 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
     public Chopper(GameView gameView, GamePlayManager gamePlayManager, GameObjectManager gameObjectManager) {
         super(gameView, gamePlayManager);
         this.gameObjectManager = gameObjectManager;
-        position.x = GameView.WIDTH / 2.0;
-        position.y = GameView.HEIGHT / 2.0;
+        position.x = 620;
+        position.y = 400;
         speedInPixel = 2;
         rotation = 0;
         size = 1.5;
@@ -71,6 +71,7 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         //hit box
         height = 21 * size;
         width = 47.5 * size;
+
 
         hitBoxOffsetX = 7;
         hitBoxOffsetY = 4;
@@ -227,6 +228,14 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         health -= 1;
     }
 
+    public void resetPosition() {
+        position.x = 620;
+        position.y = 400;
+        status = Status.STANDARD;
+        imageFile = "Chopper_links.png";
+        exploded = false;
+    }
+
 
     /**
      * Fügt den Chopper zu GameView hinzu.
@@ -280,7 +289,4 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * For the bullets from the enemy.
      * @return returns the center of the Position
      */
-    public double getCenter() {
-        return 0.0;
-    }
 }

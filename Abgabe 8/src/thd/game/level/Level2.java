@@ -1,15 +1,14 @@
 package thd.game.level;
 
-public class Level1 extends Level {
-
+public class Level2 extends Level {
     Difficulty difficulty;
 
-    public Level1(Difficulty difficulty) {
+    public Level2(Difficulty difficulty) {
         super(difficulty);
         this.difficulty = difficulty;
         name = "Level 1";
         number = 0;
-        backgroundImage = "background.png";
+        backgroundImage = "background_level2.png";
         numberOfEnemies();
         shotsPerSecond();
     }

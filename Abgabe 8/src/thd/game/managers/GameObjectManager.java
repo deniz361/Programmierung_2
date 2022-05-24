@@ -20,6 +20,8 @@ public class GameObjectManager {
     private final ArrayList<GameObject> toAdd;
     private final ArrayList<GameObject> toRemove;
 
+    protected Chopper chopper;
+    protected Background background;
 
     protected GameObjectManager(GameView gameView, GamePlayManager gamePlayManager) {
         toAdd = new ArrayList<>(120);
@@ -27,11 +29,14 @@ public class GameObjectManager {
         gameObjects = new LinkedList<>();
         backgroundObjects = new LinkedList<>();
 
-        backgroundObjects.add(new Background(gameView, gamePlayManager));
+        chopper = new Chopper(gameView, gamePlayManager, this);
+        background = new Background(gameView, gamePlayManager);
+
+        backgroundObjects.add(background);
         backgroundObjects.add(new Cloud(gameView, gamePlayManager));
         backgroundObjects.add(new LandingPlace(gameView,gamePlayManager));
         backgroundObjects.add(new Base(gameView, gamePlayManager));
-        gameObjects.add(new Chopper(gameView, gamePlayManager, this));
+        gameObjects.add(chopper);
         gameObjects.add(new Jet(gameView, gamePlayManager));
         gameObjects.add(new Tank(gameView, gamePlayManager));
         }

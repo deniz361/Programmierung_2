@@ -5,6 +5,10 @@ import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 public class Background extends GameObject {
+
+    private String backgroundImage;
+
+
     /**
      * Mindestanforderung, die jedes GameObject haben muss.
      *
@@ -15,6 +19,7 @@ public class Background extends GameObject {
         super(gameView, gamePlayManager);
         position.x = -800;
         position.y = 0;
+        backgroundImage = "background.png";
     }
 
     /**
@@ -22,7 +27,13 @@ public class Background extends GameObject {
      */
     @Override
     public void addToCanvas() {
-        gameView.addImageToCanvas("background.png",position.x,position.y,1,0);
-        gameView.addImageToCanvas("background.png",position.x - 1840,position.y,1,0);
+        gameView.addImageToCanvas(backgroundImage, position.x, position.y, 1, 0);
+        gameView.addImageToCanvas(backgroundImage, position.x - 1840, position.y, 1, 0);
+    }
+
+
+    /** Changes the background image. */
+    public void setBackgroundImage(String image) {
+        this.backgroundImage = image;
     }
 }

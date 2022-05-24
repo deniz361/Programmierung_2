@@ -13,7 +13,7 @@ public abstract class Level {
     //Design
     protected String backgroundImage;
 
-    public enum Difficulty {EASY, STANDARD}
+    public enum Difficulty {EASY, STANDARD, HARD}
 
     Level(Difficulty difficulty) {
 
