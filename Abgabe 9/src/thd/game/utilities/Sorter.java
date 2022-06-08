@@ -14,8 +14,8 @@ class Sorter {
         ArrayList<Position> positions = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < 10; i++) {
-            double xPos = (Math.round(random.nextDouble(GameView.WIDTH) * 100)) / 100d;
-            double yPos = (Math.round(random.nextDouble(GameView.HEIGHT) * 100)) / 100d;
+            double xPos = (Math.round(random.nextInt(GameView.WIDTH) * 100)) / 100d;
+            double yPos = (Math.round(random.nextInt(GameView.HEIGHT) * 100)) / 100d;
             Position x = new Position(xPos, yPos);
             positions.add(x);
         }

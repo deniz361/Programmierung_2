@@ -35,7 +35,7 @@ public abstract class CollidableGameObject extends GameObject {
         hitBox.width = (int) hitBoxWidth;
         hitBox.height = (int) hitBoxHeight;
         // Nur vorübergehend: Die Hitbox wird angezeigt. Bitte diese Zeile nach der Abgabe auskommentieren/löschen.
-        // gameView.addRectangleToCanvas(hitBox.x, hitBox.y, hitBox.width, hitBox.height, 1, false, Color.RED);
+        gameView.addRectangleToCanvas(hitBox.x, hitBox.y, hitBox.width, hitBox.height, 1, false, Color.RED);
     }
 
 
@@ -61,14 +61,13 @@ public abstract class CollidableGameObject extends GameObject {
 
     /**
      * Verschiebung der Spielwelt.
+     *
      * @param shiftX Verschiebung in X-Richtung
-     * @param shiftY Verschiebung in Y-Richtung
      */
     @Override
-    public void worldHasMoved(double shiftX, double shiftY) {
-        super.worldHasMoved(shiftX, shiftY);
+    public void worldHasMoved(double shiftX) {
+        super.worldHasMoved(shiftX);
         hitBox.x -= shiftX;
-        hitBox.y -= shiftY;
     }
 
 }

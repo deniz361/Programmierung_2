@@ -8,6 +8,7 @@ import thd.gameobjects.base.Position;
 import thd.gameobjects.movable.Chopper;
 import thd.gameobjects.movable.Jet;
 import thd.gameobjects.movable.Tank;
+import thd.gameobjects.unmovable.House;
 import thd.gameview.GameView;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class GamePlayManager {
 
     private final GameView gameView;
+    public boolean gameOver;
     private GameObjectManager gameObjectManager;
     private final ArrayList<GameObject> createdTanks;
     private final LevelManager levelManager;
@@ -26,6 +28,7 @@ public class GamePlayManager {
 
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
+        gameOver = false;
         createdTanks = new ArrayList<>(100);
         levelManager = new LevelManager(Level.Difficulty.STANDARD);
         currentLevel = levelManager.levels.getFirst();
@@ -62,6 +65,8 @@ public class GamePlayManager {
             gameObjectManager.background.setBackgroundImage("background.png");
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
+            gameObjectManager.addGameObject(new House(gameView, this, 100, 350));
+            System.out.println(gameObjectManager.getGameObjects());
         }
         if (currentLevel instanceof Level2) {
 
@@ -102,7 +107,7 @@ public class GamePlayManager {
      * @param pixels how fast it moves
      */
     public void moveWorldToLeft(double pixels) {
-        gameObjectManager.moveWorld(pixels, 0);
+        gameObjectManager.moveWorld(pixels);
     }
 
     /**
@@ -111,7 +116,7 @@ public class GamePlayManager {
      * @param pixels how fast it moves
      */
     public void moveWorldToRight(double pixels) {
-        gameObjectManager.moveWorld(-pixels, 0);
+        gameObjectManager.moveWorld(-pixels);
     }
 
 
@@ -128,15 +133,24 @@ public class GamePlayManager {
 
     /** Was passieren soll, wenn der Chopper von einer Kugel getroffen wird. */
     public void chopperHasBeenHit() {
-        Chopper chopper = (Chopper) gameObjectManager.getGameObjects().get(0);
-        chopper.decreaseHealth();
+        for (GameObject o : gameObjectManager.getGameObjects()) {
+            if (o instanceof Chopper) {
+                Chopper chopper = (Chopper) o;
+                chopper.decreaseHealth();
+            }
+        }
+
     }
 
     /** Gibt die Position des Choppers zurück, wichtig, um zu berechnen, wo die Gegner hin schießen müssen.
      * @return gibt die Position des Choppers zurück. */
     public Position positonChopper() {
-        Chopper chopper = (Chopper) gameObjectManager.getGameObjects().get(0);
-        return chopper.getPosition();
+        for (GameObject o : gameObjectManager.getGameObjects()) {
+            if (o instanceof Chopper) {
+                return o.getPosition();
+            }
+        }
+        return null;
     }
 
 

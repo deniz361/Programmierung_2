@@ -1,6 +1,7 @@
 package thd.game.managers;
 
 import thd.game.utilities.TooManyGameObjectsException;
+import thd.gameobjects.base.GameObject;
 import thd.gameobjects.movable.Chopper;
 import thd.gameview.GameView;
 
@@ -14,7 +15,7 @@ public class GameLoopManager {
     private final GameView gameView;
     private final GameObjectManager gameObjectManager;
     private final GamePlayManager gamePlayManager;
-    private final InputManager inputManager;
+    private InputManager inputManager;
 
     /**
      * Erstellt GameView und die extras.
@@ -24,9 +25,14 @@ public class GameLoopManager {
         gamePlayManager = new GamePlayManager(gameView);
         gameObjectManager = new GameObjectManager(gameView, gamePlayManager);
         gamePlayManager.setGameObjectManager(gameObjectManager);
-        inputManager = new InputManager(gameView, (Chopper) gameObjectManager.getGameObjects().get(0));
+        for (GameObject o : gameObjectManager.getGameObjects()) {
+            if (o instanceof Chopper) {
+                inputManager = new InputManager(gameView, (Chopper) o);
+            }
+        }
+        //inputManager = new InputManager(gameView, (Chopper) gameObjectManager.getGameObjects().get(1));
         gameView.setWindowTitle("Choplifter");
-        gameView.setStatusText("Java Programmierung SS 2022");
+        gameView.setStatusText("Deniz Adigüzel - Java Programmierung SS 2022");
         gameView.setWindowIcon("choplifter icon.png");
 
 
@@ -40,7 +46,7 @@ public class GameLoopManager {
      * Startet die Spielumgebung.
      */
     public void startGame() throws TooManyGameObjectsException {
-        while (true) { // Der "Game-Loop"
+        while (!gamePlayManager.gameOver) { // Der "Game-Loop"
             gamePlayManager.updateGamePlay();
             inputManager.updateUserInputs();
             gameObjectManager.updateGameObjects();

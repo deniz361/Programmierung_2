@@ -36,8 +36,6 @@ public class GamePlayManager {
      * Steuert den Spielverlauf.
      */
     void updateGamePlay() {
-
-        /*
         if (!gameView.timerIsActive("level", this)) {
             gameView.activateTimer("level", this, 2000);
             currentLevel = levelManager.nextLevel();
@@ -46,7 +44,7 @@ public class GamePlayManager {
             }
             setGameObjectManager(gameObjectManager);
         }
-         */
+
         spawnTanks();
     }
 
@@ -125,14 +123,19 @@ public class GamePlayManager {
     }
 
 
-    /** Was passieren soll, wenn der Chopper von einer Kugel getroffen wird. */
+    /**
+     * Was passieren soll, wenn der Chopper von einer Kugel getroffen wird.
+     */
     public void chopperHasBeenHit() {
         Chopper chopper = (Chopper) gameObjectManager.getGameObjects().get(0);
         chopper.decreaseHealth();
     }
 
-    /** Gibt die Position des Choppers zurück, wichtig, um zu berechnen, wo die Gegner hin schießen müssen.
-     * @return gibt die Position des Choppers zurück. */
+    /**
+     * Gibt die Position des Choppers zurück, wichtig, um zu berechnen, wo die Gegner hin schießen müssen.
+     *
+     * @return gibt die Position des Choppers zurück.
+     */
     public Position positonChopper() {
         Chopper chopper = (Chopper) gameObjectManager.getGameObjects().get(0);
         return chopper.getPosition();

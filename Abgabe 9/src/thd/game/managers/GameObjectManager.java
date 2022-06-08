@@ -2,10 +2,7 @@ package thd.game.managers;
 
 import thd.game.utilities.TooManyGameObjectsException;
 import thd.gameobjects.movable.*;
-import thd.gameobjects.unmovable.Background;
-import thd.gameobjects.unmovable.Base;
-import thd.gameobjects.unmovable.Cloud;
-import thd.gameobjects.unmovable.LandingPlace;
+import thd.gameobjects.unmovable.*;
 import thd.gameview.GameView;
 import thd.gameobjects.base.*;
 
@@ -15,7 +12,7 @@ import java.util.LinkedList;
 /** Manages all the Game Objects. */
 public class GameObjectManager {
 
-    private final LinkedList<GameObject> gameObjects;
+    private LinkedList<GameObject> gameObjects;
     private final LinkedList<GameObject> backgroundObjects;
     private final ArrayList<GameObject> toAdd;
     private final ArrayList<GameObject> toRemove;
@@ -37,8 +34,6 @@ public class GameObjectManager {
         backgroundObjects.add(new LandingPlace(gameView,gamePlayManager));
         backgroundObjects.add(new Base(gameView, gamePlayManager));
         gameObjects.add(chopper);
-        gameObjects.add(new Jet(gameView, gamePlayManager));
-        gameObjects.add(new Tank(gameView, gamePlayManager));
         }
 
     void updateGameObjects() {
@@ -95,18 +90,17 @@ public class GameObjectManager {
     /**
      * Moves the background
      * @param shiftX shift in x
-     * @param shiftY shift in y
      */
-    void moveWorld(double shiftX, double shiftY) {
+    void moveWorld(double shiftX) {
         for (GameObject o : backgroundObjects) {
-            o.worldHasMoved(shiftX, shiftY);
+            o.worldHasMoved(shiftX);
         }
+
         for (GameObject foreground : gameObjects) {
             if (!(foreground instanceof Chopper)) {
-                if (foreground instanceof Tank) {
-                    if (!((Tank) foreground).doNotDisturb) {
-                        foreground.worldHasMoved(shiftX,shiftY);
-                    }
+                if ((foreground instanceof Tank && !((Tank) foreground).doNotDisturb) || foreground instanceof House) {
+                    foreground.worldHasMoved(shiftX);
+
                 }
             }
         }

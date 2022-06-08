@@ -32,12 +32,11 @@ public abstract class GameObject {
 
     /**
      * Verschiebung der Spielwelt.
+     *
      * @param shiftX Verschiebung in X-Richtung
-     * @param shiftY Verschiebung in Y-Richtung
      */
-    public void worldHasMoved(double shiftX, double shiftY) {
+    public void worldHasMoved(double shiftX) {
         position.x -= shiftX;
-        position.y -= shiftY;
     }
 
     /**

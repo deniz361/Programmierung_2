@@ -12,9 +12,10 @@ import java.awt.*;
 /**
  * Die Klasse zu dem Objekt Bullet.
  */
-class Bullet extends CollidableGameObject implements AutoMovable {
+public class Bullet extends CollidableGameObject implements AutoMovable {
 
     private boolean flyFromLeftToRight;
+    private Chopper chopper;
 
 
     /**
@@ -26,6 +27,7 @@ class Bullet extends CollidableGameObject implements AutoMovable {
      */
     Bullet(GameView gameView, GamePlayManager gamePlayManager, Chopper chopper) {
         super(gameView, gamePlayManager);
+        this.chopper = chopper;
         height = 2;
         width = 5;
         speedInPixel = 3;
@@ -67,9 +69,11 @@ class Bullet extends CollidableGameObject implements AutoMovable {
     @Override
     public void updatePosition() {
         if (flyFromLeftToRight) {
-            position.right(speedInPixel);
+            position.right((speedInPixel * (chopper.getRotation() / 10)));
+            position.down(speedInPixel);
         } else {
-            position.left(speedInPixel);
+            position.left(-(speedInPixel * (chopper.getRotation() / 10)));
+            position.down(speedInPixel);
         }
     }
 

@@ -3,7 +3,6 @@ package thd.gameobjects.movable;
 
 import thd.game.managers.*;
 import thd.game.managers.GamePlayManager;
-import thd.gameobjects.base.AutoMovable;
 import thd.gameobjects.base.CollidableGameObject;
 import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
@@ -14,31 +13,57 @@ import java.util.ArrayList;
 /**
  * The "main" Object, the player can control the Chopper.
  */
-public class Chopper extends CollidableGameObject implements AutoMovable {
+public class Chopper extends CollidableGameObject{
 
 
     private final GameObjectManager gameObjectManager;
-    private boolean right;
     private ArrayList<GameObject> createdBullets;
-    private String imageFile;
     private final String emptyImage;
-    private final String imageLeft;
-    private boolean chopperMovesLeft;
-    private boolean chopperMovesRight;
-    private final String imageRight;
     private final double shotsPerSecond;
+    private boolean shooting;
     private double health;
     private double gas;
 
-
-    private enum Status {STANDARD, DAMAGED, EXPLODING, EXPLODED}
-
+    //Animation
+    //private Rotation
+    private boolean movingLeft;
+    private boolean movingRight;
+    private boolean movingUp;
+    private boolean movingDown;
     private Status status;
-
     /**
      * return true if the chopper is destroyed.
      */
     public boolean exploded;
+    private BasicAnimation basicAnimation;
+
+
+    private enum Status {STANDARD, DAMAGED, EXPLODING, EXPLODED}
+
+    private enum BasicAnimation {
+        //links
+        STANDARD("Chopper_links.png"), ANIMATION1("Chopper_links animation1.png"), ANIMATION2("Chopper_links animation2.png"),
+        ANIMATION3("Chopper_links animation3.png"), ANIMATION4("Chopper_links animation4.png"), ANIMATION5("Chopper_links animation5.png"),
+        ANIMATION6("Chopper_links animation4.png"), ANIMATION7("Chopper_links animation3.png"), ANIMATION8("Chopper_links animation2.png"),
+        ANIMATION9("Chopper_links animation1.png"),
+
+        //rechts
+        STANDARD_RIGHT("Chopper_rechts.png"), ANIMATION1_RIGHT("Chopper_rechts animation1.png"),
+        ANIMATION2_RIGHT("Chopper_rechts animation2.png"), ANIMATION3_RIGHT("Chopper_rechts animation3.png"),
+        ANIMATION4_RIGHT("Chopper_rechts animation4.png"), ANIMATION5_RIGHT("Chopper_rechts animation5.png"),
+        ANIMATION6_RIGHT("Chopper_rechts animation4.png"), ANIMATION7_RIGHT("Chopper_rechts animation3.png"),
+        ANIMATION8_RIGHT("Chopper_rechts animation2.png"), ANIMATION9_RIGHT("Chopper_rechts animation1.png"),
+
+        //when the chopper hits the ground
+        EXPLODED("Chopper exploded.png");
+
+        private final String animationFile;
+
+        BasicAnimation(String animationFile) {
+            this.animationFile = animationFile;
+        }
+    }
+
 
     /**
      * Initializes the Chopper.
@@ -57,15 +82,10 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         size = 1.5;
         health = 100.0;
         gas = 100.0;
-        imageFile = "Chopper_links.png";
         emptyImage = "empty.png";
-        imageLeft = "Chopper_links.png";
-        chopperMovesLeft = false;
-        imageRight = "Chopper_rechts.png";
-        chopperMovesRight = false;
         createdBullets = new ArrayList<>(100);
-        right = false;
         shotsPerSecond = 3;
+        shooting = true;
 
         //hit box
         height = 21 * size;
@@ -77,11 +97,22 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         hitBoxHeight = height;
         hitBoxWidth = width;
 
-        status = Status.STANDARD;
-        exploded = false;
 
         //health
         health = 3;
+
+        //Animation
+        status = Status.STANDARD;
+        exploded = false;
+        // = Rotation.MOVING_LEFT;
+        movingLeft = true;
+
+        movingDown = false;
+        movingUp = false;
+        movingRight = false;
+        basicAnimation = BasicAnimation.STANDARD;
+
+
     }
 
 
@@ -91,10 +122,10 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * aufgerufen.
      */
     public void left() {
-        if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x > 3300 && position.x <= 132.0) {
+        if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x > 3300 && position.x <= 432.0) {
             return;
         }
-        if (position.x > GameView.WIDTH / 2d - 350) {
+        if (position.x > GameView.WIDTH / 2d - 50) {
             if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
                 gameView.activateTimer("faster", this, 200);
                 faster();
@@ -109,10 +140,10 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * Siehe left().
      */
     public void right() {
-        if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x < 630 && position.x > 810) {
+        if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x < 630 && position.x > 678.0) {
             return;
         }
-        if (position.x < GameView.WIDTH - 70 - width) {
+        if (position.x < GameView.WIDTH / 2d + 200) {
             if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
                 gameView.activateTimer("faster", this, 200);
                 faster();
@@ -121,14 +152,6 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         } else {
             gamePlayManager.moveWorldToLeft(speedInPixel);
         }
-        /*
-        if (position.x + width > GameView.WIDTH) {
-            position.left();
-        } else {
-            position.x += speedInPixel;
-        }
-
-         */
     }
 
     /**
@@ -144,6 +167,15 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
             }
             position.up(speedInPixel);
         }
+        if (movingLeft) {
+            if (rotation <= 20 && movingUp) {
+                rotation += 0.5;
+            }
+        } else {
+            if (rotation >= -20 && movingUp) {
+                rotation += 0.5;
+            }
+        }
     }
 
     /**
@@ -151,7 +183,6 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      */
     public void down() {
         if (position.y >= 510) {
-            imageFile = emptyImage;
             status = Status.EXPLODED;
         } else {
             if (!gameView.timerIsActive("slower", this) && speedInPixel > 1) {
@@ -166,23 +197,25 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * Schießt.
      */
     public void shoot() {
-        if (!gameView.timerIsActive("shoot", this)) {
-            gameView.activateTimer("shoot", this, (long) (1000 / shotsPerSecond));
-            GameObject o = new Bullet(gameView, gamePlayManager, this);
-            createdBullets.add(o);
-            gamePlayManager.spawn(o);
+        if (shooting) {
+            if (!gameView.timerIsActive("shoot", this)) {
+                gameView.activateTimer("shoot", this, (long) (1000 / shotsPerSecond));
+                GameObject o = new Bullet(gameView, gamePlayManager, this);
+                createdBullets.add(o);
+                gamePlayManager.spawn(o);
 
-            if (right) {
-                o.changeDirectionTo("right");
+                if (movingLeft) {
+                    o.changeDirectionTo("left");
 
-            } else {
-                o.changeDirectionTo("left");
+                } else if (movingRight) {
+                    o.changeDirectionTo("right");
+                }
             }
-        }
 
-        for (GameObject o : createdBullets) {
-            if (o.outOfGame()) {
-                gamePlayManager.destroy(o);
+            for (GameObject o : createdBullets) {
+                if (o.outOfGame()) {
+                    gamePlayManager.destroy(o);
+                }
             }
         }
     }
@@ -205,24 +238,37 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      * Der Helikopter schaut nach rechts.
      */
     public void changeDirectionToRight() {
-        if (!imageFile.equals(emptyImage)) {
-            imageFile = imageRight;
-            right = true;
-            hitBoxOffsetX = 1;
+        if (!movingRight) {
+            basicAnimation = BasicAnimation.STANDARD_RIGHT;
         }
+        if (rotation <= 20 && movingRight) {
+            rotation += 0.5;
+        }
+        movingRight = true;
+        hitBoxOffsetX = 1;
+
+
     }
 
     /**
      * Der Helikopter schaut nach links.
      */
     public void changeDirectionToLeft() {
-        if (!imageFile.equals(emptyImage)) {
-            imageFile = imageLeft;
-            right = false;
-            hitBoxOffsetX = 7;
+        if (movingRight) {
+            basicAnimation = BasicAnimation.STANDARD;
         }
+        if (rotation >= -20 && movingLeft) {
+            rotation -= 0.5;
+        }
+
+        movingRight = false;
+        hitBoxOffsetX = 7;
+
     }
-    /** When the chopper gets hit by an enemy bullet his health decreases by 1. */
+
+    /**
+     * When the chopper gets hit by an enemy bullet his health decreases by 1.
+     */
     public void decreaseHealth() {
         health -= 1;
     }
@@ -235,7 +281,7 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
         position.x = 620;
         position.y = 400;
         status = Status.STANDARD;
-        imageFile = "Chopper_links.png";
+        basicAnimation = BasicAnimation.STANDARD;
         exploded = false;
     }
 
@@ -247,35 +293,24 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
     public void addToCanvas() {
         gameView.addTextToCanvas("Airspeed: " + speedInPixel, 0, 0, 18, Color.WHITE, 0);
 
-        gameView.addImageToCanvas(imageFile, position.x, position.y, size, 0);
+        gameView.addImageToCanvas(basicAnimation.animationFile, position.x, position.y, size, rotation);
     }
 
-    /**
-     * updates the position.
-     */
-    @Override
-    public void updatePosition() {
+
+    private enum Rotation {
+        MOVING_UP, MOVING_DOWN, MOVING_LEFT, MOVING_RIGHT
+    }
+    private void adjustChopperRotation() {
 
     }
-
 
 
     @Override
     public void updateStatus() {
-        switch (status) {
-            case EXPLODED:
-                imageFile = "Chopper exploded.png";
-                exploded = true;
-                break;
-            case DAMAGED:
-                break;
-            case EXPLODING:
-                break;
-            case STANDARD:
-                break;
-            default:
+        adjustChopperRotation();
+        basicAnimation();
+        damageAnimation();
 
-        }
     }
 
     /**
@@ -285,5 +320,114 @@ public class Chopper extends CollidableGameObject implements AutoMovable {
      */
     @Override
     public void reactToCollision(CollidableGameObject other) {
+    }
+
+
+    /**
+     * Damit sich die Propeller drehen
+     * Der Alarm gibt an, wie schnell sich der Propeller dreht
+     */
+    private void basicAnimation() {
+        if (!gameView.alarmIsSet("basicAnimation", this)) {
+            gameView.setAlarm("basicAnimation", this, 100);
+        } else if (gameView.alarm("basicAnimation", this)) {
+            if (!movingRight) {
+                switch (basicAnimation) {
+                    case STANDARD:
+                        basicAnimation = BasicAnimation.ANIMATION1;
+                        break;
+                    case ANIMATION1:
+                        basicAnimation = BasicAnimation.ANIMATION2;
+                        break;
+                    case ANIMATION2:
+                        basicAnimation = BasicAnimation.ANIMATION3;
+                        break;
+                    case ANIMATION3:
+                        basicAnimation = BasicAnimation.ANIMATION4;
+                        break;
+                    case ANIMATION4:
+                        basicAnimation = BasicAnimation.ANIMATION5;
+                        break;
+                    case ANIMATION5:
+                        basicAnimation = BasicAnimation.ANIMATION6;
+                        break;
+                    case ANIMATION6:
+                        basicAnimation = BasicAnimation.ANIMATION7;
+                        break;
+                    case ANIMATION7:
+                        basicAnimation = BasicAnimation.ANIMATION8;
+                        break;
+                    case ANIMATION8:
+                        basicAnimation = BasicAnimation.ANIMATION9;
+                        break;
+                    case ANIMATION9:
+                        basicAnimation = BasicAnimation.STANDARD;
+                        break;
+                    default:
+
+                }
+            } else {
+
+                switch (basicAnimation) {
+                    case STANDARD_RIGHT:
+                        basicAnimation = BasicAnimation.ANIMATION1_RIGHT;
+                        break;
+                    case ANIMATION1_RIGHT:
+                        basicAnimation = BasicAnimation.ANIMATION2_RIGHT;
+                        break;
+                    case ANIMATION2_RIGHT:
+                        basicAnimation = BasicAnimation.ANIMATION3_RIGHT;
+                        break;
+                    case ANIMATION3_RIGHT:
+                        basicAnimation = BasicAnimation.ANIMATION4_RIGHT;
+                        break;
+                    case ANIMATION4_RIGHT:
+                        basicAnimation = BasicAnimation.ANIMATION5_RIGHT;
+                        break;
+                    case ANIMATION5_RIGHT:
+                        basicAnimation = BasicAnimation.ANIMATION6_RIGHT;
+                        break;
+                    case ANIMATION6_RIGHT:
+                        basicAnimation = BasicAnimation.ANIMATION7_RIGHT;
+                        break;
+                    case ANIMATION7_RIGHT:
+                        basicAnimation = BasicAnimation.ANIMATION8_RIGHT;
+                        break;
+                    case ANIMATION8_RIGHT:
+                        basicAnimation = BasicAnimation.ANIMATION9_RIGHT;
+                        break;
+                    case ANIMATION9_RIGHT:
+                        basicAnimation = BasicAnimation.STANDARD_RIGHT;
+                        break;
+                    default:
+
+                }
+            }
+        }
+
+    }
+
+    private void damageAnimation() {
+        switch (status) {
+            case EXPLODED:
+                basicAnimation = BasicAnimation.EXPLODED;
+                exploded = true;
+                break;
+            case DAMAGED:
+                break;
+            case EXPLODING:
+                break;
+            case STANDARD:
+                break;
+            default:
+        }
+    }
+
+    /**
+     * Damit die Klasse "Bullet" die Rotation des Choppers sehen kann.
+     * @return gibt die Rotation zurück
+     */
+    public double getRotation() {
+        return rotation;
     }
 }

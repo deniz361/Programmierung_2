@@ -27,12 +27,12 @@ class InputManager {
             if (chopper.exploded) {
                 break;
             }
+            if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
+                chopper.down();
+            }
             if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
                 chopper.left();
                 chopper.changeDirectionToLeft();
-            }
-            if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
-                chopper.down();
             }
             if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
                 chopper.right();

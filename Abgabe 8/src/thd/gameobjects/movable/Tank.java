@@ -54,9 +54,9 @@ public class Tank extends CollidableGameObject implements AutoMovable {
         size = 3;
         width = 13 * size;
         height = 7 * size;
-        xStart = random.nextInt(100, 851);
+        xStart = random.nextInt(751) + 100;
         yStart = GameView.HEIGHT + height + 15;  //gameview height ist 540
-        yGoal = random.nextDouble(400, 500);
+        yGoal = random.nextInt(100) + 400;
         position.x = xStart;
         position.y = yStart;
         doNotDisturb = true;
