@@ -128,7 +128,6 @@ public class Chopper extends CollidableGameObject{
         if (position.x > GameView.WIDTH / 2d - 50) {
             if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
                 gameView.activateTimer("faster", this, 200);
-                faster();
             }
             position.left(speedInPixel);
         } else {
@@ -146,7 +145,6 @@ public class Chopper extends CollidableGameObject{
         if (position.x < GameView.WIDTH / 2d + 200) {
             if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
                 gameView.activateTimer("faster", this, 200);
-                faster();
             }
             position.right(speedInPixel);
         } else {
@@ -163,7 +161,6 @@ public class Chopper extends CollidableGameObject{
         } else {
             if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
                 gameView.activateTimer("faster", this, 200);
-                faster();
             }
             position.up(speedInPixel);
         }
@@ -187,7 +184,6 @@ public class Chopper extends CollidableGameObject{
         } else {
             if (!gameView.timerIsActive("slower", this) && speedInPixel > 1) {
                 gameView.activateTimer("slower", this, 200);
-                slower();
             }
             position.down(speedInPixel);
         }

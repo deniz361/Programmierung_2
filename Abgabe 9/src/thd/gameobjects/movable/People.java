@@ -9,6 +9,9 @@ import thd.gameview.GameView;
 import java.awt.*;
 
 public class People extends CollidableGameObject implements AutoMovable {
+
+    private String imageFile;
+
     /**
      * Crates a new GameObject.
      *
@@ -19,10 +22,12 @@ public class People extends CollidableGameObject implements AutoMovable {
         super(gameView, gamePlayManager);
         position.x = positionX;
         position.y = positionY;
-        width = 50;
-        height = 50;
+        size = 1;
+        width = 7 * size;
+        height = 27 * size;
         hitBoxHeight = height;
         hitBoxWidth = width;
+        imageFile = "Human standard.png";
     }
 
     /**
@@ -42,11 +47,11 @@ public class People extends CollidableGameObject implements AutoMovable {
      */
     @Override
     public void addToCanvas() {
-        gameView.addRectangleToCanvas(position.x, position.y, width, height,2,false, Color.BLACK);
+        //gameView.addImageToCanvas();
+
     }
 
     @Override
     public void updatePosition() {
-        position.x += 0.001;
     }
 }
