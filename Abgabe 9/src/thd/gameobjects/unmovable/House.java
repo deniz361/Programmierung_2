@@ -53,7 +53,7 @@ public class House extends CollidableGameObject {
                 burning = false;
             }
             fireAnimation();
-            //spawnPeople();
+            spawnPeople();
         }
 
 
@@ -107,15 +107,15 @@ public class House extends CollidableGameObject {
     }
 
     private void spawnPeople() {
+        if (counter < maxPeople) {
+
             if (!gameView.alarmIsSet("spawnPeople", this)) {
                 gameView.setAlarm("spawnPeople", this, 100);
             } else if (gameView.alarm("spawnPeople", this)) {
-                if (counter < maxPeople) {
-                    gamePlayManager.spawn(people);
-                    counter++;
-                }
+                gamePlayManager.spawn(people);
+                counter++;
             }
-
+        }
     }
 
     public boolean isBroken() {

@@ -10,7 +10,8 @@ import java.awt.*;
 
 public class People extends CollidableGameObject implements AutoMovable {
 
-    private String imageFile;
+    //private String imageFile;
+    private WalkingAnimation walkingAnimation;
 
     /**
      * Crates a new GameObject.
@@ -27,7 +28,8 @@ public class People extends CollidableGameObject implements AutoMovable {
         height = 27 * size;
         hitBoxHeight = height;
         hitBoxWidth = width;
-        imageFile = "Human standard.png";
+        //imageFile = "Human standard.png";
+        walkingAnimation = WalkingAnimation.STANDARD;
     }
 
     /**
@@ -47,11 +49,52 @@ public class People extends CollidableGameObject implements AutoMovable {
      */
     @Override
     public void addToCanvas() {
-        //gameView.addImageToCanvas();
+        gameView.addImageToCanvas(walkingAnimation.imageFile, position.x, position.y, size, rotation);
 
+    }
+
+    private void walkingAnimation() {
+        if (!gameView.alarmIsSet("walkingAnimation", this)) {
+            gameView.setAlarm("walkingAnimation", this, 100);
+        } else if (gameView.alarm("walkingAnimation", this)) {
+            switch (walkingAnimation) {
+                case STANDARD:
+                    walkingAnimation = WalkingAnimation.WALKING1;
+                    break;
+                case WALKING1:
+                    walkingAnimation = WalkingAnimation.WALKING2;
+                    break;
+                case WALKING2:
+                    walkingAnimation = WalkingAnimation.STANDARD;
+                    break;
+                default:
+            }
+        }
+    }
+
+    @Override
+    public void updateStatus() {
+        walkingAnimation();
     }
 
     @Override
     public void updatePosition() {
+        if (!gameView.alarmIsSet("updatePosition", this)) {
+            gameView.setAlarm("updatePosition", this, 300);
+        } else if (gameView.alarm("updatePosition", this)) {
+            position.x++;
+        }
+
+    }
+
+    private enum WalkingAnimation {
+        STANDARD("Human standard.png"), WALKING1("human walking1.png"),
+        WALKING2("human walking 2.png");
+
+        private String imageFile;
+
+        WalkingAnimation(String imageFile) {
+            this.imageFile = imageFile;
+        }
     }
 }

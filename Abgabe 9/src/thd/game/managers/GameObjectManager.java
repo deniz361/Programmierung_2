@@ -67,6 +67,14 @@ public class GameObjectManager {
         }
     }
 
+    void chopperToFront() {
+        for(GameObject g : gameObjects) {
+            if (g instanceof Chopper) {
+                removeGameObject(g);
+            }
+        }
+    }
+
 
     void addGameObject(GameObject gameObject) {
         toAdd.add(gameObject);
@@ -76,7 +84,8 @@ public class GameObjectManager {
         toRemove.add(gameObject);
     }
 
-    private void modifyGameObjectsList() throws TooManyGameObjectsException{
+    private void modifyGameObjectsList() {
+        //chopperToFront();
         gameObjects.addAll(toAdd);
         gameObjects.removeAll(toRemove);
         toAdd.clear();

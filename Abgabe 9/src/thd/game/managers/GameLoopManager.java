@@ -45,7 +45,7 @@ public class GameLoopManager {
     /**
      * Startet die Spielumgebung.
      */
-    public void startGame() throws TooManyGameObjectsException {
+    public void startGame() {
         while (!gamePlayManager.gameOver) { // Der "Game-Loop"
             gamePlayManager.updateGamePlay();
             inputManager.updateUserInputs();

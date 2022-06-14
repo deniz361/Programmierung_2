@@ -66,7 +66,6 @@ public class GamePlayManager {
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
             gameObjectManager.addGameObject(new House(gameView, this, 100, 350));
-            System.out.println(gameObjectManager.getGameObjects());
         }
         if (currentLevel instanceof Level2) {
 
