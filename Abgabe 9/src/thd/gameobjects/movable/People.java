@@ -24,8 +24,10 @@ public class People extends CollidableGameObject implements AutoMovable {
         position.x = positionX;
         position.y = positionY;
         size = 1;
-        width = 7 * size;
+        width = 7 * size + 3;
         height = 27 * size;
+        hitBoxOffsetX = 10;
+        hitBoxOffsetY = 5;
         hitBoxHeight = height;
         hitBoxWidth = width;
         //imageFile = "Human standard.png";
@@ -80,9 +82,9 @@ public class People extends CollidableGameObject implements AutoMovable {
     @Override
     public void updatePosition() {
         if (!gameView.alarmIsSet("updatePosition", this)) {
-            gameView.setAlarm("updatePosition", this, 300);
+            gameView.setAlarm("updatePosition", this, 50);
         } else if (gameView.alarm("updatePosition", this)) {
-            position.x++;
+            position.right(1);
         }
 
     }

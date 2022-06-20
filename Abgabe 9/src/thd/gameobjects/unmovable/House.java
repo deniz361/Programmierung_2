@@ -38,7 +38,7 @@ public class House extends CollidableGameObject {
         burning = false;
         exploded = false;
         fireAnimation = FireAnimation.FIRE1;
-        people = new People(gameView, gamePlayManager, position.x, position.y);
+        people = new People(gameView, gamePlayManager, position.x + width / 2d - 10, position.y + height / 2d + 10);
         maxPeople = 7;
         counter = 0;
     }
@@ -108,14 +108,27 @@ public class House extends CollidableGameObject {
 
     private void spawnPeople() {
         if (counter < maxPeople) {
+            if (!gameView.alarmIsSet("spawn", this)) {
+                gameView.setAlarm("spawn", this, 100);
+            } else if (gameView.alarm("spawn", this)) {
+                gamePlayManager.spawnUnmovable(people);
+                counter++;
+            }
+        }
+
+        /*
+        if (counter < maxPeople) {
 
             if (!gameView.alarmIsSet("spawnPeople", this)) {
                 gameView.setAlarm("spawnPeople", this, 100);
             } else if (gameView.alarm("spawnPeople", this)) {
                 gamePlayManager.spawn(people);
+                System.out.println("spawn people");
                 counter++;
             }
         }
+
+         */
     }
 
     public boolean isBroken() {

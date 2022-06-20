@@ -90,6 +90,10 @@ public class GamePlayManager {
         gameObjectManager.addGameObject(gameObject);
     }
 
+    public void spawnUnmovable(GameObject gameObject) {
+        gameObjectManager.addUnmovableGameObject(gameObject);
+    }
+
     /**
      * Destroys game objects.
      *

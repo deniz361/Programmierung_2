@@ -16,12 +16,14 @@ public class GameObjectManager {
     private final LinkedList<GameObject> backgroundObjects;
     private final ArrayList<GameObject> toAdd;
     private final ArrayList<GameObject> toRemove;
+    private final ArrayList<GameObject> toAddBackground;
 
     Chopper chopper;
     Background background;
 
     protected GameObjectManager(GameView gameView, GamePlayManager gamePlayManager) {
         toAdd = new ArrayList<>(120);
+        toAddBackground = new ArrayList<>(120);
         toRemove = new ArrayList<>(120);
         gameObjects = new LinkedList<>();
         backgroundObjects = new LinkedList<>();
@@ -80,6 +82,10 @@ public class GameObjectManager {
         toAdd.add(gameObject);
     }
 
+    void addUnmovableGameObject(GameObject gameObject) {
+        toAddBackground.add(gameObject);
+    }
+
     void removeGameObject(GameObject gameObject) {
         toRemove.add(gameObject);
     }
@@ -87,6 +93,7 @@ public class GameObjectManager {
     private void modifyGameObjectsList() {
         //chopperToFront();
         gameObjects.addAll(toAdd);
+        backgroundObjects.addAll(toAddBackground);
         gameObjects.removeAll(toRemove);
         toAdd.clear();
         toRemove.clear();
