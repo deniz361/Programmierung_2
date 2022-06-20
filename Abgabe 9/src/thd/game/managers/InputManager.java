@@ -12,8 +12,8 @@ class InputManager {
      * Die Klassen variable, um diagonales Movement zu erlauben
      */
     public static final boolean DIAGONAL_MOVEMENT_ALLOWED = true;
-    private GameView gameView;
-    private Chopper chopper;
+    private final GameView gameView;
+    private final Chopper chopper;
 
 
     InputManager(GameView gameView, Chopper chopper) {
@@ -27,19 +27,23 @@ class InputManager {
             if (chopper.exploded) {
                 break;
             }
-            if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN) {
+            if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN && !chopper.chopperLanded()) {
                 chopper.down();
+                chopper.setFlyDownFalse();
             }
-            if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
+            if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT && !chopper.chopperLanded()) {
                 chopper.left();
                 chopper.changeDirectionToLeft();
+                chopper.setFlyDownFalse();
             }
-            if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
+            if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT && !chopper.chopperLanded()) {
                 chopper.right();
                 chopper.changeDirectionToRight();
+                chopper.setFlyDownFalse();
             }
             if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
                 chopper.up();
+                chopper.setFlyDownFalse();
             }
             if (keyCode == KeyEvent.VK_E) {
                 if (!gameView.timerIsActive("faster", this)) {

@@ -9,7 +9,9 @@ import thd.gameobjects.base.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/** Manages all the Game Objects. */
+/**
+ * Manages all the Game Objects.
+ */
 public class GameObjectManager {
 
     private LinkedList<GameObject> gameObjects;
@@ -33,16 +35,15 @@ public class GameObjectManager {
 
         backgroundObjects.add(background);
         backgroundObjects.add(new Cloud(gameView, gamePlayManager));
-        backgroundObjects.add(new LandingPlace(gameView,gamePlayManager));
+        backgroundObjects.add(new LandingPlace(gameView, gamePlayManager));
         backgroundObjects.add(new Base(gameView, gamePlayManager));
         gameObjects.add(chopper);
-        }
+    }
 
     void updateGameObjects() {
         for (GameObject backgroundObject : backgroundObjects) {
             backgroundObject.addToCanvas();
         }
-
         modifyGameObjectsList();
         ArrayList<CollidableGameObject> collidables = new ArrayList<>(gameObjects.size());
         for (GameObject gameObject : gameObjects) {
@@ -70,9 +71,10 @@ public class GameObjectManager {
     }
 
     void chopperToFront() {
-        for(GameObject g : gameObjects) {
+        for (GameObject g : gameObjects) {
             if (g instanceof Chopper) {
                 removeGameObject(g);
+                addGameObject(g);
             }
         }
     }
@@ -91,12 +93,19 @@ public class GameObjectManager {
     }
 
     private void modifyGameObjectsList() {
-        //chopperToFront();
+        if (toAdd.size() != 0) {
+            chopperToFront();
+        }
+
+        gameObjects.removeAll(toRemove);
         gameObjects.addAll(toAdd);
         backgroundObjects.addAll(toAddBackground);
-        gameObjects.removeAll(toRemove);
+
+
+
         toAdd.clear();
         toRemove.clear();
+
 
         if (gameObjects.size() > 300) {
             throw new TooManyGameObjectsException("Too many game Objects");
@@ -105,6 +114,7 @@ public class GameObjectManager {
 
     /**
      * Moves the background
+     *
      * @param shiftX shift in x
      */
     void moveWorld(double shiftX) {
@@ -123,14 +133,20 @@ public class GameObjectManager {
     }
 
 
-    /** Returns all GameObjects.
-     * @return all game objects */
+    /**
+     * Returns all GameObjects.
+     *
+     * @return all game objects
+     */
     LinkedList<GameObject> getGameObjects() {
         return gameObjects;
     }
 
-    /** Returns all background GameObjects.
-     * @return all background game objects */
+    /**
+     * Returns all background GameObjects.
+     *
+     * @return all background game objects
+     */
     public LinkedList<GameObject> getBackgroundObjects() {
         return backgroundObjects;
     }

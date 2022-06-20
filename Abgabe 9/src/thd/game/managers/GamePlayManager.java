@@ -50,7 +50,7 @@ public class GamePlayManager {
             setGameObjectManager(gameObjectManager);
         }
          */
-        spawnTanks();
+        //spawnTanks();
     }
 
     private void initializeLevel() {
@@ -63,9 +63,10 @@ public class GamePlayManager {
         if (currentLevel instanceof Level1) {
             gameObjectManager.chopper.reset();
             gameObjectManager.background.setBackgroundImage("background.png");
+            gameObjectManager.addGameObject(new House(gameView, this, 100, 350));
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
-            gameObjectManager.addGameObject(new House(gameView, this, 100, 350));
+
         }
         if (currentLevel instanceof Level2) {
 
@@ -147,7 +148,7 @@ public class GamePlayManager {
 
     /** Gibt die Position des Choppers zurück, wichtig, um zu berechnen, wo die Gegner hin schießen müssen.
      * @return gibt die Position des Choppers zurück. */
-    public Position positonChopper() {
+    public Position positionChopper() {
         for (GameObject o : gameObjectManager.getGameObjects()) {
             if (o instanceof Chopper) {
                 return o.getPosition();

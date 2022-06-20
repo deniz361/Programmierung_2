@@ -42,8 +42,8 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
 
 
         //AutoAim
-        positionChopperX = gamePlayManager.positonChopper().x;
-        positionChopperY = gamePlayManager.positonChopper().y;
+        positionChopperX = gamePlayManager.positionChopper().x;
+        positionChopperY = gamePlayManager.positionChopper().y;
     }
 
     /**

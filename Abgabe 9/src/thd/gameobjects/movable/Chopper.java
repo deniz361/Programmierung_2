@@ -25,15 +25,15 @@ public class Chopper extends CollidableGameObject{
     private double gas;
 
     //Animation
-    //private Rotation
     private boolean movingLeft;
     private boolean movingRight;
     private boolean movingUp;
     private boolean movingDown;
     private Status status;
-    /**
-     * return true if the chopper is destroyed.
-     */
+    private boolean flyDown;
+    private boolean landed;
+
+    /** return true if the chopper has been destroyed.*/
     public boolean exploded;
     private BasicAnimation basicAnimation;
 
@@ -81,6 +81,8 @@ public class Chopper extends CollidableGameObject{
         rotation = 0;
         size = 1.5;
         health = 100.0;
+        flyDown = false;
+        landed = true;
         gas = 100.0;
         emptyImage = "empty.png";
         createdBullets = new ArrayList<>(100);
@@ -106,7 +108,6 @@ public class Chopper extends CollidableGameObject{
         exploded = false;
         // = Rotation.MOVING_LEFT;
         movingLeft = true;
-
         movingDown = false;
         movingUp = false;
         movingRight = false;
@@ -185,7 +186,7 @@ public class Chopper extends CollidableGameObject{
             if (!gameView.timerIsActive("slower", this) && speedInPixel > 1) {
                 gameView.activateTimer("slower", this, 200);
             }
-            position.down(speedInPixel);
+            position.down(0.5);
         }
     }
 
@@ -293,19 +294,41 @@ public class Chopper extends CollidableGameObject{
     }
 
 
-    private enum Rotation {
-        MOVING_UP, MOVING_DOWN, MOVING_LEFT, MOVING_RIGHT
-    }
-    private void adjustChopperRotation() {
 
+
+    /**
+     * Wenn der Chopper in der Luft ist und er sich nicht bewegt, soll er langsam herunterfliegen
+     */
+    private void chopperFlyDown() {
+        if (position.y <= 400) {
+            flyDown = true;
+        } else if (position.y > 400) {
+            flyDown = false;
+        }
+
+        if (flyDown) {
+            if (!gameView.timerIsActive("flyDown", this)) {
+                gameView.activateTimer("Blink", this, 1000);
+                position.down(0.5);
+            }
+        }
+    }
+
+    /**
+     * To change "flyDown" variable in the InputManager class
+     */
+    public void setFlyDownFalse() {
+        flyDown = false;
     }
 
 
     @Override
     public void updateStatus() {
-        adjustChopperRotation();
+        flyDownAnimationReset();
+        chopperFlyDown();
         basicAnimation();
         damageAnimation();
+        crashLanding();
 
     }
 
@@ -319,84 +342,127 @@ public class Chopper extends CollidableGameObject{
     }
 
 
+
+
+
+
+    //Animations
+    /**
+     * Wenn der chopper gelandet ist, soll er nur noch hochfliegen können. Siehe Input Manager
+     * @return true, wenn der Chopper gelandet ist. False, wenn er gerade fliegt.
+     */
+    public boolean chopperLanded() {
+        if (position.y >= 400) {
+            landed = true;
+        } else if (position.y <= 400) {
+            landed = false;
+        }
+
+        return landed;
+    }
+
+    private void crashLanding() {
+        if ((rotation >= 10 || rotation <= - 10) && chopperLanded()) {
+            status = Status.EXPLODED;
+            rotation = 3;
+        }
+    }
+
+
+
+    /*
+    private enum flyDownAnimationReset {
+        MOVING_UP, MOVING_DOWN, MOVING_LEFT, MOVING_RIGHT
+    }
+     */
+    private void flyDownAnimationReset() {
+        if (flyDown) {
+            if (rotation < 0) {
+                rotation += 0.2;
+            } else if (rotation > 0) {
+                rotation -= 0.2;
+            }
+        }
+    }
     /**
      * Damit sich die Propeller drehen
      * Der Alarm gibt an, wie schnell sich der Propeller dreht
      */
     private void basicAnimation() {
-        if (!gameView.alarmIsSet("basicAnimation", this)) {
-            gameView.setAlarm("basicAnimation", this, 100);
-        } else if (gameView.alarm("basicAnimation", this)) {
-            if (!movingRight) {
-                switch (basicAnimation) {
-                    case STANDARD:
-                        basicAnimation = BasicAnimation.ANIMATION1;
-                        break;
-                    case ANIMATION1:
-                        basicAnimation = BasicAnimation.ANIMATION2;
-                        break;
-                    case ANIMATION2:
-                        basicAnimation = BasicAnimation.ANIMATION3;
-                        break;
-                    case ANIMATION3:
-                        basicAnimation = BasicAnimation.ANIMATION4;
-                        break;
-                    case ANIMATION4:
-                        basicAnimation = BasicAnimation.ANIMATION5;
-                        break;
-                    case ANIMATION5:
-                        basicAnimation = BasicAnimation.ANIMATION6;
-                        break;
-                    case ANIMATION6:
-                        basicAnimation = BasicAnimation.ANIMATION7;
-                        break;
-                    case ANIMATION7:
-                        basicAnimation = BasicAnimation.ANIMATION8;
-                        break;
-                    case ANIMATION8:
-                        basicAnimation = BasicAnimation.ANIMATION9;
-                        break;
-                    case ANIMATION9:
-                        basicAnimation = BasicAnimation.STANDARD;
-                        break;
-                    default:
+        if (!exploded) {
+            if (!gameView.alarmIsSet("basicAnimation", this)) {
+                gameView.setAlarm("basicAnimation", this, 50);
+            } else if (gameView.alarm("basicAnimation", this)) {
+                if (!movingRight) {
+                    switch (basicAnimation) {
+                        case STANDARD:
+                            basicAnimation = BasicAnimation.ANIMATION1;
+                            break;
+                        case ANIMATION1:
+                            basicAnimation = BasicAnimation.ANIMATION2;
+                            break;
+                        case ANIMATION2:
+                            basicAnimation = BasicAnimation.ANIMATION3;
+                            break;
+                        case ANIMATION3:
+                            basicAnimation = BasicAnimation.ANIMATION4;
+                            break;
+                        case ANIMATION4:
+                            basicAnimation = BasicAnimation.ANIMATION5;
+                            break;
+                        case ANIMATION5:
+                            basicAnimation = BasicAnimation.ANIMATION6;
+                            break;
+                        case ANIMATION6:
+                            basicAnimation = BasicAnimation.ANIMATION7;
+                            break;
+                        case ANIMATION7:
+                            basicAnimation = BasicAnimation.ANIMATION8;
+                            break;
+                        case ANIMATION8:
+                            basicAnimation = BasicAnimation.ANIMATION9;
+                            break;
+                        case ANIMATION9:
+                            basicAnimation = BasicAnimation.STANDARD;
+                            break;
+                        default:
 
-                }
-            } else {
+                    }
+                } else {
+                    switch (basicAnimation) {
+                        case STANDARD_RIGHT:
+                            basicAnimation = BasicAnimation.ANIMATION1_RIGHT;
+                            break;
+                        case ANIMATION1_RIGHT:
+                            basicAnimation = BasicAnimation.ANIMATION2_RIGHT;
+                            break;
+                        case ANIMATION2_RIGHT:
+                            basicAnimation = BasicAnimation.ANIMATION3_RIGHT;
+                            break;
+                        case ANIMATION3_RIGHT:
+                            basicAnimation = BasicAnimation.ANIMATION4_RIGHT;
+                            break;
+                        case ANIMATION4_RIGHT:
+                            basicAnimation = BasicAnimation.ANIMATION5_RIGHT;
+                            break;
+                        case ANIMATION5_RIGHT:
+                            basicAnimation = BasicAnimation.ANIMATION6_RIGHT;
+                            break;
+                        case ANIMATION6_RIGHT:
+                            basicAnimation = BasicAnimation.ANIMATION7_RIGHT;
+                            break;
+                        case ANIMATION7_RIGHT:
+                            basicAnimation = BasicAnimation.ANIMATION8_RIGHT;
+                            break;
+                        case ANIMATION8_RIGHT:
+                            basicAnimation = BasicAnimation.ANIMATION9_RIGHT;
+                            break;
+                        case ANIMATION9_RIGHT:
+                            basicAnimation = BasicAnimation.STANDARD_RIGHT;
+                            break;
+                        default:
 
-                switch (basicAnimation) {
-                    case STANDARD_RIGHT:
-                        basicAnimation = BasicAnimation.ANIMATION1_RIGHT;
-                        break;
-                    case ANIMATION1_RIGHT:
-                        basicAnimation = BasicAnimation.ANIMATION2_RIGHT;
-                        break;
-                    case ANIMATION2_RIGHT:
-                        basicAnimation = BasicAnimation.ANIMATION3_RIGHT;
-                        break;
-                    case ANIMATION3_RIGHT:
-                        basicAnimation = BasicAnimation.ANIMATION4_RIGHT;
-                        break;
-                    case ANIMATION4_RIGHT:
-                        basicAnimation = BasicAnimation.ANIMATION5_RIGHT;
-                        break;
-                    case ANIMATION5_RIGHT:
-                        basicAnimation = BasicAnimation.ANIMATION6_RIGHT;
-                        break;
-                    case ANIMATION6_RIGHT:
-                        basicAnimation = BasicAnimation.ANIMATION7_RIGHT;
-                        break;
-                    case ANIMATION7_RIGHT:
-                        basicAnimation = BasicAnimation.ANIMATION8_RIGHT;
-                        break;
-                    case ANIMATION8_RIGHT:
-                        basicAnimation = BasicAnimation.ANIMATION9_RIGHT;
-                        break;
-                    case ANIMATION9_RIGHT:
-                        basicAnimation = BasicAnimation.STANDARD_RIGHT;
-                        break;
-                    default:
-
+                    }
                 }
             }
         }
