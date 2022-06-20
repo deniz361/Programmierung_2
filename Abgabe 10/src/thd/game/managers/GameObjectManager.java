@@ -21,6 +21,7 @@ public class GameObjectManager {
     private final ArrayList<GameObject> toAddBackground;
 
     Chopper chopper;
+    Overlay overlay;
     Background background;
 
     protected GameObjectManager(GameView gameView, GamePlayManager gamePlayManager) {
@@ -32,12 +33,14 @@ public class GameObjectManager {
 
         chopper = new Chopper(gameView, gamePlayManager, this);
         background = new Background(gameView, gamePlayManager);
+        overlay = new Overlay(gameView, gamePlayManager);
 
         backgroundObjects.add(background);
         backgroundObjects.add(new Cloud(gameView, gamePlayManager));
         backgroundObjects.add(new LandingPlace(gameView, gamePlayManager));
         backgroundObjects.add(new Base(gameView, gamePlayManager));
         gameObjects.add(chopper);
+        gameObjects.add(overlay);
     }
 
     void updateGameObjects() {
@@ -70,8 +73,12 @@ public class GameObjectManager {
         }
     }
 
-    void chopperToFront() {
+    void sortGameObjects() {
         for (GameObject g : gameObjects) {
+            if (g instanceof Overlay) {
+                removeGameObject(g);
+                addGameObject(g);
+            }
             if (g instanceof Chopper) {
                 removeGameObject(g);
                 addGameObject(g);
@@ -94,7 +101,7 @@ public class GameObjectManager {
 
     private void modifyGameObjectsList() {
         if (toAdd.size() != 0) {
-            chopperToFront();
+            sortGameObjects();
         }
 
         gameObjects.removeAll(toRemove);
@@ -106,6 +113,7 @@ public class GameObjectManager {
         toAdd.clear();
         toRemove.clear();
 
+        System.out.println(gameObjects);
 
         if (gameObjects.size() > 300) {
             throw new TooManyGameObjectsException("Too many game Objects");

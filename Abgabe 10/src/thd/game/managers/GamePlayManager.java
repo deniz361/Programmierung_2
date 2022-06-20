@@ -9,6 +9,7 @@ import thd.gameobjects.movable.Chopper;
 import thd.gameobjects.movable.Jet;
 import thd.gameobjects.movable.Tank;
 import thd.gameobjects.unmovable.House;
+import thd.gameobjects.unmovable.Overlay;
 import thd.gameview.GameView;
 
 import java.util.ArrayList;
@@ -66,6 +67,7 @@ public class GamePlayManager {
             gameObjectManager.addGameObject(new House(gameView, this, 100, 350));
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
+            gameObjectManager.overlay.showMessage("      Level 1 \n At the mountains", 2000);
 
         }
         if (currentLevel instanceof Level2) {
