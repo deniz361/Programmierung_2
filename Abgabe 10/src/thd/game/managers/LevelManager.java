@@ -13,7 +13,7 @@ import java.util.LinkedList;
 public class LevelManager {
     LinkedList<Level> levels;
 
-    int currentLevel;
+    private int currentLevel;
 
     /** Der Konstruktor.
      * @param difficulty Der Schwierigkeitsgrat, der das Spiel haben soll
@@ -32,13 +32,13 @@ public class LevelManager {
      * @return gibt true zurück, wenn es ein weiteres Level gibt. Gibt false zurück,
      * wenn es kein neues Level gibt
      */
-    boolean hasNextLevel() {
+    private boolean hasNextLevel() {
         return levels.size() > currentLevel;
 
 
     }
 
-    Level nextLevel() {
+    private Level nextLevel() {
         if (hasNextLevel()) {
             currentLevel++;
             return levels.get(currentLevel - 1);
@@ -47,7 +47,7 @@ public class LevelManager {
         }
     }
 
-    void resetLevelCounter() {
+    private void resetLevelCounter() {
         currentLevel = 0;
     }
 

@@ -69,10 +69,10 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
     @Override
     public void updatePosition() {
         if (flyFromLeftToRight) {
-            position.right((speedInPixel * (chopper.getRotation() / 10)));
+            position.right((speedInPixel * (chopper.rotation() / 10)));
             position.down(speedInPixel);
         } else {
-            position.left(-(speedInPixel * (chopper.getRotation() / 10)));
+            position.left(-(speedInPixel * (chopper.rotation() / 10)));
             position.down(speedInPixel);
         }
     }

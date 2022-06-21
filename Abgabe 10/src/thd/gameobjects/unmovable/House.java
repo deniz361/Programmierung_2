@@ -6,10 +6,12 @@ import thd.gameobjects.movable.Bullet;
 import thd.gameobjects.movable.People;
 import thd.gameview.GameView;
 
-
+/**
+ * Das Haus, in dem sich die Menschen befinden, die gerettet werden müssen.
+ */
 public class House extends CollidableGameObject {
 
-    boolean broken;
+    private boolean broken;
     private String image;
     private FireAnimation fireAnimation;
     private People people;
@@ -17,12 +19,14 @@ public class House extends CollidableGameObject {
     private boolean exploded;
     private final int maxPeople;
     private int counter;
-
+    private boolean once;
     /**
      * Mindestanforderung, das jedes GameObject haben muss.
      *
-     * @param gameView        to interact with game view.
-     * @param gamePlayManager to control the game flow.
+     * @param gameView        GameView.
+     * @param gamePlayManager GamePlayManager.
+     * @param positionX X Koordinate, wo das Haus sein soll.
+     * @param positionY Y Koordinate, wo das Haus sein soll.
      */
     public House(GameView gameView, GamePlayManager gamePlayManager, double positionX, double positionY) {
         super(gameView, gamePlayManager);
@@ -38,9 +42,10 @@ public class House extends CollidableGameObject {
         burning = false;
         exploded = false;
         fireAnimation = FireAnimation.FIRE1;
-        people = new People(gameView, gamePlayManager, position.x + width / 2d - 10, position.y + height / 2d + 10);
-        maxPeople = 7;
+        people = new People(gameView, gamePlayManager, this.position.x, this.position.y + height / 2d + 10);
+        maxPeople = 2;
         counter = 0;
+        once = true;
     }
 
     @Override
@@ -55,8 +60,65 @@ public class House extends CollidableGameObject {
             fireAnimation();
             spawnPeople();
         }
+    }
+
+    private void spawnPeople() {
+        if (counter < maxPeople) {
+            if (!once) {
+                if (!gameView.alarmIsSet("spawnDelay", this)) {
+                    gameView.setAlarm("spawnDelay", this, 2000);
+                } else if (gameView.alarm("spawnDelay", this)) {
+                    gamePlayManager.spawn(new People(gameView, gamePlayManager, this.position.x + 50, this.position.y + height / 2d + 15));
+                    counter++;
+                }
+            }
+            if (once) {
+                if (!gameView.alarmIsSet("delayAfterHouseHasBeenShot", this)) {
+                    gameView.setAlarm("delayAfterHouseHasBeenShot", this, 100);
+                } else if (gameView.alarm("delayAfterHouseHasBeenShot", this)) {
+                    gamePlayManager.spawn(new People(gameView, gamePlayManager, this.position.x + 50, this.position.y + height / 2d + 15));
+                    once = false;
+                    counter++;
+                }
+            }
+        }
+    }
+
+    /**
+     * Fügt das Spielobject in GameView hinzu.
+     */
+    @Override
+    public void addToCanvas() {
+        gameView.addImageToCanvas(image, position.x, position.y, size, rotation);
+
+        if (burning) {
+            gameView.addImageToCanvas(fireAnimation.file, position.x + width / 2d - 38,position.y + height / 2d - 22,2,rotation);
+        }
+    }
+
+    /**
+     * If a game object is collided with something, it is able to react to the collision.
+     *
+     * @param other The other GameObject that is involved in the collision.
+     */
+    @Override
+    public void reactToCollision(CollidableGameObject other) {
+        if (other.getClass() == Bullet.class) {
+            image = "house_broken.png";
+            broken = true;
+        }
+    }
 
 
+
+    private enum FireAnimation {
+        FIRE1("Fire 1.png"), FIRE2("Fire 2.png"), FIRE3("Fire 3.png");
+
+        private final String file;
+
+        FireAnimation(String file) {
+            this.file = file;
+        }
     }
 
     private void fireAnimation() {
@@ -78,70 +140,14 @@ public class House extends CollidableGameObject {
 
                 }
             }
-       }
-    }
-
-    /**
-     * If a game object is collided with something, it is able to react to the collision.
-     *
-     * @param other The other GameObject that is involved in the collision.
-     */
-    @Override
-    public void reactToCollision(CollidableGameObject other) {
-        if (other.getClass() == Bullet.class) {
-            image = "house_broken.png";
-            broken = true;
         }
     }
 
     /**
-     * Fügt das Spielobject in GameView hinzu.
+     * Um von außen abzufragen, ob das Haus schon zerstört wurde oder nicht.
+     * @return gibt True zurück, wenn das Haus zerstört wurde.
      */
-    @Override
-    public void addToCanvas() {
-        gameView.addImageToCanvas(image, position.x, position.y, size, rotation);
-
-        if (burning) {
-            gameView.addImageToCanvas(fireAnimation.file, position.x + width / 2d - 38,position.y + height / 2d - 22,2,rotation);
-        }
-    }
-
-    private void spawnPeople() {
-        if (counter < maxPeople) {
-            if (!gameView.alarmIsSet("spawn", this)) {
-                gameView.setAlarm("spawn", this, 100);
-            } else if (gameView.alarm("spawn", this)) {
-                gamePlayManager.spawnUnmovable(people);
-                counter++;
-            }
-        }
-
-        /*
-        if (counter < maxPeople) {
-
-            if (!gameView.alarmIsSet("spawnPeople", this)) {
-                gameView.setAlarm("spawnPeople", this, 100);
-            } else if (gameView.alarm("spawnPeople", this)) {
-                gamePlayManager.spawn(people);
-                System.out.println("spawn people");
-                counter++;
-            }
-        }
-
-         */
-    }
-
     public boolean isBroken() {
         return broken;
-    }
-
-    private enum FireAnimation {
-        FIRE1("Fire 1.png"), FIRE2("Fire 2.png"), FIRE3("Fire 3.png");
-
-        private final String file;
-
-        FireAnimation(String file) {
-            this.file = file;
-        }
     }
 }

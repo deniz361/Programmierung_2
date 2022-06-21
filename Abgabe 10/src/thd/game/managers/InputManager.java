@@ -27,36 +27,10 @@ class InputManager {
             if (chopper.exploded) {
                 break;
             }
-            if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN && !chopper.chopperLanded()) {
-                chopper.down();
-                chopper.setFlyDownFalse();
-            }
-            if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT && !chopper.chopperLanded()) {
-                chopper.left();
-                chopper.changeDirectionToLeft();
-                chopper.setFlyDownFalse();
-            }
-            if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT && !chopper.chopperLanded()) {
-                chopper.right();
-                chopper.changeDirectionToRight();
-                chopper.setFlyDownFalse();
-            }
-            if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
-                chopper.up();
-                chopper.setFlyDownFalse();
-            }
-            if (keyCode == KeyEvent.VK_E) {
-                if (!gameView.timerIsActive("faster", this)) {
-                    gameView.activateTimer("faster", this, 200);
-                    chopper.faster();
-                }
-            }
-            if (keyCode == KeyEvent.VK_Q) {
-                if (!gameView.timerIsActive("slower", this)) {
-                    gameView.activateTimer("slower", this, 200);
-                    chopper.slower();
-                }
-            }
+            movement(keyCode);
+            controlFasterAndSlower(keyCode);
+            changeDirection(keyCode);
+
             if (keyCode == KeyEvent.VK_SPACE) {
                 chopper.shoot();
             }
@@ -65,19 +39,49 @@ class InputManager {
             }
 
 
+        }
+    }
 
+    private void changeDirection(int keyCode) {
+        if (keyCode == KeyEvent.VK_Q && !chopper.chopperLanded()) {
+            chopper.changeDirectionOfTheChopperToLeft();
+        }
+        if (keyCode == KeyEvent.VK_E && !chopper.chopperLanded()) {
+            chopper.changeDirectionOfTheChopperToRight();
+        }
+    }
 
+    private void movement(int keyCode) {
+        if (keyCode == KeyEvent.VK_S || keyCode == KeyEvent.VK_DOWN && !chopper.chopperLanded()) {
+            chopper.down();
+            chopper.flyDown = false;
+        }
+        if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT && !chopper.chopperLanded()) {
+            chopper.left();
+            chopper.flyDown = false;
+        }
+        if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT && !chopper.chopperLanded()) {
+            chopper.right();
+            chopper.flyDown = false;
+        }
+        if (keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_UP) {
+            chopper.up();
+            chopper.flyDown = false;
+        }
+    }
 
-
-                /*
-                else if (keyCode == KeyEvent.VK_E) {
-                    chopper.faster();
-                    break;
-                } else if (keyCode == KeyEvent.VK_Q) {
-                    chopper.slower();
-                    break;
-                }
-                 */
+    private void controlFasterAndSlower(int keyCode) {
+        if (keyCode == KeyEvent.VK_T) {
+            if (!gameView.timerIsActive("faster", this)) {
+                gameView.activateTimer("faster", this, 200);
+                chopper.faster();
+            }
+        }
+        if (keyCode == KeyEvent.VK_R) {
+            if (!gameView.timerIsActive("slower", this)) {
+                gameView.activateTimer("slower", this, 200);
+                chopper.slower();
+            }
         }
     }
 }

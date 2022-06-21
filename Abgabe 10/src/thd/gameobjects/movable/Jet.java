@@ -131,24 +131,6 @@ public class Jet extends CollidableGameObject implements AutoMovable {
     /** Moves the jet.*/
     @Override
     public void updatePosition() {
-
-        /*
-        timeElapsed = Math.round(((System.currentTimeMillis() - time) / 1000.0));
-
-        if (!doTheKurve) {
-            position.left(speedInPixel);
-        }
-
-        if (timeElapsed >= 2) {
-            p1 = new Position(position.x - 300, position.y + 100);
-            p2 = new Position(position.x, position.y + 200);
-            doTheKurve = true;
-
-        }
-
-        while (doTheKurve) {
-
-         */
         switch (counter) {
             case 0:
                 followTargetPostion(bezierPoint1);
@@ -163,32 +145,6 @@ public class Jet extends CollidableGameObject implements AutoMovable {
                 position.right(speedInPixel);
 
         }
-        //}
-
-
-
-
-
-
-
-
-
-
-
-        /*
-
-        bewegt sich im kreis:
-        position.y = position.y + Math.round(Math.sin(Math.toRadians(position.x * 2)));
-        position.x = position.x + Math.round(Math.cos(Math.toRadians(position.y * 2)));
-
-
-        System.out.println("Position y: " + position.y);
-
-        //if (position.x <= 320)
-
-         */
-
-
     }
 
 

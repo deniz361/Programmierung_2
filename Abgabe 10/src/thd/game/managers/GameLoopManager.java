@@ -1,6 +1,6 @@
 package thd.game.managers;
 
-import thd.game.utilities.TooManyGameObjectsException;
+
 import thd.gameobjects.base.GameObject;
 import thd.gameobjects.movable.Chopper;
 import thd.gameview.GameView;

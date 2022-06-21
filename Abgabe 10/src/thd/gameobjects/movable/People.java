@@ -3,26 +3,30 @@ package thd.gameobjects.movable;
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.AutoMovable;
 import thd.gameobjects.base.CollidableGameObject;
-import thd.gameobjects.unmovable.House;
 import thd.gameview.GameView;
 
-import java.awt.*;
 
+/**
+ * Die Menschen, die gerettet werden sollen.
+ */
 public class People extends CollidableGameObject implements AutoMovable {
 
     //private String imageFile;
     private WalkingAnimation walkingAnimation;
 
     /**
-     * Crates a new GameObject.
+     * Erstellt das GameObject.
      *
-     * @param gameView        Window to show the GameObject on.
-     * @param gamePlayManager Controls the gameplay.
+     * @param gameView        Das Fenster wo das Spielobjekt angezeigt wird.
+     * @param gamePlayManager Bestimmt den Spielablauf.
+     * @param positionY Y Koordinate des Spawnpunkts.
+     * @param positionX X Koordinate des Spawnpunkts.
      */
     public People(GameView gameView, GamePlayManager gamePlayManager, double positionX, double positionY) { // maybe House house in die Signatur
         super(gameView, gamePlayManager);
         position.x = positionX;
         position.y = positionY;
+        speedInPixel = 1;
         size = 1;
         width = 7 * size + 3;
         height = 27 * size;
@@ -84,7 +88,7 @@ public class People extends CollidableGameObject implements AutoMovable {
         if (!gameView.alarmIsSet("updatePosition", this)) {
             gameView.setAlarm("updatePosition", this, 50);
         } else if (gameView.alarm("updatePosition", this)) {
-            position.right(1);
+            position.right(speedInPixel);
         }
 
     }

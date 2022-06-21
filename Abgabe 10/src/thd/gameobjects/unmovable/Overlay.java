@@ -2,17 +2,21 @@ package thd.gameobjects.unmovable;
 
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.CollidableGameObject;
-import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 import java.awt.*;
 
+/**
+ * Das Overlay des Spiels.
+ */
 public class Overlay extends CollidableGameObject {
 
     private String text;
-    private boolean onlyOneTime;
-    private String message;
-    private int secondsToShow;
+    /**
+     * Damit vom GamePlayManager auf diesen counter zugegriffen werden kann.
+     */
+    public int gameOverCounter;
+    private boolean executeThisOneTime;
 
     /**
      * Mindestanforderung, das jedes GameObject haben muss.
@@ -24,7 +28,8 @@ public class Overlay extends CollidableGameObject {
         super(gameView, gamePlayManager);
         size = 35;
         text = "This is a test";
-        onlyOneTime = true;
+        executeThisOneTime = true;
+        gameOverCounter = 0;
     }
 
     /**
@@ -37,18 +42,35 @@ public class Overlay extends CollidableGameObject {
 
     }
 
+    /**
+     * Um am Anfang die Nachricht anzeigen zu lassen.
+     *
+     * @param message       Die Nachricht.
+     * @param secondsToShow Wie lange die Nachricht angezeigt werden soll.
+     */
     public void showMessage(String message, int secondsToShow) {
-        this.message = message;
-        this.secondsToShow = secondsToShow;
-        if (onlyOneTime) {
-            if (!gameView.alarmIsSet("overlay", this)) {
-                gameView.setAlarm("overlay", this, secondsToShow);
-                text = message;
-            } else if (gameView.alarm("overlay", this)) {
-                text = " ";
-                onlyOneTime = false;
-            }
+        text = message;
+        gameView.activateTimer(text, this, secondsToShow * 1000L);
+    }
+
+
+    /**
+     * Zeigt den vorläufigen counter an.
+     * @param counter counter.
+     * @param secondsToShow wie lange der counter angezeigt werden soll.
+     */
+    public void showCounter(int counter, int secondsToShow) {
+        if (executeThisOneTime) {
+            gameOverCounter = counter;
+            executeThisOneTime = false;
         }
+        if (!gameView.alarmIsSet("gameOverCounter", this)) {
+            gameView.setAlarm("gameOverCounter", this, secondsToShow * 1000L);
+        } else if (gameView.alarm("gameOverCounter", this)) {
+            gameOverCounter--;
+        }
+
+
     }
 
 
@@ -57,7 +79,17 @@ public class Overlay extends CollidableGameObject {
      */
     @Override
     public void addToCanvas() {
-        showMessage(message, secondsToShow);
-        gameView.addTextToCanvas(text, 150, 200, size, Color.BLACK, rotation);
+        if (gameView.timerIsActive(text, this)) {
+            final int size = 30;
+            final double xCoordinate = GameView.WIDTH / 2.0 - size * 7;
+            final double yCoordinate = GameView.HEIGHT / 2.0 - size / 2.0;
+            gameView.addTextToCanvas(text, xCoordinate, yCoordinate, size, Color.BLACK, rotation);
+
+        }
+
+
+        if (gameOverCounter >= 0) {
+            gameView.addTextToCanvas("The Game ends in: " + gameOverCounter, 500, 50, 20, Color.BLACK, rotation);
+        }
     }
 }

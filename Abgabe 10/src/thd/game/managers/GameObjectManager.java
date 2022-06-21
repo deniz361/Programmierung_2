@@ -73,7 +73,7 @@ public class GameObjectManager {
         }
     }
 
-    void sortGameObjects() {
+    private void sortGameObjects() {
         for (GameObject g : gameObjects) {
             if (g instanceof Overlay) {
                 removeGameObject(g);
@@ -91,9 +91,7 @@ public class GameObjectManager {
         toAdd.add(gameObject);
     }
 
-    void addUnmovableGameObject(GameObject gameObject) {
-        toAddBackground.add(gameObject);
-    }
+
 
     void removeGameObject(GameObject gameObject) {
         toRemove.add(gameObject);
@@ -107,13 +105,8 @@ public class GameObjectManager {
         gameObjects.removeAll(toRemove);
         gameObjects.addAll(toAdd);
         backgroundObjects.addAll(toAddBackground);
-
-
-
         toAdd.clear();
         toRemove.clear();
-
-        System.out.println(gameObjects);
 
         if (gameObjects.size() > 300) {
             throw new TooManyGameObjectsException("Too many game Objects");
@@ -132,9 +125,8 @@ public class GameObjectManager {
 
         for (GameObject foreground : gameObjects) {
             if (!(foreground instanceof Chopper)) {
-                if ((foreground instanceof Tank && !((Tank) foreground).doNotDisturb) || foreground instanceof House) {
+                if ((foreground instanceof Tank && !((Tank) foreground).doNotDisturb) || foreground instanceof House || foreground instanceof Jet || foreground instanceof People) {
                     foreground.worldHasMoved(shiftX);
-
                 }
             }
         }

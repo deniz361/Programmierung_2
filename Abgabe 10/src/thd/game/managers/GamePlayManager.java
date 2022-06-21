@@ -9,7 +9,6 @@ import thd.gameobjects.movable.Chopper;
 import thd.gameobjects.movable.Jet;
 import thd.gameobjects.movable.Tank;
 import thd.gameobjects.unmovable.House;
-import thd.gameobjects.unmovable.Overlay;
 import thd.gameview.GameView;
 
 import java.util.ArrayList;
@@ -21,11 +20,15 @@ import java.util.ArrayList;
 public class GamePlayManager {
 
     private final GameView gameView;
-    public boolean gameOver;
+    /**
+     * Um zu bestimmen, wann das Spiel vorbei ist.
+     */
+    boolean gameOver;
     private GameObjectManager gameObjectManager;
     private final ArrayList<GameObject> createdTanks;
     private final LevelManager levelManager;
     private Level currentLevel;
+    private int counter;
 
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
@@ -40,18 +43,14 @@ public class GamePlayManager {
      * Steuert den Spielverlauf.
      */
     void updateGamePlay() {
-
-        /*
-        if (!gameView.timerIsActive("level", this)) {
-            gameView.activateTimer("level", this, 2000);
-            currentLevel = levelManager.nextLevel();
-            if (levelManager.levels.size() - 1 < levelManager.currentLevel) {
-                levelManager.resetLevelCounter();
+        if (gameOver()) {
+            if (!gameView.alarmIsSet("gameOver", this)) {
+                gameView.setAlarm("gameOver", this, 2000);
+                gameObjectManager.overlay.showMessage("Game Over", 2);
+            } else if (gameView.alarm("gameOver", this)) {
+                initializeGame();
             }
-            setGameObjectManager(gameObjectManager);
         }
-         */
-        //spawnTanks();
     }
 
     private void initializeLevel() {
@@ -67,7 +66,7 @@ public class GamePlayManager {
             gameObjectManager.addGameObject(new House(gameView, this, 100, 350));
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
-            gameObjectManager.overlay.showMessage("      Level 1 \n At the mountains", 2000);
+            gameObjectManager.overlay.showMessage("      Level 1 \n At the mountains", 2);
 
         }
         if (currentLevel instanceof Level2) {
@@ -79,8 +78,18 @@ public class GamePlayManager {
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
         }
+    }
 
+    private void initializeGame() {
+        initializeLevel();
+        createdTanks.clear();
+        gameObjectManager.overlay.gameOverCounter = 10;
 
+    }
+
+    private boolean gameOver() {
+        gameObjectManager.overlay.showCounter(10, 1);
+        return gameObjectManager.overlay.gameOverCounter <= 0;
     }
 
 
@@ -93,9 +102,6 @@ public class GamePlayManager {
         gameObjectManager.addGameObject(gameObject);
     }
 
-    public void spawnUnmovable(GameObject gameObject) {
-        gameObjectManager.addUnmovableGameObject(gameObject);
-    }
 
     /**
      * Destroys game objects.
@@ -135,6 +141,8 @@ public class GamePlayManager {
             spawn(o);
         }
     }
+
+
 
 
     /** Was passieren soll, wenn der Chopper von einer Kugel getroffen wird. */
