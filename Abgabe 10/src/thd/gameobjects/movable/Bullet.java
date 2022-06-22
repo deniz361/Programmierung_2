@@ -16,6 +16,9 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
 
     private boolean flyFromLeftToRight;
     private Chopper chopper;
+    private boolean facingLeft;
+    private boolean facingRight;
+    private boolean shootDown;
 
 
     /**
@@ -39,6 +42,10 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
         hitBoxOffsetY = 0;
         hitBoxHeight = height;
         hitBoxWidth = width;
+        rotation = chopper.rotation();
+        facingLeft = chopper.facingLeft;
+        facingRight = chopper.facingRight;
+        shootDown = chopper.shootDown;
 
     }
 
@@ -68,6 +75,18 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
      */
     @Override
     public void updatePosition() {
+        if (facingLeft && !shootDown) {
+            position.left(speedInPixel);
+            position.down(-rotation / 10);
+        }
+        if(facingRight && !shootDown) {
+            position.right(speedInPixel);
+            position.down(rotation / 10);
+        }
+        if (shootDown) {
+            position.down(speedInPixel);
+        }
+        /*
         if (flyFromLeftToRight) {
             position.right((speedInPixel * (chopper.rotation() / 10)));
             position.down(speedInPixel);
@@ -75,6 +94,7 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
             position.left(-(speedInPixel * (chopper.rotation() / 10)));
             position.down(speedInPixel);
         }
+         */
     }
 
 

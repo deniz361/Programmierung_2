@@ -20,6 +20,9 @@ public class House extends CollidableGameObject {
     private final int maxPeople;
     private int counter;
     private boolean once;
+    private boolean onceFire;
+
+
     /**
      * Mindestanforderung, das jedes GameObject haben muss.
      *
@@ -46,16 +49,20 @@ public class House extends CollidableGameObject {
         maxPeople = 2;
         counter = 0;
         once = true;
+        onceFire = true;
     }
 
     @Override
     public void updateStatus() {
         if (broken) {
-            if (!gameView.alarmIsSet("spawnPeople", this)) {
-                gameView.setAlarm("spawnPeople", this, 15000);
-                burning = true;
-            } else if (gameView.alarm("spawnPeople", this)) {
-                burning = false;
+            if (onceFire) {
+                if (!gameView.alarmIsSet("spawnPeople", this)) {
+                    gameView.setAlarm("spawnPeople", this, 15000);
+                    burning = true;
+                } else if (gameView.alarm("spawnPeople", this)) {
+                    burning = false;
+                    onceFire = false;
+                }
             }
             fireAnimation();
             spawnPeople();

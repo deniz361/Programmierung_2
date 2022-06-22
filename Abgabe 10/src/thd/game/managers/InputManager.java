@@ -30,15 +30,25 @@ class InputManager {
             movement(keyCode);
             controlFasterAndSlower(keyCode);
             changeDirection(keyCode);
+            shoot(keyCode);
 
-            if (keyCode == KeyEvent.VK_SPACE) {
-                chopper.shoot();
-            }
+
             if (!DIAGONAL_MOVEMENT_ALLOWED){
                 break;
             }
 
 
+        }
+    }
+
+    private void shoot(int keyCode) {
+        if (keyCode == KeyEvent.VK_SPACE) {
+            chopper.shootDown = false;
+            chopper.shoot();
+        }
+        if (keyCode == KeyEvent.VK_F) {
+            chopper.shootDown = true;
+            chopper.shoot();
         }
     }
 

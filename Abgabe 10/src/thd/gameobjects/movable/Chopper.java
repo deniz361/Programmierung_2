@@ -26,13 +26,14 @@ public class Chopper extends CollidableGameObject {
 
     //Animation
 
-    private boolean facingLeft;
-    private boolean facingRight;
+    boolean facingLeft;
+    boolean facingRight;
     private boolean movingLeft;
     private boolean movingRight;
     private boolean movingUp;
     private boolean movingDown;
     private Status status;
+    public boolean shootDown;
 
     /**
      * Ob der Chopper von der Schwerkraft heruntergezogen wird oder nicht.
@@ -97,6 +98,8 @@ public class Chopper extends CollidableGameObject {
         createdBullets = new ArrayList<>(100);
         shotsPerSecond = 3;
         shooting = true;
+        shootDown = false;
+
 
         //hit box
         height = 21 * size;
@@ -286,6 +289,7 @@ public class Chopper extends CollidableGameObject {
         hitBoxOffsetX = 7;
     }
 
+
     /**
      * When the chopper gets hit by an enemy bullet his health decreases by 1.
      */
@@ -328,10 +332,7 @@ public class Chopper extends CollidableGameObject {
         }
 
         if (flyDown) {
-            if (!gameView.timerIsActive("flyDown", this)) {
-                gameView.activateTimer("Blink", this, 1000);
-                position.down(0.5);
-            }
+            position.down(0.5);
         }
     }
 
@@ -403,13 +404,13 @@ public class Chopper extends CollidableGameObject {
     private void basicAnimation() {
         if (!exploded) {
             if (!gameView.alarmIsSet("basicAnimation", this)) {
-                gameView.setAlarm("basicAnimation", this, 100);
+                gameView.setAlarm("basicAnimation", this, 50);
             } else if (gameView.alarm("basicAnimation", this)) {
                 if (facingLeft) {
                     basicAnimationLeft();
+                } else if (facingRight) {
+                    basicAnimationRight();
                 }
-            } else if (facingRight) {
-                basicAnimationRight();
             }
         }
     }
@@ -484,7 +485,6 @@ public class Chopper extends CollidableGameObject {
                 basicAnimation = BasicAnimation.STANDARD_RIGHT;
                 break;
             default:
-
         }
     }
 

@@ -125,7 +125,7 @@ public class GameObjectManager {
 
         for (GameObject foreground : gameObjects) {
             if (!(foreground instanceof Chopper)) {
-                if ((foreground instanceof Tank && !((Tank) foreground).doNotDisturb) || foreground instanceof House || foreground instanceof Jet || foreground instanceof People) {
+                if ((foreground instanceof Tank && !((Tank) foreground).doNotDisturb) || foreground instanceof House || foreground instanceof Jet || foreground instanceof People){
                     foreground.worldHasMoved(shiftX);
                 }
             }

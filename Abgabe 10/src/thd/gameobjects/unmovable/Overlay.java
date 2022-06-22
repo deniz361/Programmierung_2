@@ -88,8 +88,11 @@ public class Overlay extends CollidableGameObject {
         }
 
 
+        /*
         if (gameOverCounter >= 0) {
             gameView.addTextToCanvas("The Game ends in: " + gameOverCounter, 500, 50, 20, Color.BLACK, rotation);
         }
+
+         */
     }
 }

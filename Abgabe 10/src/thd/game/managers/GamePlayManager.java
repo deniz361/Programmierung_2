@@ -43,7 +43,9 @@ public class GamePlayManager {
      * Steuert den Spielverlauf.
      */
     void updateGamePlay() {
+        /*
         if (gameOver()) {
+
             if (!gameView.alarmIsSet("gameOver", this)) {
                 gameView.setAlarm("gameOver", this, 2000);
                 gameObjectManager.overlay.showMessage("Game Over", 2);
@@ -51,6 +53,8 @@ public class GamePlayManager {
                 initializeGame();
             }
         }
+
+         */
     }
 
     private void initializeLevel() {
@@ -66,7 +70,7 @@ public class GamePlayManager {
             gameObjectManager.addGameObject(new House(gameView, this, 100, 350));
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
-            gameObjectManager.overlay.showMessage("      Level 1 \n At the mountains", 2);
+            //gameObjectManager.overlay.showMessage("      Level 1 \n At the mountains", 2);
 
         }
         if (currentLevel instanceof Level2) {
@@ -81,15 +85,22 @@ public class GamePlayManager {
     }
 
     private void initializeGame() {
+
         initializeLevel();
         createdTanks.clear();
-        gameObjectManager.overlay.gameOverCounter = 10;
+
+        //gameObjectManager.overlay.gameOverCounter = 10;
 
     }
 
     private boolean gameOver() {
+        /*
         gameObjectManager.overlay.showCounter(10, 1);
         return gameObjectManager.overlay.gameOverCounter <= 0;
+
+         */
+
+        return false;
     }
 
 
