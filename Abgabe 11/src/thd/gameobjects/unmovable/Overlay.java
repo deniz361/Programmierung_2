@@ -1,7 +1,7 @@
 package thd.gameobjects.unmovable;
 
 import thd.game.managers.GamePlayManager;
-import thd.gameobjects.base.CollidableGameObject;
+import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 import java.awt.*;
@@ -9,13 +9,13 @@ import java.awt.*;
 /**
  * Das Overlay des Spiels.
  */
-public class Overlay extends CollidableGameObject {
+public class Overlay extends GameObject {
 
     private String text;
     /**
      * Damit vom GamePlayManager auf diesen counter zugegriffen werden kann.
      */
-    public int gameOverCounter;
+    private int gameOverCounter;
     private boolean executeThisOneTime;
 
     /**
@@ -32,15 +32,6 @@ public class Overlay extends CollidableGameObject {
         gameOverCounter = 0;
     }
 
-    /**
-     * If a game object is collided with something, it is able to react to the collision.
-     *
-     * @param other The other GameObject that is involved in the collision.
-     */
-    @Override
-    public void reactToCollision(CollidableGameObject other) {
-
-    }
 
     /**
      * Um am Anfang die Nachricht anzeigen zu lassen.
@@ -48,7 +39,7 @@ public class Overlay extends CollidableGameObject {
      * @param message       Die Nachricht.
      * @param secondsToShow Wie lange die Nachricht angezeigt werden soll.
      */
-    public void showMessage(String message, int secondsToShow) {
+    private void showMessage(String message, int secondsToShow) {
         text = message;
         gameView.activateTimer(text, this, secondsToShow * 1000L);
     }
@@ -59,7 +50,7 @@ public class Overlay extends CollidableGameObject {
      * @param counter counter.
      * @param secondsToShow wie lange der counter angezeigt werden soll.
      */
-    public void showCounter(int counter, int secondsToShow) {
+    private void showCounter(int counter, int secondsToShow) {
         if (executeThisOneTime) {
             gameOverCounter = counter;
             executeThisOneTime = false;

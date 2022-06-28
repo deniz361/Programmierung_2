@@ -1,14 +1,14 @@
 package thd.gameobjects.unmovable;
 
 import thd.game.managers.GamePlayManager;
-import thd.gameobjects.base.GameObject;
+import thd.gameobjects.base.CollidableGameObject;
 import thd.gameview.GameView;
 
 
 /**
  * The Base.
  */
-public class Base extends GameObject {
+public class Base extends CollidableGameObject {
 
     /**
      * Instantiates the clouds.
@@ -23,6 +23,21 @@ public class Base extends GameObject {
         size = 2;
         width = 59 * size;
         height = 46 * size;
+
+        //hitbox
+        hitBoxOffsetX = width - 13 * size;
+        hitBoxOffsetY = height - 10 * size - 7;
+        hitBoxHeight = 13 * size;
+        hitBoxWidth = 10 * size;
+    }
+
+    /**
+     * If a game object is collided with something, it is able to react to the collision.
+     *
+     * @param other The other GameObject that is involved in the collision.
+     */
+    @Override
+    public void reactToCollision(CollidableGameObject other) {
     }
 
 

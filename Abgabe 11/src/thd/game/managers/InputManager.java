@@ -16,6 +16,10 @@ class InputManager {
     private final Chopper chopper;
 
 
+    //sounds
+    private int shootChopperSound;
+
+
     InputManager(GameView gameView, Chopper chopper) {
         this.gameView = gameView;
         this.chopper = chopper;
@@ -38,6 +42,8 @@ class InputManager {
             }
 
 
+
+
         }
     }
 
@@ -45,10 +51,21 @@ class InputManager {
         if (keyCode == KeyEvent.VK_SPACE) {
             chopper.shootDown = false;
             chopper.shoot();
+
+            if (!gameView.timerIsActive("shootSoundChopper", this)) {
+                gameView.activateTimer("shootSoundChopper", this, (long) (1000 / chopper.shotsPerSecond));
+                shootChopperSound = gameView.playSound("Pang.wav", false);
+            }
+
         }
         if (keyCode == KeyEvent.VK_F) {
             chopper.shootDown = true;
-            chopper.shoot();
+            if (!gameView.timerIsActive("shootSoundChopperDown", this)) {
+                gameView.activateTimer("shootSoundChopperDown", this, (long) (1000 / chopper.shotsPerSecond) * 5);
+                chopper.shoot();
+                shootChopperSound = gameView.playSound("Schuss nach unten.wav", false);
+            }
+
         }
     }
 

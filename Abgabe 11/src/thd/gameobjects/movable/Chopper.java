@@ -5,6 +5,8 @@ import thd.game.managers.*;
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.CollidableGameObject;
 import thd.gameobjects.base.GameObject;
+import thd.gameobjects.unmovable.Base;
+import thd.gameobjects.unmovable.LandingPlace;
 import thd.gameview.GameView;
 
 import java.awt.*;
@@ -19,13 +21,21 @@ public class Chopper extends CollidableGameObject {
     private final GameObjectManager gameObjectManager;
     private ArrayList<GameObject> createdBullets;
     private final String emptyImage;
-    private final double shotsPerSecond;
+
+    /**
+     * Um in "Inputmanager" darauf zugreifen zu können.
+     */
+    public final double shotsPerSecond;
     private boolean shooting;
     private double health;
     private double gas;
 
-    //Animation
+    /**
+     * Ob der Chopper auf der Landefläche ist oder nicht. Essenziell wichtig für das Aufsammeln und Ausladen der Personen.
+     */
+    public boolean chopperIsOnLandingPlace;
 
+    //Animation
     boolean facingLeft;
     boolean facingRight;
     private boolean movingLeft;
@@ -33,6 +43,10 @@ public class Chopper extends CollidableGameObject {
     private boolean movingUp;
     private boolean movingDown;
     private Status status;
+
+    /**
+     * Ob der Chopper nach unten schießt oder nicht.
+     */
     public boolean shootDown;
 
     /**
@@ -96,10 +110,10 @@ public class Chopper extends CollidableGameObject {
         gas = 100.0;
         emptyImage = "empty.png";
         createdBullets = new ArrayList<>(100);
-        shotsPerSecond = 3;
+        shotsPerSecond = 10;
         shooting = true;
         shootDown = false;
-
+        chopperIsOnLandingPlace = false;
 
         //hit box
         height = 21 * size;
@@ -138,9 +152,19 @@ public class Chopper extends CollidableGameObject {
     public void left() {
         rotationDown();
 
+        for (GameObject o : gameObjectManager.getGameObjects()) {
+            if ((o instanceof Base)) {
+                if (o.getPosition().x > 3300 && position.x <= 432.0) {
+                    return;
+                }
+            }
+        }
+        /*
         if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x > 3300 && position.x <= 432.0) {
             return;
         }
+
+         */
         if (position.x > GameView.WIDTH / 2d - 50) {
             if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
                 gameView.activateTimer("faster", this, 200);
@@ -156,9 +180,21 @@ public class Chopper extends CollidableGameObject {
      */
     public void right() {
         rotationUp();
+
+        for (GameObject o : gameObjectManager.getGameObjects()) {
+            if ((o instanceof Base)) {
+                if (o.getPosition().x < 630 && position.x > 678.0) {
+                    return;
+                }
+            }
+        }
+
+        /*
         if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x < 630 && position.x > 678.0) {
             return;
         }
+
+         */
         if (position.x < GameView.WIDTH / 2d + 200) {
             if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
                 gameView.activateTimer("faster", this, 200);
@@ -174,24 +210,13 @@ public class Chopper extends CollidableGameObject {
      */
     public void up() {
         if (position.y < -5) {
-            position.down();
+            return;
         } else {
             if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
                 gameView.activateTimer("faster", this, 200);
             }
             position.up(speedInPixel);
         }
-        /*
-        if (facingLeft) {
-            if (rotation <= 20 && movingUp) {
-                rotation += 0.5;
-            }
-        } else {
-            if (rotation >= -20 && movingUp) {
-                rotation += 0.5;
-            }
-        }
-         */
     }
 
     /**
@@ -204,7 +229,7 @@ public class Chopper extends CollidableGameObject {
             if (!gameView.timerIsActive("slower", this) && speedInPixel > 1) {
                 gameView.activateTimer("slower", this, 200);
             }
-            position.down(0.5);
+            position.down(speedInPixel / 2);
         }
     }
 
@@ -252,14 +277,14 @@ public class Chopper extends CollidableGameObject {
 
     private void rotationUp() {
         if (rotation <= 20) {
-            rotation += 0.5;
+            rotation += 1;
         }
 
     }
 
     private void rotationDown() {
         if (rotation >= -20) {
-            rotation -= 0.5;
+            rotation -= 1;
         }
     }
 
@@ -354,6 +379,9 @@ public class Chopper extends CollidableGameObject {
      */
     @Override
     public void reactToCollision(CollidableGameObject other) {
+        if (other.getClass() == LandingPlace.class && gamePlayManager.pickedUpPeopleSize() > 0) {
+            chopperIsOnLandingPlace = true;
+        }
     }
 
 

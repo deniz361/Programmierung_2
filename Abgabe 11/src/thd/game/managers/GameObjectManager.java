@@ -21,7 +21,7 @@ public class GameObjectManager {
     private final ArrayList<GameObject> toAddBackground;
 
     Chopper chopper;
-    Overlay overlay;
+    private Overlay overlay;
     Background background;
 
     protected GameObjectManager(GameView gameView, GamePlayManager gamePlayManager) {
@@ -37,8 +37,14 @@ public class GameObjectManager {
 
         backgroundObjects.add(background);
         backgroundObjects.add(new Cloud(gameView, gamePlayManager));
+
+        /*
         backgroundObjects.add(new LandingPlace(gameView, gamePlayManager));
         backgroundObjects.add(new Base(gameView, gamePlayManager));
+
+         */
+
+
         gameObjects.add(chopper);
         gameObjects.add(overlay);
     }
@@ -63,6 +69,17 @@ public class GameObjectManager {
     }
 
     private void detectCollisionsAndNotifyGameObjects(ArrayList<CollidableGameObject> collidables) {
+        //es ist das Problem aufgetreten, dass wenn man einmal Leute abgeliefert hat, dass man nicht mehr neue
+        // aufsammeln konnte. Deswegen dieses Konstrukt:
+        for (CollidableGameObject g: collidables) {
+            if (g instanceof LandingPlace) {
+                if (!(chopper.collidesWith(g))) {
+                    chopper.chopperIsOnLandingPlace = false;
+                }
+            }
+        }
+
+
         for (int index = 0; index < collidables.size(); index++) {
             for (int other = index + 1; other < collidables.size(); other++) {
                 if (collidables.get(index).collidesWith(collidables.get(other))) {
@@ -83,6 +100,11 @@ public class GameObjectManager {
                 removeGameObject(g);
                 addGameObject(g);
             }
+            if (g instanceof Tank) {
+                removeGameObject(g);
+                addGameObject(g);
+            }
+
         }
     }
 
@@ -125,7 +147,8 @@ public class GameObjectManager {
 
         for (GameObject foreground : gameObjects) {
             if (!(foreground instanceof Chopper)) {
-                if ((foreground instanceof Tank && !((Tank) foreground).doNotDisturb) || foreground instanceof House || foreground instanceof Jet || foreground instanceof People){
+                if ((foreground instanceof Tank && !((Tank) foreground).doNotDisturb) || foreground instanceof House || foreground instanceof Jet || foreground instanceof People
+                || foreground instanceof Base || foreground instanceof LandingPlace || foreground instanceof Bullet){
                     foreground.worldHasMoved(shiftX);
                 }
             }
@@ -138,16 +161,16 @@ public class GameObjectManager {
      *
      * @return all game objects
      */
-    LinkedList<GameObject> getGameObjects() {
+    public LinkedList<GameObject> getGameObjects() {
         return gameObjects;
     }
 
-    /**
-     * Returns all background GameObjects.
-     *
-     * @return all background game objects
-     */
+
+
+    /*
     public LinkedList<GameObject> getBackgroundObjects() {
         return backgroundObjects;
     }
+
+     */
 }

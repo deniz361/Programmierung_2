@@ -15,10 +15,14 @@ import java.awt.*;
 public class Bullet extends CollidableGameObject implements AutoMovable {
 
     private boolean flyFromLeftToRight;
-    private Chopper chopper;
-    private boolean facingLeft;
-    private boolean facingRight;
-    private boolean shootDown;
+    private final boolean facingLeft;
+    private final boolean facingRight;
+    private final boolean shootDown;
+
+
+
+    //sound
+    private int id;
 
 
     /**
@@ -30,10 +34,9 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
      */
     Bullet(GameView gameView, GamePlayManager gamePlayManager, Chopper chopper) {
         super(gameView, gamePlayManager);
-        this.chopper = chopper;
         height = 2;
         width = 5;
-        speedInPixel = 3;
+        speedInPixel = 6;
         position.x = chopper.getPosition().x + 10;
         position.y = chopper.getPosition().y + 26;
         flyFromLeftToRight = true;
@@ -46,7 +49,6 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
         facingLeft = chopper.facingLeft;
         facingRight = chopper.facingRight;
         shootDown = chopper.shootDown;
-
     }
 
 
@@ -86,15 +88,6 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
         if (shootDown) {
             position.down(speedInPixel);
         }
-        /*
-        if (flyFromLeftToRight) {
-            position.right((speedInPixel * (chopper.rotation() / 10)));
-            position.down(speedInPixel);
-        } else {
-            position.left(-(speedInPixel * (chopper.rotation() / 10)));
-            position.down(speedInPixel);
-        }
-         */
     }
 
 
@@ -103,7 +96,6 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
      */
     @Override
     public void addToCanvas() {
-        //gameView.addOvalToCanvas(position.x, position.y, width, height, 5, false, Color.darkGray);
         gameView.addRectangleToCanvas(position.x, position.y, width, height, 0, true, Color.BLACK);
     }
 

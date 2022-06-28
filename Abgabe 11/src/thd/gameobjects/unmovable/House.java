@@ -46,7 +46,7 @@ public class House extends CollidableGameObject {
         exploded = false;
         fireAnimation = FireAnimation.FIRE1;
         people = new People(gameView, gamePlayManager, this.position.x, this.position.y + height / 2d + 10);
-        maxPeople = 2;
+        maxPeople = 7;
         counter = 0;
         once = true;
         onceFire = true;
@@ -57,7 +57,7 @@ public class House extends CollidableGameObject {
         if (broken) {
             if (onceFire) {
                 if (!gameView.alarmIsSet("spawnPeople", this)) {
-                    gameView.setAlarm("spawnPeople", this, 15000);
+                    gameView.setAlarm("spawnPeople", this, 30000);
                     burning = true;
                 } else if (gameView.alarm("spawnPeople", this)) {
                     burning = false;
@@ -73,7 +73,7 @@ public class House extends CollidableGameObject {
         if (counter < maxPeople) {
             if (!once) {
                 if (!gameView.alarmIsSet("spawnDelay", this)) {
-                    gameView.setAlarm("spawnDelay", this, 2000);
+                    gameView.setAlarm("spawnDelay", this, 1500);
                 } else if (gameView.alarm("spawnDelay", this)) {
                     gamePlayManager.spawn(new People(gameView, gamePlayManager, this.position.x + 50, this.position.y + height / 2d + 15));
                     counter++;

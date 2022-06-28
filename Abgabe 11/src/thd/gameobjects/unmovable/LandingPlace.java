@@ -1,12 +1,13 @@
 package thd.gameobjects.unmovable;
 
 import thd.game.managers.GamePlayManager;
-import thd.gameobjects.base.GameObject;
+import thd.gameobjects.base.CollidableGameObject;
+import thd.gameobjects.movable.Chopper;
 import thd.gameview.GameView;
 
 
 /** The landing place for the Chopper. */
-public class LandingPlace extends GameObject {
+public class LandingPlace extends CollidableGameObject {
 
     /** Wenn der Chopper auf dem Landeplatz landet, steigen die Passagiere aus. */
     private boolean landed;
@@ -22,6 +23,24 @@ public class LandingPlace extends GameObject {
         position.x = 620;
         position.y = 430;
         size = 3.5;
+
+        //hitbot
+        hitBoxOffsetX = 0;
+        hitBoxOffsetY = 0;
+        hitBoxHeight = 9 * size;
+        hitBoxWidth = 59 * size;
+    }
+
+    /**
+     * If a game object is collided with something, it is able to react to the collision.
+     *
+     * @param other The other GameObject that is involved in the collision.
+     */
+    @Override
+    public void reactToCollision(CollidableGameObject other) {
+        if (other.getClass() == Chopper.class && gamePlayManager.pickedUpPeopleSize() > 0) {
+            gamePlayManager.unloadPeople();
+        }
     }
 
     @Override

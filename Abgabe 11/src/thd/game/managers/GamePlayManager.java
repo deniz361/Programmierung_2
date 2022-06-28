@@ -7,11 +7,15 @@ import thd.gameobjects.base.GameObject;
 import thd.gameobjects.base.Position;
 import thd.gameobjects.movable.Chopper;
 import thd.gameobjects.movable.Jet;
+import thd.gameobjects.movable.People;
 import thd.gameobjects.movable.Tank;
+import thd.gameobjects.unmovable.Base;
 import thd.gameobjects.unmovable.House;
+import thd.gameobjects.unmovable.LandingPlace;
 import thd.gameview.GameView;
+import java.util.LinkedList;
 
-import java.util.ArrayList;
+import static thd.game.managers.FileManager.writeDifficultyToDisc;
 
 
 /**
@@ -25,15 +29,22 @@ public class GamePlayManager {
      */
     boolean gameOver;
     private GameObjectManager gameObjectManager;
-    private final ArrayList<GameObject> createdTanks;
-    private final LevelManager levelManager;
+    private final LinkedList<GameObject> createdTanks;
+    private final LinkedList<GameObject> pickedUpPeople;
+    private final LinkedList<GameObject> unloadedPeople;
+
+
+
+    private LevelManager levelManager;
     private Level currentLevel;
     private int counter;
 
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
         gameOver = false;
-        createdTanks = new ArrayList<>(100);
+        createdTanks = new LinkedList<>();
+        pickedUpPeople = new LinkedList<>();
+        unloadedPeople = new LinkedList<>();
         levelManager = new LevelManager(Level.Difficulty.STANDARD);
         currentLevel = levelManager.levels.getFirst();
     }
@@ -43,18 +54,11 @@ public class GamePlayManager {
      * Steuert den Spielverlauf.
      */
     void updateGamePlay() {
-        /*
         if (gameOver()) {
-
-            if (!gameView.alarmIsSet("gameOver", this)) {
-                gameView.setAlarm("gameOver", this, 2000);
-                gameObjectManager.overlay.showMessage("Game Over", 2);
-            } else if (gameView.alarm("gameOver", this)) {
-                initializeGame();
-            }
+            initializeGame();
         }
 
-         */
+
     }
 
     private void initializeLevel() {
@@ -70,6 +74,11 @@ public class GamePlayManager {
             gameObjectManager.addGameObject(new House(gameView, this, 100, 350));
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
+
+            gameObjectManager.addGameObject(new LandingPlace(gameView, this));
+            gameObjectManager.addGameObject(new Base(gameView, this));
+
+
             //gameObjectManager.overlay.showMessage("      Level 1 \n At the mountains", 2);
 
         }
@@ -85,21 +94,16 @@ public class GamePlayManager {
     }
 
     private void initializeGame() {
+        Level.Difficulty difficulty = FileManager.readDifficultyFromDisc();
+        writeDifficultyToDisc(difficulty);
+
+        levelManager = new LevelManager(difficulty);
 
         initializeLevel();
         createdTanks.clear();
-
-        //gameObjectManager.overlay.gameOverCounter = 10;
-
     }
 
     private boolean gameOver() {
-        /*
-        gameObjectManager.overlay.showCounter(10, 1);
-        return gameObjectManager.overlay.gameOverCounter <= 0;
-
-         */
-
         return false;
     }
 
@@ -167,6 +171,51 @@ public class GamePlayManager {
 
     }
 
+    /**
+     * Chopper sammelt die Leute ein.
+     * @param g das bestimmte Objekt
+     */
+    public void pickUpPeople(GameObject g) {
+        if (pickedUpPeople.size() <= 7 && !gameObjectManager.chopper.chopperIsOnLandingPlace && gameObjectManager.chopper.chopperLanded()) {
+            pickedUpPeople.add(g);
+            destroy(g);
+        }
+    }
+
+    /**
+     * Man kann nicht mehr die selben Objekte aus "pickedUpPeople" hinzufügen, da man die position schlecht verändern kann.
+     * --> einfache Lösung: neue Objekte mit Position des Choppers hinzufügen
+     */
+    public void unloadPeople() {
+            for (GameObject g: pickedUpPeople) {
+                if (!gameView.timerIsActive("unloadPeople", this) && gameObjectManager.chopper.chopperIsOnLandingPlace) {
+                    gameView.activateTimer("unloadPeople", this, 600);
+                    pickedUpPeople.remove(g);
+                    GameObject o = new People(gameView, this, gameObjectManager.chopper.getPosition().x + 60, gameObjectManager.chopper.getPosition().y + 13);
+                    unloadedPeople.add(o);
+                    spawn(o);
+                }
+            }
+    }
+
+
+    /**
+     * Wenn eine Person in die Base geht.
+     * @param g die bestimmte Person.
+     */
+    public void storePeopleInBase(GameObject g) {
+            destroy(g);
+            //erhöhe score
+    }
+
+    /**
+     * Wie groß die Liste "pickedUpPeopleSize" ist auszugeben, ohne die Liste public zu machen.
+     * @return die größe der Liste
+     */
+    public int pickedUpPeopleSize() {
+        return pickedUpPeople.size();
+    }
+
     /** Gibt die Position des Choppers zurück, wichtig, um zu berechnen, wo die Gegner hin schießen müssen.
      * @return gibt die Position des Choppers zurück. */
     public Position positionChopper() {
@@ -176,6 +225,14 @@ public class GamePlayManager {
             }
         }
         return null;
+    }
+
+    /**
+     * Um in der Klasse People auf "ChopperLanded" zuzugreifen.
+     * @return true wenn der Chopper gelandet ist, false wenn nicht.
+     */
+    public boolean chopperLanded() {
+        return gameObjectManager.chopper.chopperLanded();
     }
 
 
