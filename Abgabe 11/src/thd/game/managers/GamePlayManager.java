@@ -14,6 +14,7 @@ import thd.gameobjects.unmovable.Base;
 import thd.gameobjects.unmovable.House;
 import thd.gameobjects.unmovable.LandingPlace;
 import thd.gameview.GameView;
+
 import java.util.LinkedList;
 
 import static thd.game.managers.FileManager.writeDifficultyToDisc;
@@ -35,6 +36,11 @@ public class GamePlayManager {
     private final LinkedList<GameObject> unloadedPeople;
     private final LinkedList<GameObject> savedPeople;
     private final LinkedList<GameObject> lostPeople;
+
+
+    private double landingplacePositionXWhenHit;
+    private double distanceToBase;
+    private boolean chopperHit;
 
 
     private LevelManager levelManager;
@@ -59,6 +65,18 @@ public class GamePlayManager {
     void updateGamePlay() {
         if (gameOver()) {
             initializeGame();
+        }
+
+        if (chopperHit) {
+            if (!gameView.alarmIsSet("reset", this)) {
+                gameView.setAlarm("reset", this, 3000);
+            } else if (gameView.alarm("reset", this)) {
+                gameObjectManager.chopper.reset();
+                moveWorldToLeft(distanceToBase);
+                chopperHit = false;
+            }
+
+
         }
 
 
@@ -110,7 +128,6 @@ public class GamePlayManager {
         gameOver = false;
         Level.Difficulty difficulty = FileManager.readDifficultyFromDisc();
         writeDifficultyToDisc(difficulty);
-
         levelManager = new LevelManager(difficulty);
 
         initializeLevel();
@@ -121,9 +138,19 @@ public class GamePlayManager {
         if (getHealthChopper() == 0) {
             gameObjectManager.chopper.health = 3;
             return true;
-        } else if (gameObjectManager.chopper.status == Chopper.Status.EXPLODED) {
-            return true;
-        } else {
+
+        }
+
+        /*else if (gameObjectManager.chopper.status == Chopper.Status.EXPLODED) {
+            if (!gameView.alarmIsSet("gameOver", this)) {
+                gameView.setAlarm("gameOver", this, 5000);
+            } else if (gameView.alarm("gameOver", this)) {
+                return true;
+            }
+            return false;
+        } */
+
+        else {
             return false;
         }
 
@@ -181,20 +208,34 @@ public class GamePlayManager {
     }
 
 
-
-
-    /** Was passieren soll, wenn der Chopper von einer Kugel getroffen wird. */
+    /**
+     * Was passieren soll, wenn der Chopper von einer Kugel getroffen wird.
+     */
     public void chopperHasBeenHit() {
         for (GameObject o : gameObjectManager.getGameObjects()) {
             if (o instanceof Chopper) {
                 Chopper chopper = (Chopper) o;
                 chopper.decreaseHealth();
+                chopper.chopperHit();
+                chopperHit = true;
+
+
+
+
+            }
+            if (o instanceof LandingPlace) {
+                LandingPlace LandingPlace = (LandingPlace) o;
+                landingplacePositionXWhenHit = LandingPlace.getPosition().x;
+                distanceToBase = (landingplacePositionXWhenHit - 620);
+
+
             }
         }
     }
 
     /**
      * Chopper sammelt die Leute ein.
+     *
      * @param g das bestimmte Objekt
      */
     public void pickUpPeople(GameObject g) {
@@ -224,6 +265,7 @@ public class GamePlayManager {
 
     /**
      * Wenn eine Person in die Base geht.
+     *
      * @param g die bestimmte Person.
      */
     public void storePeopleInBase(GameObject g) {
@@ -234,19 +276,25 @@ public class GamePlayManager {
 
     /**
      * Wie groß die Liste "pickedUpPeopleSize" ist auszugeben, ohne die Liste public zu machen.
+     *
      * @return die größe der Liste
      */
     public int getPickedUpPeopleSize() {
         return pickedUpPeople.size();
     }
 
-    /** Increase score. */
+    /**
+     * Increase score.
+     */
     public void adjustScore(double score) {
         gameObjectManager.chopper.score += score;
     }
 
-    /** Gibt die Position des Choppers zurück, wichtig, um zu berechnen, wo die Gegner hin schießen müssen.
-     * @return gibt die Position des Choppers zurück. */
+    /**
+     * Gibt die Position des Choppers zurück, wichtig, um zu berechnen, wo die Gegner hin schießen müssen.
+     *
+     * @return gibt die Position des Choppers zurück.
+     */
     public Position positionChopper() {
         for (GameObject o : gameObjectManager.getGameObjects()) {
             if (o instanceof Chopper) {
@@ -259,6 +307,7 @@ public class GamePlayManager {
 
     /**
      * Um die geretteten Menschen im Overlay anzeigen zu lassen.
+     *
      * @return gibt die geretteten Menschen zurück.
      */
     public int getSavedPeopleSize() {
@@ -268,6 +317,7 @@ public class GamePlayManager {
     /**
      * Wenn ein Objekt "People" mit dem Objekt "BulletEnemy" kollidiert, wird es in diese Liste hinzugefügt. Diese
      * Liste wurde hauptsächlich für das Overlay erstellt.
+     *
      * @param people welches Objekt zur Liste hinzugefügt werden soll.
      */
     public void addLostPeople(People people) {
@@ -285,6 +335,7 @@ public class GamePlayManager {
 
     /**
      * Um in der Klasse People auf "ChopperLanded" zuzugreifen.
+     *
      * @return true wenn der Chopper gelandet ist, false wenn nicht.
      */
     public boolean chopperLanded() {

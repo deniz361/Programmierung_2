@@ -46,5 +46,6 @@ public class LandingPlace extends CollidableGameObject {
     @Override
     public void addToCanvas() {
         gameView.addImageToCanvas("Landeplatz.png",position.x, position.y, size,0);
+        //System.out.println(getPosition());
     }
 }

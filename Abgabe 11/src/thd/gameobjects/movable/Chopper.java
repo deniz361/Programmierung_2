@@ -6,6 +6,7 @@ import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.CollidableGameObject;
 import thd.gameobjects.base.GameObject;
 import thd.gameobjects.unmovable.Base;
+import thd.gameobjects.unmovable.House;
 import thd.gameobjects.unmovable.LandingPlace;
 import thd.gameview.GameView;
 
@@ -37,6 +38,7 @@ public class Chopper extends CollidableGameObject {
      * Ob der Chopper auf der Landefläche ist oder nicht. Essenziell wichtig für das Aufsammeln und Ausladen der Personen.
      */
     public boolean chopperIsOnLandingPlace;
+    private House house;
 
     //Animation
     boolean facingLeft;
@@ -62,6 +64,8 @@ public class Chopper extends CollidableGameObject {
      * return true if the chopper has been destroyed.
      */
     public boolean exploded;
+    public boolean chopperHit;
+    private House.FireAnimation fireAnimation;
     private BasicAnimation basicAnimation;
 
 
@@ -118,13 +122,15 @@ public class Chopper extends CollidableGameObject {
         shootDown = false;
         chopperIsOnLandingPlace = false;
 
+
+
         //hit box
-        height = 21 * size;
-        width = 47.5 * size;
+        height = 21 * size - 10;
+        width = 47.5 * size - 5;
 
 
         hitBoxOffsetX = 7;
-        hitBoxOffsetY = 4;
+        hitBoxOffsetY = 10;
         hitBoxHeight = height;
         hitBoxWidth = width;
 
@@ -142,6 +148,7 @@ public class Chopper extends CollidableGameObject {
         movingUp = false;
         movingRight = false;
         basicAnimation = BasicAnimation.STANDARD;
+        fireAnimation = House.FireAnimation.FIRE1;
 
 
     }
@@ -162,12 +169,7 @@ public class Chopper extends CollidableGameObject {
                 }
             }
         }
-        /*
-        if (gameObjectManager.getBackgroundObjects().get(3).getPosition().x > 3300 && position.x <= 432.0) {
-            return;
-        }
 
-         */
         if (position.x > GameView.WIDTH / 2d - 50) {
             if (!gameView.timerIsActive("faster", this) && speedInPixel < 2) {
                 gameView.activateTimer("faster", this, 200);
@@ -281,6 +283,7 @@ public class Chopper extends CollidableGameObject {
     private void rotationUp() {
         if (rotation <= 20) {
             rotation += 1;
+            hitBoxOffsetY = 5;
         }
 
     }
@@ -288,6 +291,7 @@ public class Chopper extends CollidableGameObject {
     private void rotationDown() {
         if (rotation >= -20) {
             rotation -= 1;
+            hitBoxOffsetY = 15;
         }
     }
 
@@ -341,9 +345,13 @@ public class Chopper extends CollidableGameObject {
     public void reset() {
         position.x = 620;
         position.y = 400;
+        hitBoxOffsetX = 7;
+        hitBoxOffsetY = 10;
+        rotation = 0;
         status = Status.STANDARD;
         basicAnimation = BasicAnimation.STANDARD;
         exploded = false;
+        chopperHit = false;
     }
 
 
@@ -352,11 +360,6 @@ public class Chopper extends CollidableGameObject {
      */
     @Override
     public void addToCanvas() {
-
-
-        //gameView.addTextToCanvas("Speed:" + speedInPixel, 300, 0, 15, Color.WHITE, 0);
-
-
         gameView.addImageToCanvas(basicAnimation.animationFile, position.x, position.y, size, rotation);
     }
 
@@ -384,6 +387,14 @@ public class Chopper extends CollidableGameObject {
         basicAnimation();
         damageAnimation();
         crashLanding();
+
+        if (chopperHit && !chopperLanded() && facingLeft) {
+            position.down(1.3);
+            position.left(1);
+        } else if(chopperHit && !chopperLanded() && facingRight) {
+            position.down(1.3);
+            position.right(1);
+        }
 
     }
 
@@ -422,6 +433,13 @@ public class Chopper extends CollidableGameObject {
             status = Status.EXPLODED;
             rotation = 3;
         }
+    }
+
+
+
+    public void chopperHit() {
+        status = Status.EXPLODED;
+        chopperHit = true;
     }
 
 

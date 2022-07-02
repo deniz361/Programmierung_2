@@ -121,15 +121,15 @@ public class House extends CollidableGameObject {
     public enum FireAnimation {
         FIRE1("Fire 1.png"), FIRE2("Fire 2.png"), FIRE3("Fire 3.png");
 
-        final String file;
+        public final String file;
 
         FireAnimation(String file) {
             this.file = file;
         }
     }
 
-    private void fireAnimation() {
-        if (burning) {
+    public void fireAnimation() {
+        //if (burning) {
             if (!gameView.alarmIsSet("fireAnimation", this)) {
                 gameView.setAlarm("fireAnimation", this, 100);
             } else if (gameView.alarm("fireAnimation", this)) {
@@ -147,7 +147,7 @@ public class House extends CollidableGameObject {
 
                 }
             }
-        }
+        //}
     }
 
     /**
