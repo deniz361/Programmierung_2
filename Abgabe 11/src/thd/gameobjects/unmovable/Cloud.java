@@ -53,5 +53,17 @@ public class Cloud extends GameObject {
         gameView.addImageToCanvas("Cloud.png", position.x - 2200, position.y, 2, 0);
         gameView.addImageToCanvas("Cloud.png", position.x - 2400, position.y - 50, 2, 0);
         gameView.addImageToCanvas("Cloud.png", position.x - 2600, position.y + 20, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 2800, position.y - 20, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 2900, position.y + 30, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 3100, position.y - 60, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 3200, position.y + 20, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 3400, position.y, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 3660, position.y + 10, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 3800, position.y - 40, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 4000, position.y + 50, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 4150, position.y - 10, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 4250, position.y, 2, 0);
+        gameView.addImageToCanvas("Cloud.png", position.x - 4400, position.y + 50, 2, 0);
+
     }
 }

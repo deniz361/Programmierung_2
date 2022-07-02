@@ -147,10 +147,10 @@ public class GameObjectManager {
 
         for (GameObject foreground : gameObjects) {
             if (!(foreground instanceof Chopper)) {
-                if ((foreground instanceof Tank && !((Tank) foreground).doNotDisturb) || foreground instanceof House || foreground instanceof Jet || foreground instanceof People
-                || foreground instanceof Base || foreground instanceof LandingPlace || foreground instanceof Bullet){
+                //if ((foreground instanceof Tank) || foreground instanceof House || foreground instanceof Jet || foreground instanceof People
+                //|| foreground instanceof Base || foreground instanceof LandingPlace || foreground instanceof Bullet){
                     foreground.worldHasMoved(shiftX);
-                }
+                //}
             }
         }
     }

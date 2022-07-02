@@ -70,6 +70,14 @@ public class Overlay extends GameObject {
      */
     @Override
     public void addToCanvas() {
+        //gameView.addRectangleToCanvas(0,0,GameView.WIDTH, 80,0, true, Color.BLACK);
+        gameView.addTextToCanvas("SCORE:" + gamePlayManager.getScore(), 780, 0, 15, Color.BLACK, 0);
+        gameView.addTextToCanvas(" LOAD:" + gamePlayManager.getPickedUpPeopleSize() + "/7", 780, 20, 15, Color.BLACK, 0);
+        gameView.addTextToCanvas(" SAFE:" + gamePlayManager.getSavedPeopleSize(), 780, 40, 15, Color.BLACK, 0);
+        gameView.addTextToCanvas(" LOST:" + gamePlayManager.getLostPeopleSize(), 780, 60, 15, Color.BLACK, 0);
+        gameView.addTextToCanvas("HEALTH:" + gamePlayManager.getHealthChopper(), 0,0,15, Color.BLACK, 0);
+
+
         if (gameView.timerIsActive(text, this)) {
             final int size = 30;
             final double xCoordinate = GameView.WIDTH / 2.0 - size * 7;

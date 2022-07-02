@@ -26,6 +26,7 @@ public class Tank extends CollidableGameObject implements AutoMovable {
 
     /** don't move the Tank while it's driving into the scene. */
     public boolean doNotDisturb;
+    private double positionXNotDynamic;
 
 
     // shoot
@@ -58,6 +59,7 @@ public class Tank extends CollidableGameObject implements AutoMovable {
         yStart = GameView.HEIGHT + height + 15;  //gameview height ist 540
         yGoal = random.nextInt(100) + 400;
         position.x = xStart;
+        positionXNotDynamic = xStart;
         position.y = yStart;
         doNotDisturb = true;
         tankLeft =
@@ -103,7 +105,6 @@ public class Tank extends CollidableGameObject implements AutoMovable {
         } else {
             gameView.addBlockImageToCanvas(tankLeft, position.x, position.y, size, 0);
         }
-        //gameView.addImageToCanvas("tank_left.png", position.x,position.y,0.03,0);
     }
 
     @Override
@@ -144,7 +145,6 @@ public class Tank extends CollidableGameObject implements AutoMovable {
 
 
     private void goIntoScene() {
-        doNotDisturb = true;
         if (xStart > 475) {
             leftCurve();
             flyFromLeftToRight = false;
@@ -156,16 +156,16 @@ public class Tank extends CollidableGameObject implements AutoMovable {
 
     private void rightCurve() {
         parabel();
-        position.right(speedInPixel);
+        positionXNotDynamic += speedInPixel;
     }
 
     private void leftCurve() {
         parabel();
-        position.left(speedInPixel);
+        positionXNotDynamic -= speedInPixel;
     }
 
     private void parabel() {
-        position.y = -0.005 * Math.pow(position.x - xStart, 2) + yStart;
+        position.y = -0.005 * Math.pow(positionXNotDynamic - xStart, 2) + yStart;
     }
 
 
@@ -173,7 +173,7 @@ public class Tank extends CollidableGameObject implements AutoMovable {
     private void shoot() {
         if (!gameView.timerIsActive("shootTank", this)) {
             gameView.activateTimer("shootTank", this, (long) (1000 / shotsPerSecond));
-            GameObject o = new BulletEnemy(gameView, gamePlayManager, this.position.x, this.position.y);
+            GameObject o = new BulletEnemy(gameView, gamePlayManager, this.position.x, this.position.y, 3, 3);
             createdBullets.add(o);
             gamePlayManager.spawn(o);
 

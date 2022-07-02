@@ -9,6 +9,7 @@ import thd.gameobjects.movable.Chopper;
 import thd.gameobjects.movable.Jet;
 import thd.gameobjects.movable.People;
 import thd.gameobjects.movable.Tank;
+import thd.gameobjects.unmovable.Artillery;
 import thd.gameobjects.unmovable.Base;
 import thd.gameobjects.unmovable.House;
 import thd.gameobjects.unmovable.LandingPlace;
@@ -32,12 +33,12 @@ public class GamePlayManager {
     private final LinkedList<GameObject> createdTanks;
     private final LinkedList<GameObject> pickedUpPeople;
     private final LinkedList<GameObject> unloadedPeople;
-
+    private final LinkedList<GameObject> savedPeople;
+    private final LinkedList<GameObject> lostPeople;
 
 
     private LevelManager levelManager;
     private Level currentLevel;
-    private int counter;
 
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
@@ -45,6 +46,8 @@ public class GamePlayManager {
         createdTanks = new LinkedList<>();
         pickedUpPeople = new LinkedList<>();
         unloadedPeople = new LinkedList<>();
+        savedPeople = new LinkedList<>();
+        lostPeople = new LinkedList<>();
         levelManager = new LevelManager(Level.Difficulty.STANDARD);
         currentLevel = levelManager.levels.getFirst();
     }
@@ -71,7 +74,17 @@ public class GamePlayManager {
         if (currentLevel instanceof Level1) {
             gameObjectManager.chopper.reset();
             gameObjectManager.background.setBackgroundImage("background.png");
-            gameObjectManager.addGameObject(new House(gameView, this, 100, 350));
+            gameObjectManager.addGameObject(new House(gameView, this, -800, 350));
+            gameObjectManager.addGameObject(new House(gameView, this, -2100, 350));
+            gameObjectManager.addGameObject(new House(gameView, this, -3800, 350));
+
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -100, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -300, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -1500, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -2800, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -3100, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -3000, 420));
+
             gameObjectManager.addGameObject(new Tank(gameView, this));
             gameObjectManager.addGameObject(new Jet(gameView, this));
 
@@ -94,6 +107,7 @@ public class GamePlayManager {
     }
 
     private void initializeGame() {
+        gameOver = false;
         Level.Difficulty difficulty = FileManager.readDifficultyFromDisc();
         writeDifficultyToDisc(difficulty);
 
@@ -104,7 +118,16 @@ public class GamePlayManager {
     }
 
     private boolean gameOver() {
-        return false;
+        if (getHealthChopper() == 0) {
+            gameObjectManager.chopper.health = 3;
+            return true;
+        } else if (gameObjectManager.chopper.status == Chopper.Status.EXPLODED) {
+            return true;
+        } else {
+            return false;
+        }
+
+
     }
 
 
@@ -168,7 +191,6 @@ public class GamePlayManager {
                 chopper.decreaseHealth();
             }
         }
-
     }
 
     /**
@@ -187,15 +209,16 @@ public class GamePlayManager {
      * --> einfache Lösung: neue Objekte mit Position des Choppers hinzufügen
      */
     public void unloadPeople() {
-            for (GameObject g: pickedUpPeople) {
-                if (!gameView.timerIsActive("unloadPeople", this) && gameObjectManager.chopper.chopperIsOnLandingPlace) {
-                    gameView.activateTimer("unloadPeople", this, 600);
-                    pickedUpPeople.remove(g);
-                    GameObject o = new People(gameView, this, gameObjectManager.chopper.getPosition().x + 60, gameObjectManager.chopper.getPosition().y + 13);
-                    unloadedPeople.add(o);
-                    spawn(o);
-                }
+        for (int i = 0; i < pickedUpPeople.size(); i++) {
+            if (!gameView.timerIsActive("unloadPeople", this) && gameObjectManager.chopper.chopperIsOnLandingPlace) {
+                gameView.activateTimer("unloadPeople", this, 600);
+                pickedUpPeople.remove(i);
+                People o = new People(gameView, this, gameObjectManager.chopper.getPosition().x + 60, gameObjectManager.chopper.getPosition().y + 13);
+                unloadedPeople.add(o);
+                spawn(o);
+                o.runToBase = true;
             }
+        }
     }
 
 
@@ -204,16 +227,22 @@ public class GamePlayManager {
      * @param g die bestimmte Person.
      */
     public void storePeopleInBase(GameObject g) {
-            destroy(g);
-            //erhöhe score
+        savedPeople.add(g);
+        destroy(g);
+        adjustScore(250.0);
     }
 
     /**
      * Wie groß die Liste "pickedUpPeopleSize" ist auszugeben, ohne die Liste public zu machen.
      * @return die größe der Liste
      */
-    public int pickedUpPeopleSize() {
+    public int getPickedUpPeopleSize() {
         return pickedUpPeople.size();
+    }
+
+    /** Increase score. */
+    public void adjustScore(double score) {
+        gameObjectManager.chopper.score += score;
     }
 
     /** Gibt die Position des Choppers zurück, wichtig, um zu berechnen, wo die Gegner hin schießen müssen.
@@ -227,12 +256,43 @@ public class GamePlayManager {
         return null;
     }
 
+
+    /**
+     * Um die geretteten Menschen im Overlay anzeigen zu lassen.
+     * @return gibt die geretteten Menschen zurück.
+     */
+    public int getSavedPeopleSize() {
+        return savedPeople.size();
+    }
+
+    /**
+     * Wenn ein Objekt "People" mit dem Objekt "BulletEnemy" kollidiert, wird es in diese Liste hinzugefügt. Diese
+     * Liste wurde hauptsächlich für das Overlay erstellt.
+     * @param people welches Objekt zur Liste hinzugefügt werden soll.
+     */
+    public void addLostPeople(People people) {
+        lostPeople.add(people);
+    }
+
+    public int getLostPeopleSize() {
+        return lostPeople.size();
+    }
+
+    public double getHealthChopper() {
+        return gameObjectManager.chopper.health;
+    }
+
+
     /**
      * Um in der Klasse People auf "ChopperLanded" zuzugreifen.
      * @return true wenn der Chopper gelandet ist, false wenn nicht.
      */
     public boolean chopperLanded() {
         return gameObjectManager.chopper.chopperLanded();
+    }
+
+    public double getScore() {
+        return gameObjectManager.chopper.score;
     }
 
 

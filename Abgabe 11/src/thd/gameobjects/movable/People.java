@@ -23,6 +23,7 @@ public class People extends CollidableGameObject implements AutoMovable {
     private Random random;
     private long duration;
     private double distanceToChopper;
+    public boolean runToBase;
 
     /**
      * Erstellt das GameObject.
@@ -50,6 +51,7 @@ public class People extends CollidableGameObject implements AutoMovable {
         facingLeft = false;
         changeDirection = false;
         random = new Random();
+        runToBase = false;
 
     }
 
@@ -61,6 +63,8 @@ public class People extends CollidableGameObject implements AutoMovable {
     @Override
     public void reactToCollision(CollidableGameObject other) {
         if (other.getClass() == BulletEnemy.class) {
+            gamePlayManager.addLostPeople(this);
+            gamePlayManager.adjustScore(-250.0);
             gamePlayManager.destroy(this);
         }
 
@@ -99,16 +103,20 @@ public class People extends CollidableGameObject implements AutoMovable {
 
     @Override
     public void updatePosition() {
-        distanceToChopper = distanceToChopper();
-
-        if (distanceToChopper < 250 && distanceToChopper > -250 && gamePlayManager.chopperLanded()) {
-            if (distanceToChopper > 0) {
-                walkingRight(0.5);
-            } else {
-                walkingLeft(0.5);
-            }
+        if (runToBase) {
+            walkingRight(0.5);
         } else {
-            randomChangeOfDirection();
+            distanceToChopper = distanceToChopper();
+
+            if (distanceToChopper < 250 && distanceToChopper > -250 && gamePlayManager.chopperLanded()) {
+                if (distanceToChopper > 0) {
+                    walkingRight(0.5);
+                } else {
+                    walkingLeft(0.5);
+                }
+            } else {
+                randomChangeOfDirection();
+            }
         }
     }
 

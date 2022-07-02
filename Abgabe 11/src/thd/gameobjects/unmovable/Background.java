@@ -31,6 +31,7 @@ public class Background extends GameObject {
     public void addToCanvas() {
         gameView.addImageToCanvas(backgroundImage, position.x, position.y, 1, 0);
         gameView.addImageToCanvas(backgroundImage, position.x - 1840, position.y, 1, 0);
+        gameView.addImageToCanvas(backgroundImage, position.x - 1840 * 2, position.y, 1, 0);
     }
 
 

@@ -108,6 +108,7 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
     public void reactToCollision(CollidableGameObject other) {
         if (other.getClass() == Jet.class || other.getClass() == Tank.class) {
             gamePlayManager.destroy(this);
+            gamePlayManager.adjustScore(100.0);
         }
     }
 }

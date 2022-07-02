@@ -118,10 +118,10 @@ public class House extends CollidableGameObject {
 
 
 
-    private enum FireAnimation {
+    public enum FireAnimation {
         FIRE1("Fire 1.png"), FIRE2("Fire 2.png"), FIRE3("Fire 3.png");
 
-        private final String file;
+        final String file;
 
         FireAnimation(String file) {
             this.file = file;

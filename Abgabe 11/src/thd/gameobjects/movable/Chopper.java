@@ -27,8 +27,11 @@ public class Chopper extends CollidableGameObject {
      */
     public final double shotsPerSecond;
     private boolean shooting;
-    private double health;
+    public double health;
     private double gas;
+
+    /** Display the score. */
+    public double score;
 
     /**
      * Ob der Chopper auf der Landefläche ist oder nicht. Essenziell wichtig für das Aufsammeln und Ausladen der Personen.
@@ -42,7 +45,7 @@ public class Chopper extends CollidableGameObject {
     private boolean movingRight;
     private boolean movingUp;
     private boolean movingDown;
-    private Status status;
+    public Status status;
 
     /**
      * Ob der Chopper nach unten schießt oder nicht.
@@ -62,7 +65,7 @@ public class Chopper extends CollidableGameObject {
     private BasicAnimation basicAnimation;
 
 
-    private enum Status {STANDARD, DAMAGED, EXPLODING, EXPLODED}
+    public enum Status {STANDARD, DAMAGED, EXPLODING, EXPLODED}
 
     private enum BasicAnimation {
         //links
@@ -154,7 +157,7 @@ public class Chopper extends CollidableGameObject {
 
         for (GameObject o : gameObjectManager.getGameObjects()) {
             if ((o instanceof Base)) {
-                if (o.getPosition().x > 3300 && position.x <= 432.0) {
+                if (o.getPosition().x > 5000 && position.x <= 432.0) {
                     return;
                 }
             }
@@ -237,7 +240,7 @@ public class Chopper extends CollidableGameObject {
      * Schießt.
      */
     public void shoot() {
-        if (shooting) {
+        if (shooting && !chopperLanded()) {
             if (!gameView.timerIsActive("shoot", this)) {
                 gameView.activateTimer("shoot", this, (long) (1000 / shotsPerSecond));
                 GameObject o = new Bullet(gameView, gamePlayManager, this);
@@ -319,8 +322,17 @@ public class Chopper extends CollidableGameObject {
      * When the chopper gets hit by an enemy bullet his health decreases by 1.
      */
     public void decreaseHealth() {
-        health -= 1;
+        if (!gameView.timerIsActive("decreaseHealth", this)) {
+            gameView.activateTimer("decreaseHealth", this, 1500);
+            health -= 1;
+        }
     }
+
+    /*
+    public void increaseScore(double score) {
+        this.score += score;
+    }
+     */
 
 
     /**
@@ -340,7 +352,10 @@ public class Chopper extends CollidableGameObject {
      */
     @Override
     public void addToCanvas() {
-        gameView.addTextToCanvas("Airspeed: " + speedInPixel, 0, 0, 18, Color.WHITE, 0);
+
+
+        //gameView.addTextToCanvas("Speed:" + speedInPixel, 300, 0, 15, Color.WHITE, 0);
+
 
         gameView.addImageToCanvas(basicAnimation.animationFile, position.x, position.y, size, rotation);
     }
@@ -379,7 +394,7 @@ public class Chopper extends CollidableGameObject {
      */
     @Override
     public void reactToCollision(CollidableGameObject other) {
-        if (other.getClass() == LandingPlace.class && gamePlayManager.pickedUpPeopleSize() > 0) {
+        if (other.getClass() == LandingPlace.class && gamePlayManager.getPickedUpPeopleSize() > 0) {
             chopperIsOnLandingPlace = true;
         }
     }
@@ -410,11 +425,8 @@ public class Chopper extends CollidableGameObject {
     }
 
 
-    /*
-    private enum flyDownAnimationReset {
-        MOVING_UP, MOVING_DOWN, MOVING_LEFT, MOVING_RIGHT
-    }
-     */
+
+
     private void flyDownAnimationReset() {
         if (flyDown) {
             if (rotation < 0) {

@@ -38,7 +38,7 @@ public class LandingPlace extends CollidableGameObject {
      */
     @Override
     public void reactToCollision(CollidableGameObject other) {
-        if (other.getClass() == Chopper.class && gamePlayManager.pickedUpPeopleSize() > 0) {
+        if (other.getClass() == Chopper.class && gamePlayManager.getPickedUpPeopleSize() > 0) {
             gamePlayManager.unloadPeople();
         }
     }

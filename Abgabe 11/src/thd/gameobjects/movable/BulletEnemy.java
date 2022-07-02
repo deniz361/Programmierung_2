@@ -18,6 +18,8 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
     private boolean flyFromLeftToRight;
     private double positionChopperX;
     private double positionChopperY;
+    private double speedX;
+    private double speedY;
 
     /**
      * Mindestanforderung, das jedes GameObject haben muss.
@@ -27,15 +29,18 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
      * @param spawnPositionX wo die Kugel spawnen soll.
      * @param spawnPositionY wo die Kugel spawnen soll.
      */
-    public BulletEnemy(GameView gameView, GamePlayManager gamePlayManager, double spawnPositionX, double spawnPositionY) {
+    public BulletEnemy(GameView gameView, GamePlayManager gamePlayManager, double spawnPositionX, double spawnPositionY, double speedX, double speedY) {
         super(gameView, gamePlayManager);
         position.x = spawnPositionX;
         position.y = spawnPositionY;
         height = 2;
         width = 5;
+
         speedInPixel = 3;
-        hitBoxOffsetX = 0;
-        hitBoxOffsetY = 0;
+        this.speedX = speedX;
+        this.speedY = speedY;
+
+
         hitBoxHeight = height;
         hitBoxWidth = width;
         flyFromLeftToRight = false;
@@ -86,11 +91,11 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
     @Override
     public void updatePosition() {
         if (flyFromLeftToRight) {
-            position.right(speedInPixel);
-            position.up(speedInPixel);
+            position.right(speedX);
+            position.up(speedY);
         } else {
-            position.left(speedInPixel);
-            position.up(speedInPixel);
+            position.left(speedX);
+            position.up(speedY);
         }
     }
 
