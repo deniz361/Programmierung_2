@@ -3,43 +3,52 @@ package thd.gameobjects.movable;
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.AutoMovable;
 import thd.gameobjects.base.CollidableGameObject;
+import thd.gameobjects.base.GameObject;
 import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
 
+import java.awt.*;
+import java.util.LinkedList;
 
-/** Pictures the jet. */
+
+/**
+ * Pictures the jet.
+ */
 public class Jet extends CollidableGameObject implements AutoMovable {
 
-
-    //Jet design
-    private String jet;
-    private String leerzeichen;
-    private String leerzeichen2;
-    private String leerzeichen3;
-    private String leerzeichen4;
-    private String leerzeichen5;
-    private String leerzeichen6;
-    private String leerzeichen7;
-
-    //WIDTH = 960;
-    //HEIGHT = 540;
-
     //Bezierkurve bzw movement
-    private double t1;
-    private double t2;
-    private double t3;
-    private Position p1;
-    private Position p2;
     private double resultX;
     private double resultY;
-    private Position bezierPoint1;
-    private Position bezierPoint2;
-    private Position bezierPoint3;
     private int counter;
+    private boolean calculatedBezierPoints;
+    private boolean finished;
+    private Position mid;
+    private Position bottom;
+    private boolean wayUp;
+    private boolean flyStraightForCoupleSeconds;
 
 
-    /** Instantiates a new Jet.
-     * @param gameView GameView for GUI uses
+    //Animation
+    private JetAnimation jetAnimation;
+
+    //dynamic bezier
+    private boolean flyStraight;
+    private boolean inCurve;
+    private boolean facingRight;
+    private boolean facingLeft;
+    public Position[] bezierPoints;
+    private int bezierPointCounter;
+
+
+    //shoot
+    private double shotsPerSecond;
+    private LinkedList<GameObject> createdBullets;
+    private double distanceToChopper;
+
+    /**
+     * Instantiates a new Jet.
+     *
+     * @param gameView        GameView for GUI uses
      * @param gamePlayManager Gameplay flow managing
      */
     public Jet(GameView gameView, GamePlayManager gamePlayManager) {
@@ -47,47 +56,29 @@ public class Jet extends CollidableGameObject implements AutoMovable {
         counter = 0;
 
 
-        position.x = 400;
-        position.y = 200;
+        position.x = 100; //400;
+        position.y = 100; //200;
 
         speedInPixel = 0.5;
-        leerzeichen = " ".repeat(27);
-        leerzeichen2 = " ".repeat(26);
-        leerzeichen3 = " ".repeat(25);
-        leerzeichen4 = " ".repeat(11);
-        leerzeichen5 = " ".repeat(9);
-        leerzeichen6 = " ".repeat(7);
-        leerzeichen7 = " ".repeat(14);
 
-        jet = leerzeichen + "LL  \n"
-                + leerzeichen2 + "LCL\n"
-                + leerzeichen3 + "LccL\n"
-                + leerzeichen4 + "LLLLLLL      LCCCL\n"
-                + leerzeichen5 + "LLWWWWWWWL" + "    LccCCL\n"
-                + leerzeichen6 + "LLWWWWWWLLLLLLLLCCCCCL\n" +
-                "    LLLCCLLLLLLCCCCCCCCCCCCCCLL\n" +
-                " LLLCCCCCCCCCLLLLLLLLLLLLLLCCCL\n" +
-                "LCCCCCCCCCCCLWWWWWWWWWWWWWLLLL\n" +
-                "LLLLLLLLLLLLLLRRRRRRRRLLLL\n"
-                + leerzeichen7 + "LLLLLLLL";
+        size = 0.5;
+        height = 37 * size;
+        width = 134 * size;
 
-        size = 2;
-        height = 11 * size;
-        width = 31 * size;
-        //Bezier
-        p1 = new Position(100, 300);
-        p2 = new Position(400, 400);
 
-        t1 = 0.25;
-        t2 = 0.5;
-        t3 = 0.75;
+        //dynamic bezier
+        flyStraight = true;
+        inCurve = false;
+        facingLeft = false;
+        facingRight = true;
 
-        calculateBezierCurve(t1);
-        bezierPoint1 = new Position(resultX, resultY);
-        calculateBezierCurve(t2);
-        bezierPoint2 = new Position(resultX, resultY);
-        calculateBezierCurve(t3);
-        bezierPoint3 = new Position(resultX, resultY);
+        bezierPoints = new Position[10];
+
+
+        //shoot
+        shotsPerSecond = 1;
+        createdBullets = new LinkedList<>();
+        distanceToChopper = 0;
 
 
         //hit box
@@ -95,6 +86,9 @@ public class Jet extends CollidableGameObject implements AutoMovable {
         hitBoxOffsetY = 0;
         hitBoxHeight = height;
         hitBoxWidth = width;
+
+        //Animation
+        jetAnimation = JetAnimation.JET_ANIMATION_RIGHT1;
     }
 
     /**
@@ -109,73 +103,311 @@ public class Jet extends CollidableGameObject implements AutoMovable {
         }
     }
 
-    /** Adds the jet to the canvas. */
+    /**
+     * Adds the jet to the canvas.
+     */
     @Override
     public void addToCanvas() {
-        gameView.addBlockImageToCanvas(jet, position.x, position.y, size, 0);
+        gameView.addImageToCanvas(jetAnimation.imageFile, position.x, position.y, size, 0);
 
+        if (calculatedBezierPoints) {
+            gameView.addOvalToCanvas(bezierPoints[0].x, bezierPoints[0].y, 10, 10, 2, false, Color.GREEN);
+            gameView.addOvalToCanvas(bezierPoints[1].x, bezierPoints[1].y, 10, 10, 2, false, Color.GREEN);
+            gameView.addOvalToCanvas(bezierPoints[2].x, bezierPoints[2].y, 10, 10, 2, false, Color.GREEN);
+        }
         /*
-        gameView.addOvalToCanvas(bezierPoint1.x, bezierPoint1.y, 10, 10, 2, false, Color.GREEN);
-        gameView.addOvalToCanvas(bezierPoint2.x, bezierPoint2.y, 10, 10, 2, false, Color.GREEN);
-        gameView.addOvalToCanvas(bezierPoint3.x, bezierPoint3.y, 10, 10, 2, false, Color.GREEN);
+
+
          */
+
 
     }
 
     @Override
     public void updateStatus() {
+        if (inCurve) {
+            if (facingRight) {
+                jetAnimationRight();
+            } else if (facingLeft) {
+                jetAnimationLeft();
+            }
+        }
+        if (flyStraight || wayUp) {
+            distanceToChopper = gamePlayManager.positionChopper().x - position.x;
 
+            if (facingRight && distanceToChopper >= 0) {
+                shoot();
+            } else if (facingLeft && distanceToChopper < 0) {
+                shoot();
+            }
+        }
     }
 
 
-    /** Moves the jet.*/
+    /**
+     * Moves the jet.
+     */
     @Override
     public void updatePosition() {
-        switch (counter) {
-            case 0:
-                followTargetPostion(bezierPoint1);
-                break;
-            case 1:
-                followTargetPostion(bezierPoint2);
-                break;
-            case 2:
-                followTargetPostion(bezierPoint3);
-                break;
-            default:
-                position.right(speedInPixel);
+        if (flyStraight) {
+            flyStraight();
+        } else if (inCurve) {
+            //problem wenn eins positiv und das andere negativ...
+            inCurve();
 
+            if (finished) {
+                finished();
+            }
+        } else if (wayUp) {
+           wayUp();
+        }
+    }
+
+    private void flyStraight() {
+        if (!gameView.alarmIsSet("whenShouldTheJetStartWithTheCurve", this)) {
+            gameView.setAlarm("whenShouldTheJetStartWithTheCurve", this, 1000);
+        } else if (gameView.alarm("whenShouldTheJetStartWithTheCurve", this)) {
+            flyStraight = false;
+            inCurve = true;
+            wayUp = false;
+
+            calculatedBezierPoints = false;
+        }
+        if (facingRight) {
+            position.x += speedInPixel;
+        } else if (facingLeft) {
+            position.x -= speedInPixel;
+        }
+    }
+
+    private void wayUp() {
+        if (position.y >= 100) {
+            if (facingLeft) {
+                position.x -= speedInPixel;
+                position.y -= 0.1; //0.05
+            } else if (facingRight) {
+                position.x += speedInPixel;
+                position.y -= 0.1; // 0.05
+            }
+        } else {
+            wayUp = false;
+            flyStraight = true;
+
+        }
+    }
+
+    private void inCurve() {
+        if (facingRight && !calculatedBezierPoints) {
+            chooseBezierPoints();
+            calculateBezierCurve(mid, bottom);
+        } else if (facingLeft && !calculatedBezierPoints) {
+            chooseBezierPoints();
+            calculateBezierCurve(mid, bottom);
+        }
+
+        followTargetPostion(bezierPoints[counter]);
+    }
+
+    private void finished() {
+        inCurve = false;
+        facingRight = !facingRight;
+        facingLeft = !facingLeft;
+        finished = false;
+        wayUp = true;
+
+        counter = 0;
+        bezierPointCounter = 0;
+
+        if (jetAnimation == JetAnimation.JET_ANIMATION_LEFT7) {
+            jetAnimation = JetAnimation.JET_ANIMATION_RIGHT1;
+        } else if (jetAnimation == JetAnimation.JET_ANIMATION_RIGHT7) {
+            jetAnimation = JetAnimation.JET_ANIMATION_LEFT1;
+        }
+    }
+
+    private void chooseBezierPoints() {
+        if (facingRight) {
+            mid = new Position(position.x + 300, position.y + 100);
+            bottom = new Position(position.x, position.y + 200);
+        } else if (facingLeft) {
+            mid = new Position(position.x - 300, position.y + 100);
+            bottom = new Position(position.x, position.y + 200);
         }
     }
 
 
     private void followTargetPostion(Position targetPosition) {
 
-        double distance = position.distance(targetPosition);
+        if (counter == bezierPointCounter) {
+            finished = true;
+        } else {
 
-        if (position.x < targetPosition.x) {
-            position.right((targetPosition.x - position.x) / distance * speedInPixel);
-        } else if (position.x > targetPosition.x) {
-            position.left(-((targetPosition.x - position.x) / distance * speedInPixel));
-        }
-        if (position.y < targetPosition.y) {
-            position.down((targetPosition.y - position.y) / distance * speedInPixel);
-        } else if (position.y > targetPosition.y) {
-            position.up((targetPosition.y - position.y) / distance * speedInPixel);
-        }
+            double distance = position.distance(targetPosition);
 
-        if (distance <= 5) {
-            counter++;
+            if (position.x < targetPosition.x) {
+                position.right((targetPosition.x - position.x) / distance * speedInPixel);
+            } else if (position.x > targetPosition.x) {
+                position.left(-((targetPosition.x - position.x) / distance * speedInPixel));
+            }
+            if (position.y < targetPosition.y) {
+                position.down((targetPosition.y - position.y) / distance * speedInPixel);
+            } else if (position.y > targetPosition.y) {
+                position.up((targetPosition.y - position.y) / distance * speedInPixel);
+            }
+
+            if (distance <= 2) {
+                counter++;
+            }
         }
 
 
     }
 
-    /** Calculates a specific Bezier point.
-     *  It should return a 2 Dimensional tuple
-     * @param t the point on the Bézier curve that you want to calculate
+    private void shoot() {
+        if (!gameView.timerIsActive("shootJet", this)) {
+            gameView.activateTimer("shootJet", this, (long) (1000 / shotsPerSecond));
+            GameObject o = new BulletEnemy(gameView, gamePlayManager, this.position.x + 20, this.position.y + 15, 3, 0.2);
+            createdBullets.add(o);
+            gamePlayManager.spawn(o);
+
+            if (facingRight) {
+                o.changeDirectionTo("right");
+
+            } else if (facingLeft) {
+                o.changeDirectionTo("left");
+            }
+        }
+        for (GameObject o : createdBullets) {
+            if (o.outOfGame()) {
+                gamePlayManager.destroy(o);
+            }
+        }
+    }
+
+    /**
+     * Calculates the BezierCurve and adds the essential Points into the array "bezierPoints"
+     *
+     * @param p1 The second Postion to create the Bézier curve
+     * @param p2 The third Postion to create the Bézier curve
      */
-    private void calculateBezierCurve(double t) {
-        resultX = (position.x - 2 * p1.x + p2.x) * Math.pow(t, 2) + (-2 * position.x + 2 * p1.x) * t + position.x;
-        resultY = (position.y - 2 * p1.y + p2.y) * Math.pow(t, 2) + (-2 * position.y + 2 * p1.y) * t + position.y;
+    private void calculateBezierCurve(Position p1, Position p2) {
+        bezierPointCounter = 0;
+        for (double i = 0.25; i <= 0.75; i += 0.25) {
+            resultX = (position.x - 2 * p1.x + p2.x) * Math.pow(i, 2) + (-2 * position.x + 2 * p1.x) * i + position.x;
+            resultY = (position.y - 2 * p1.y + p2.y) * Math.pow(i, 2) + (-2 * position.y + 2 * p1.y) * i + position.y;
+
+            bezierPoints[bezierPointCounter] = new Position(resultX, resultY);
+            bezierPointCounter++;
+        }
+        calculatedBezierPoints = true;
+    }
+
+
+    private void jetAnimationRight() {
+        if (!gameView.alarmIsSet("jetAnimationRight", this)) {
+            gameView.setAlarm("jetAnimationRight", this, 600);
+        } else if (gameView.alarm("jetAnimationRight", this)) {
+            switch (jetAnimation) {
+                case JET_ANIMATION_RIGHT1:
+                    jetAnimation = JetAnimation.JET_ANIMATION_RIGHT2;
+                    hitBoxWidth = 127 * size;
+                    hitBoxHeight = 61 * size;
+                    break;
+                case JET_ANIMATION_RIGHT2:
+                    jetAnimation = JetAnimation.JET_ANIMATION_RIGHT3;
+                    hitBoxWidth = 105 * size;
+                    hitBoxHeight = 61 * size;
+                    break;
+                case JET_ANIMATION_RIGHT3:
+                    jetAnimation = JetAnimation.JET_ANIMATION_RIGHT4;
+                    hitBoxWidth = 89 * size;
+                    hitBoxHeight = 77 * size;
+                    break;
+                case JET_ANIMATION_RIGHT4:
+                    jetAnimation = JetAnimation.JET_ANIMATION_RIGHT5;
+                    hitBoxWidth = 73 * size;
+                    hitBoxHeight = 68 * size;
+                    break;
+                case JET_ANIMATION_RIGHT5:
+                    jetAnimation = JetAnimation.JET_ANIMATION_RIGHT6;
+                    hitBoxWidth = 108 * size;
+                    hitBoxHeight = 53 * size;
+                    break;
+                case JET_ANIMATION_RIGHT6:
+                    jetAnimation = JetAnimation.JET_ANIMATION_RIGHT7;
+                    hitBoxWidth = 136 * size;
+                    hitBoxHeight = 48 * size;
+                    break;
+                case JET_ANIMATION_RIGHT7:
+                    jetAnimation = JetAnimation.JET_ANIMATION_LEFT1;
+                    hitBoxWidth = 134 * size;
+                    hitBoxHeight = 37 * size;
+                    break;
+                default:
+            }
+        }
+    }
+
+    private void jetAnimationLeft() {
+        if (!gameView.alarmIsSet("jetAnimationLeft", this)) {
+            gameView.setAlarm("jetAnimationLeft", this, 600);
+        } else if (gameView.alarm("jetAnimationLeft", this)) {
+            switch (jetAnimation) {
+                case JET_ANIMATION_LEFT1:
+                    jetAnimation = JetAnimation.JET_ANIMATION_LEFT2;
+                    hitBoxWidth = 127 * size;
+                    hitBoxHeight = 61 * size;
+                    break;
+                case JET_ANIMATION_LEFT2:
+                    jetAnimation = JetAnimation.JET_ANIMATION_LEFT3;
+                    hitBoxWidth = 105 * size;
+                    hitBoxHeight = 61 * size;
+                    break;
+                case JET_ANIMATION_LEFT3:
+                    jetAnimation = JetAnimation.JET_ANIMATION_LEFT4;
+                    hitBoxWidth = 89 * size;
+                    hitBoxHeight = 77 * size;
+                    break;
+                case JET_ANIMATION_LEFT4:
+                    jetAnimation = JetAnimation.JET_ANIMATION_LEFT5;
+                    hitBoxWidth = 73 * size;
+                    hitBoxHeight = 68 * size;
+                    break;
+                case JET_ANIMATION_LEFT5:
+                    jetAnimation = JetAnimation.JET_ANIMATION_LEFT6;
+                    hitBoxWidth = 108 * size;
+                    hitBoxHeight = 53 * size;
+                    break;
+                case JET_ANIMATION_LEFT6:
+                    jetAnimation = JetAnimation.JET_ANIMATION_LEFT7;
+                    hitBoxWidth = 136 * size;
+                    hitBoxHeight = 48 * size;
+                    break;
+                case JET_ANIMATION_LEFT7:
+                    jetAnimation = JetAnimation.JET_ANIMATION_RIGHT1;
+                    hitBoxWidth = 134 * size;
+                    hitBoxHeight = 37 * size;
+                    break;
+                default:
+            }
+        }
+    }
+
+    private enum JetAnimation {
+        JET_ANIMATION_RIGHT1("Jet_right_1.png"), JET_ANIMATION_RIGHT2("Jet_right_2.png"),
+        JET_ANIMATION_RIGHT3("Jet_right_3.png"), JET_ANIMATION_RIGHT4("Jet_right_4.png"),
+        JET_ANIMATION_RIGHT5("Jet_right_5.png"), JET_ANIMATION_RIGHT6("Jet_right_6.png"),
+        JET_ANIMATION_RIGHT7("Jet_right_7.png"),
+
+        JET_ANIMATION_LEFT1("Jet_left_1.png"), JET_ANIMATION_LEFT2("Jet_left_2.png"),
+        JET_ANIMATION_LEFT3("Jet_left_3.png"), JET_ANIMATION_LEFT4("Jet_left_4.png"),
+        JET_ANIMATION_LEFT5("Jet_left_5.png"), JET_ANIMATION_LEFT6("Jet_left_6.png"),
+        JET_ANIMATION_LEFT7("Jet_left_7.png");
+
+        final String imageFile;
+
+        JetAnimation(String imageFile) {
+            this.imageFile = imageFile;
+        }
     }
 }

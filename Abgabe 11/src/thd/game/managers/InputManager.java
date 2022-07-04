@@ -26,6 +26,7 @@ class InputManager {
     }
 
     void updateUserInputs() {
+        chopper.resetChopperHitBox();
         Integer[] pressedKeys = gameView.getKeyCodesOfCurrentlyPressedKeys();
         for (int keyCode : pressedKeys) {
             if (chopper.exploded) {

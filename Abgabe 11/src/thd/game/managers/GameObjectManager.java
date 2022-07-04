@@ -152,6 +152,13 @@ public class GameObjectManager {
                     foreground.worldHasMoved(shiftX);
                 //}
             }
+            if (foreground instanceof Jet) {
+                for (Position p: ((Jet) foreground).bezierPoints) {
+                    if (p != null) {
+                        p.x -= shiftX;
+                    }
+                }
+            }
         }
     }
 

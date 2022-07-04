@@ -37,7 +37,7 @@ public class Artillery extends CollidableGameObject {
         width = 83;
         height = 86;
         size = 0.4;
-        shotsPerSecond = 3;
+        shotsPerSecond = 1.5;
         exploding = false;
         burning = false;
         broken = false;

@@ -253,11 +253,11 @@ public class GamePlayManager {
         for (int i = 0; i < pickedUpPeople.size(); i++) {
             if (!gameView.timerIsActive("unloadPeople", this) && gameObjectManager.chopper.chopperIsOnLandingPlace) {
                 gameView.activateTimer("unloadPeople", this, 600);
-                pickedUpPeople.remove(i);
                 People o = new People(gameView, this, gameObjectManager.chopper.getPosition().x + 60, gameObjectManager.chopper.getPosition().y + 13);
                 unloadedPeople.add(o);
                 spawn(o);
                 o.runToBase = true;
+                pickedUpPeople.remove(i);
             }
         }
     }

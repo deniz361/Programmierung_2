@@ -31,7 +31,9 @@ public class Chopper extends CollidableGameObject {
     public double health;
     private double gas;
 
-    /** Display the score. */
+    /**
+     * Display the score.
+     */
     public double score;
 
     /**
@@ -121,7 +123,6 @@ public class Chopper extends CollidableGameObject {
         shooting = true;
         shootDown = false;
         chopperIsOnLandingPlace = false;
-
 
 
         //hit box
@@ -280,19 +281,46 @@ public class Chopper extends CollidableGameObject {
     }
 
 
+    /*
+    standard hitbox:
+
+        hitBoxOffsetX = 7;
+        hitBoxOffsetY = 10;
+     */
     private void rotationUp() {
+        System.out.println(hitBoxOffsetY);
         if (rotation <= 20) {
             rotation += 1;
-            hitBoxOffsetY = 5;
         }
-
+        if (facingLeft) {
+            hitBoxOffsetY = 3;
+            hitBoxOffsetX = 7;
+        } else if (facingRight) {
+            hitBoxOffsetX = 5;
+            hitBoxOffsetY = 12;
+        }
     }
+
+
+     /*
+    standard hitbox:
+
+        hitBoxOffsetX = 7;
+        hitBoxOffsetY = 10;
+     */
 
     private void rotationDown() {
         if (rotation >= -20) {
             rotation -= 1;
-            hitBoxOffsetY = 15;
         }
+        if (facingLeft) {
+            hitBoxOffsetY = 12;
+            hitBoxOffsetX = 7;
+        } else if (facingRight) {
+            hitBoxOffsetY = 7;
+            hitBoxOffsetX = 5;
+        }
+
     }
 
     /**
@@ -347,6 +375,8 @@ public class Chopper extends CollidableGameObject {
         position.y = 400;
         hitBoxOffsetX = 7;
         hitBoxOffsetY = 10;
+        hitBoxHeight = height;
+        hitBoxWidth = width;
         rotation = 0;
         status = Status.STANDARD;
         basicAnimation = BasicAnimation.STANDARD;
@@ -379,7 +409,19 @@ public class Chopper extends CollidableGameObject {
         }
     }
 
+    public void resetChopperHitBox() {
+        hitBoxOffsetX = 7;
+        hitBoxOffsetY = 10;
+        hitBoxHeight = height;
+        hitBoxWidth = width;
+    }
 
+    /*
+        standard hitbox:
+
+            hitBoxOffsetX = 7;
+            hitBoxOffsetY = 10;
+         */
     @Override
     public void updateStatus() {
         flyDownAnimationReset();
@@ -387,11 +429,12 @@ public class Chopper extends CollidableGameObject {
         basicAnimation();
         damageAnimation();
         crashLanding();
+        chopperLanded();
 
         if (chopperHit && !chopperLanded() && facingLeft) {
             position.down(1.3);
             position.left(1);
-        } else if(chopperHit && !chopperLanded() && facingRight) {
+        } else if (chopperHit && !chopperLanded() && facingRight) {
             position.down(1.3);
             position.right(1);
         }
@@ -411,7 +454,7 @@ public class Chopper extends CollidableGameObject {
     }
 
 
-    //Animations
+//Animations
 
     /**
      * Wenn der chopper gelandet ist, soll er nur noch hochfliegen können. Siehe Input Manager
@@ -421,6 +464,10 @@ public class Chopper extends CollidableGameObject {
     public boolean chopperLanded() {
         if (position.y >= 400) {
             landed = true;
+            hitBoxOffsetX = 7;
+            hitBoxOffsetY = 10;
+            hitBoxHeight = height;
+            hitBoxWidth = width;
         } else if (position.y <= 400) {
             landed = false;
         }
@@ -436,13 +483,10 @@ public class Chopper extends CollidableGameObject {
     }
 
 
-
     public void chopperHit() {
         status = Status.EXPLODED;
         chopperHit = true;
     }
-
-
 
 
     private void flyDownAnimationReset() {
