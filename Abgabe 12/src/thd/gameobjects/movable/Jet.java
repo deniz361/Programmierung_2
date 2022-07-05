@@ -110,13 +110,13 @@ public class Jet extends CollidableGameObject implements AutoMovable {
     public void addToCanvas() {
         gameView.addImageToCanvas(jetAnimation.imageFile, position.x, position.y, size, 0);
 
-        if (calculatedBezierPoints) {
+
+        /*
+if (calculatedBezierPoints) {
             gameView.addOvalToCanvas(bezierPoints[0].x, bezierPoints[0].y, 10, 10, 2, false, Color.GREEN);
             gameView.addOvalToCanvas(bezierPoints[1].x, bezierPoints[1].y, 10, 10, 2, false, Color.GREEN);
             gameView.addOvalToCanvas(bezierPoints[2].x, bezierPoints[2].y, 10, 10, 2, false, Color.GREEN);
         }
-        /*
-
 
          */
 

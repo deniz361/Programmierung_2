@@ -14,10 +14,10 @@ import thd.gameobjects.unmovable.Base;
 import thd.gameobjects.unmovable.House;
 import thd.gameobjects.unmovable.LandingPlace;
 import thd.gameview.GameView;
+import thd.screens.EndScreen;
+import thd.screens.StartScreen;
 
 import java.util.LinkedList;
-
-import static thd.game.managers.FileManager.writeDifficultyToDisc;
 
 
 /**
@@ -45,6 +45,7 @@ public class GamePlayManager {
 
     private LevelManager levelManager;
     private Level currentLevel;
+    private boolean first;
 
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
@@ -56,6 +57,7 @@ public class GamePlayManager {
         lostPeople = new LinkedList<>();
         levelManager = new LevelManager(Level.Difficulty.STANDARD);
         currentLevel = levelManager.levels.getFirst();
+        first = true;
     }
 
 
@@ -63,8 +65,29 @@ public class GamePlayManager {
      * Steuert den Spielverlauf.
      */
     void updateGamePlay() {
+        if (first) {
+            initializeGame();
+            first = false;
+        }
         if (gameOver()) {
             initializeGame();
+        } else {
+
+
+            if (returnSavedPeopleSize() >= 7) {
+                try {
+                    currentLevel = levelManager.nextLevel();
+                    initializeLevel();
+                } catch (NoMoreLevelsAvailableException e) {
+                    System.out.println(currentLevel);
+                    gameView.showEndScreen("Score: " + getScore());
+                    gameOver = true;
+                    initializeLevel();
+                }
+
+            }
+
+
         }
 
         if (chopperHit) {
@@ -125,32 +148,27 @@ public class GamePlayManager {
     }
 
     private void initializeGame() {
-        gameOver = false;
         Level.Difficulty difficulty = FileManager.readDifficultyFromDisc();
-        writeDifficultyToDisc(difficulty);
+        difficulty = StartScreen.showStartScreen(gameView, difficulty);
+        FileManager.writeDifficultyToDisc(difficulty);
         levelManager = new LevelManager(difficulty);
+        levelManager.resetLevelCounter();
+        System.out.println("Level after reset level counter: " + currentLevel);
+        currentLevel = levelManager.levels.getFirst();
+        System.out.println("Level after reset current level is get first: " + currentLevel);
 
+        gameOver = false;
+        first = true;
         initializeLevel();
         createdTanks.clear();
     }
 
     private boolean gameOver() {
-        if (getHealthChopper() == 0) {
+        if (returnHealthChopper() == 0) {
+            EndScreen.showEndScreen(gameView, (int) gameObjectManager.chopper.score);
             gameObjectManager.chopper.health = 3;
             return true;
-
-        }
-
-        /*else if (gameObjectManager.chopper.status == Chopper.Status.EXPLODED) {
-            if (!gameView.alarmIsSet("gameOver", this)) {
-                gameView.setAlarm("gameOver", this, 5000);
-            } else if (gameView.alarm("gameOver", this)) {
-                return true;
-            }
-            return false;
-        } */
-
-        else {
+        } else {
             return false;
         }
 
@@ -220,8 +238,6 @@ public class GamePlayManager {
                 chopperHit = true;
 
 
-
-
             }
             if (o instanceof LandingPlace) {
                 LandingPlace LandingPlace = (LandingPlace) o;
@@ -279,7 +295,7 @@ public class GamePlayManager {
      *
      * @return die größe der Liste
      */
-    public int getPickedUpPeopleSize() {
+    public int returnPickedUpPeopleSize() {
         return pickedUpPeople.size();
     }
 
@@ -310,7 +326,7 @@ public class GamePlayManager {
      *
      * @return gibt die geretteten Menschen zurück.
      */
-    public int getSavedPeopleSize() {
+    public int returnSavedPeopleSize() {
         return savedPeople.size();
     }
 
@@ -324,11 +340,11 @@ public class GamePlayManager {
         lostPeople.add(people);
     }
 
-    public int getLostPeopleSize() {
+    public int returnLostPeopleSize() {
         return lostPeople.size();
     }
 
-    public double getHealthChopper() {
+    public double returnHealthChopper() {
         return gameObjectManager.chopper.health;
     }
 
@@ -354,6 +370,5 @@ public class GamePlayManager {
      */
     void setGameObjectManager(GameObjectManager gameObjectManager) {
         this.gameObjectManager = gameObjectManager;
-        initializeLevel();
     }
 }

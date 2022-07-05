@@ -10,7 +10,6 @@ import thd.gameobjects.unmovable.House;
 import thd.gameobjects.unmovable.LandingPlace;
 import thd.gameview.GameView;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -288,7 +287,6 @@ public class Chopper extends CollidableGameObject {
         hitBoxOffsetY = 10;
      */
     private void rotationUp() {
-        System.out.println(hitBoxOffsetY);
         if (rotation <= 20) {
             rotation += 1;
         }
@@ -448,7 +446,7 @@ public class Chopper extends CollidableGameObject {
      */
     @Override
     public void reactToCollision(CollidableGameObject other) {
-        if (other.getClass() == LandingPlace.class && gamePlayManager.getPickedUpPeopleSize() > 0) {
+        if (other.getClass() == LandingPlace.class && gamePlayManager.returnPickedUpPeopleSize() > 0) {
             chopperIsOnLandingPlace = true;
         }
     }

@@ -38,7 +38,7 @@ public class LevelManager {
 
     }
 
-    private Level nextLevel() {
+    Level nextLevel() {
         if (hasNextLevel()) {
             currentLevel++;
             return levels.get(currentLevel - 1);
@@ -47,7 +47,7 @@ public class LevelManager {
         }
     }
 
-    private void resetLevelCounter() {
+    void resetLevelCounter() {
         currentLevel = 0;
     }
 
