@@ -72,8 +72,19 @@ public class GamePlayManager {
         if (gameOver()) {
             initializeGame();
         } else {
+            if (!gameView.timerIsActive("level", this)) {
+                gameView.activateTimer("level", this, 1000);
+                currentLevel = levelManager.nextLevel();
+                initializeLevel();
 
+                if (levelManager.levels.size() == levelManager.currentLevel - 1) {
+                    System.out.println(levelManager.levels.size());
+                    gameOver = true;
+                    gameView.showEndScreen("Score: " + getScore());
+                }
 
+            }
+            /*
             if (returnSavedPeopleSize() >= 7) {
                 try {
                     currentLevel = levelManager.nextLevel();
@@ -86,6 +97,8 @@ public class GamePlayManager {
                 }
 
             }
+
+             */
 
 
         }
@@ -167,6 +180,8 @@ public class GamePlayManager {
         if (returnHealthChopper() == 0) {
             EndScreen.showEndScreen(gameView, (int) gameObjectManager.chopper.score);
             gameObjectManager.chopper.health = 3;
+            return true;
+        } else if (gameOver) {
             return true;
         } else {
             return false;

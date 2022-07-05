@@ -13,7 +13,7 @@ import java.util.LinkedList;
 public class LevelManager {
     LinkedList<Level> levels;
 
-    private int currentLevel;
+    int currentLevel;
 
     /** Der Konstruktor.
      * @param difficulty Der Schwierigkeitsgrat, der das Spiel haben soll
