@@ -117,18 +117,27 @@ public class House extends CollidableGameObject {
     }
 
 
-
+    /**
+     * Fire Animation.
+     */
     public enum FireAnimation {
+        /**
+         * ????
+         */
         FIRE1("Fire 1.png"), FIRE2("Fire 2.png"), FIRE3("Fire 3.png");
 
-        public final String file;
+        private final String file;
 
         FireAnimation(String file) {
             this.file = file;
         }
     }
 
-    public void fireAnimation() {
+
+    /**
+     * Fire Animation.
+     */
+    private void fireAnimation() {
         //if (burning) {
             if (!gameView.alarmIsSet("fireAnimation", this)) {
                 gameView.setAlarm("fireAnimation", this, 100);

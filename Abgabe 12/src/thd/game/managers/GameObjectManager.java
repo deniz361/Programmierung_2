@@ -21,7 +21,7 @@ public class GameObjectManager {
     private final ArrayList<GameObject> toAddBackground;
 
     Chopper chopper;
-    private Overlay overlay;
+    Overlay overlay;
     Background background;
 
     protected GameObjectManager(GameView gameView, GamePlayManager gamePlayManager) {

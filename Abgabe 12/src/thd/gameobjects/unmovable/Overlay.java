@@ -39,7 +39,7 @@ public class Overlay extends GameObject {
      * @param message       Die Nachricht.
      * @param secondsToShow Wie lange die Nachricht angezeigt werden soll.
      */
-    private void showMessage(String message, int secondsToShow) {
+    public void showMessage(String message, int secondsToShow) {
         text = message;
         gameView.activateTimer(text, this, secondsToShow * 1000L);
     }
@@ -71,7 +71,7 @@ public class Overlay extends GameObject {
     @Override
     public void addToCanvas() {
         //gameView.addRectangleToCanvas(0,0,GameView.WIDTH, 80,0, true, Color.BLACK);
-        gameView.addTextToCanvas("SCORE:" + gamePlayManager.getScore(), 780, 0, 15, Color.BLACK, 0);
+        gameView.addTextToCanvas("SCORE:" + gamePlayManager.returnScore(), 780, 0, 15, Color.BLACK, 0);
         gameView.addTextToCanvas(" LOAD:" + gamePlayManager.returnPickedUpPeopleSize() + "/7", 780, 20, 15, Color.BLACK, 0);
         gameView.addTextToCanvas(" SAFE:" + gamePlayManager.returnSavedPeopleSize(), 780, 40, 15, Color.BLACK, 0);
         gameView.addTextToCanvas(" LOST:" + gamePlayManager.returnLostPeopleSize(), 780, 60, 15, Color.BLACK, 0);

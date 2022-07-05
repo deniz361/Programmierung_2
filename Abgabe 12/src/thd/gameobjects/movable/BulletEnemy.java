@@ -28,6 +28,9 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
      * @param gamePlayManager to control the game flow.
      * @param spawnPositionX wo die Kugel spawnen soll.
      * @param spawnPositionY wo die Kugel spawnen soll.
+     * @param speedX wie schnell sich die Kugel in X-Richtung bewegen soll.
+     * @param speedY wie schnell sich die Kugel in Y-Richtung bewegen soll.
+     *
      */
     public BulletEnemy(GameView gameView, GamePlayManager gamePlayManager, double spawnPositionX, double spawnPositionY, double speedX, double speedY) {
         super(gameView, gamePlayManager);
@@ -58,12 +61,11 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
      */
     @Override
     public void reactToCollision(CollidableGameObject other) {
-        /*
         if (other.getClass() == Chopper.class) {
             gamePlayManager.chopperHasBeenHit();
         }
 
-         */
+
     }
 
     /**

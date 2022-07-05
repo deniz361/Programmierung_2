@@ -1,7 +1,7 @@
 package thd.gameobjects.movable;
 
 
-import thd.game.managers.*;
+import thd.game.managers.GameObjectManager;
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.CollidableGameObject;
 import thd.gameobjects.base.GameObject;
@@ -27,13 +27,16 @@ public class Chopper extends CollidableGameObject {
      */
     public final double shotsPerSecond;
     private boolean shooting;
+    /**
+     * Um die Leben in Overlay anzeigen zu lassen und um diese Variable in GamePlayManager zu verändern.
+     */
     public double health;
     private double gas;
 
     /**
      * Display the score.
      */
-    public double score;
+    public int score;
 
     /**
      * Ob der Chopper auf der Landefläche ist oder nicht. Essenziell wichtig für das Aufsammeln und Ausladen der Personen.
@@ -48,7 +51,8 @@ public class Chopper extends CollidableGameObject {
     private boolean movingRight;
     private boolean movingUp;
     private boolean movingDown;
-    public Status status;
+
+    private Status status;
 
     /**
      * Ob der Chopper nach unten schießt oder nicht.
@@ -65,12 +69,15 @@ public class Chopper extends CollidableGameObject {
      * return true if the chopper has been destroyed.
      */
     public boolean exploded;
-    public boolean chopperHit;
+
+    private boolean chopperHit;
     private House.FireAnimation fireAnimation;
     private BasicAnimation basicAnimation;
 
-
-    public enum Status {STANDARD, DAMAGED, EXPLODING, EXPLODED}
+    /**
+     * Der Status des Choppers, eventuell auch "Damaged" und "Exploding" hinzufügen, falls der Chopper mehr aushalten soll.
+     */
+    public enum Status {STANDARD, EXPLODED}
 
     private enum BasicAnimation {
         //links
@@ -407,6 +414,9 @@ public class Chopper extends CollidableGameObject {
         }
     }
 
+    /**
+     * Da die HitBox immer wieder vergrößert und verkleinert wird, muss sie wieder zurückgesetzt werden.
+     */
     public void resetChopperHitBox() {
         hitBoxOffsetX = 7;
         hitBoxOffsetY = 10;
@@ -422,11 +432,22 @@ public class Chopper extends CollidableGameObject {
          */
     @Override
     public void updateStatus() {
-        flyDownAnimationReset();
+        //Diese Methode wurde wegen "Clean Code" wieder in diese Methode reingeschrieben, da es zu viele Methoden gab????
+        if (flyDown) {
+            if (rotation < 0) {
+                rotation += 0.2;
+            } else if (rotation > 0) {
+                rotation -= 0.2;
+            }
+        }
         chopperFlyDown();
         basicAnimation();
         damageAnimation();
-        crashLanding();
+        //Diese Methode wurde wegen "Clean Code" wieder in diese Methode reingeschrieben, da es zu viele Methoden gab????
+        if ((rotation >= 10 || rotation <= -10) && chopperLanded()) {
+            status = Status.EXPLODED;
+            rotation = 3;
+        }
         chopperLanded();
 
         if (chopperHit && !chopperLanded() && facingLeft) {
@@ -473,28 +494,12 @@ public class Chopper extends CollidableGameObject {
         return landed;
     }
 
-    private void crashLanding() {
-        if ((rotation >= 10 || rotation <= -10) && chopperLanded()) {
-            status = Status.EXPLODED;
-            rotation = 3;
-        }
-    }
-
-
+    /**
+     * Was passieren soll, wenn die Hauptspielfigur getroffen wird.
+     */
     public void chopperHit() {
         status = Status.EXPLODED;
         chopperHit = true;
-    }
-
-
-    private void flyDownAnimationReset() {
-        if (flyDown) {
-            if (rotation < 0) {
-                rotation += 0.2;
-            } else if (rotation > 0) {
-                rotation -= 0.2;
-            }
-        }
     }
 
     /**
@@ -594,10 +599,13 @@ public class Chopper extends CollidableGameObject {
                 basicAnimation = BasicAnimation.EXPLODED;
                 exploded = true;
                 break;
+                /*
             case DAMAGED:
                 break;
             case EXPLODING:
                 break;
+
+                 */
             case STANDARD:
                 break;
             default:

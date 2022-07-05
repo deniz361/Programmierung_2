@@ -72,18 +72,23 @@ public class GamePlayManager {
         if (gameOver()) {
             initializeGame();
         } else {
+
             if (!gameView.timerIsActive("level", this)) {
-                gameView.activateTimer("level", this, 1000);
-                currentLevel = levelManager.nextLevel();
+                gameView.activateTimer("level", this, 3000);
+
+                try {
+                    currentLevel = levelManager.nextLevel();
+
+                } catch (NoMoreLevelsAvailableException ignore) {
+                    gameOver = true;
+                    gameView.showEndScreen("Score: " + returnScore());
+                    initializeGame();
+
+                }
                 initializeLevel();
 
-                if (levelManager.levels.size() == levelManager.currentLevel - 1) {
-                    System.out.println(levelManager.levels.size());
-                    gameOver = true;
-                    gameView.showEndScreen("Score: " + getScore());
-                }
-
             }
+        }
             /*
             if (returnSavedPeopleSize() >= 7) {
                 try {
@@ -101,7 +106,6 @@ public class GamePlayManager {
              */
 
 
-        }
 
         if (chopperHit) {
             if (!gameView.alarmIsSet("reset", this)) {
@@ -126,12 +130,16 @@ public class GamePlayManager {
         }
 
         if (currentLevel instanceof Level1) {
+            gameObjectManager.overlay.showMessage("Level 1", 1);
             gameObjectManager.chopper.reset();
             gameObjectManager.background.setBackgroundImage("background.png");
+            //House
             gameObjectManager.addGameObject(new House(gameView, this, -800, 350));
             gameObjectManager.addGameObject(new House(gameView, this, -2100, 350));
             gameObjectManager.addGameObject(new House(gameView, this, -3800, 350));
 
+
+            //Artillery
             gameObjectManager.addGameObject(new Artillery(gameView, this, -100, 420));
             gameObjectManager.addGameObject(new Artillery(gameView, this, -300, 420));
             gameObjectManager.addGameObject(new Artillery(gameView, this, -1500, 420));
@@ -139,9 +147,13 @@ public class GamePlayManager {
             gameObjectManager.addGameObject(new Artillery(gameView, this, -3100, 420));
             gameObjectManager.addGameObject(new Artillery(gameView, this, -3000, 420));
 
-            gameObjectManager.addGameObject(new Tank(gameView, this));
-            gameObjectManager.addGameObject(new Jet(gameView, this));
+            //Tanks
+            //gameObjectManager.addGameObject(new Tank(gameView, this));
 
+            //Jet
+            gameObjectManager.addGameObject(new Jet(gameView, this, 300, 100));
+
+            //Base
             gameObjectManager.addGameObject(new LandingPlace(gameView, this));
             gameObjectManager.addGameObject(new Base(gameView, this));
 
@@ -150,13 +162,13 @@ public class GamePlayManager {
 
         }
         if (currentLevel instanceof Level2) {
+            gameObjectManager.overlay.showMessage("Level 2", 1);
 
             gameObjectManager.chopper.reset();
             gameObjectManager.background.setBackgroundImage("background_level2.png");
 
 
             gameObjectManager.addGameObject(new Tank(gameView, this));
-            gameObjectManager.addGameObject(new Jet(gameView, this));
         }
     }
 
@@ -166,14 +178,12 @@ public class GamePlayManager {
         FileManager.writeDifficultyToDisc(difficulty);
         levelManager = new LevelManager(difficulty);
         levelManager.resetLevelCounter();
-        System.out.println("Level after reset level counter: " + currentLevel);
         currentLevel = levelManager.levels.getFirst();
-        System.out.println("Level after reset current level is get first: " + currentLevel);
 
         gameOver = false;
         first = true;
-        initializeLevel();
         createdTanks.clear();
+        initializeLevel();
     }
 
     private boolean gameOver() {
@@ -181,10 +191,8 @@ public class GamePlayManager {
             EndScreen.showEndScreen(gameView, (int) gameObjectManager.chopper.score);
             gameObjectManager.chopper.health = 3;
             return true;
-        } else if (gameOver) {
-            return true;
         } else {
-            return false;
+            return gameOver;
         }
 
 
@@ -255,8 +263,8 @@ public class GamePlayManager {
 
             }
             if (o instanceof LandingPlace) {
-                LandingPlace LandingPlace = (LandingPlace) o;
-                landingplacePositionXWhenHit = LandingPlace.getPosition().x;
+                LandingPlace landingPlace = (LandingPlace) o;
+                landingplacePositionXWhenHit = landingPlace.getPosition().x;
                 distanceToBase = (landingplacePositionXWhenHit - 620);
 
 
@@ -315,7 +323,9 @@ public class GamePlayManager {
     }
 
     /**
-     * Increase score.
+     * Verändere score.
+     *
+     * @param score Um wie viel der score verändert werden soll
      */
     public void adjustScore(double score) {
         gameObjectManager.chopper.score += score;
@@ -355,10 +365,19 @@ public class GamePlayManager {
         lostPeople.add(people);
     }
 
+    /**
+     * Um bei Overlay diese Information anzeigen zu lassen.
+     * @return gibt lostpeople.size zurück.
+     */
     public int returnLostPeopleSize() {
         return lostPeople.size();
     }
 
+
+    /**
+     * Um bei Overlay diese Information anzeigen zu lassen.
+     * @return gibt health des Choppers zurück
+     */
     public double returnHealthChopper() {
         return gameObjectManager.chopper.health;
     }
@@ -373,7 +392,11 @@ public class GamePlayManager {
         return gameObjectManager.chopper.chopperLanded();
     }
 
-    public double getScore() {
+    /**
+     * Um bei Overlay diese Information anzeigen zu lassen.
+     * @return gibt den score zurück
+     */
+    public double returnScore() {
         return gameObjectManager.chopper.score;
     }
 
