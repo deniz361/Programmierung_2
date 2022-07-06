@@ -7,7 +7,6 @@ import thd.gameobjects.base.GameObject;
 import thd.gameobjects.base.Position;
 import thd.gameview.GameView;
 
-import java.awt.*;
 import java.util.LinkedList;
 
 
@@ -436,7 +435,7 @@ if (calculatedBezierPoints) {
         JET_ANIMATION_LEFT5("Jet_left_5.png"), JET_ANIMATION_LEFT6("Jet_left_6.png"),
         JET_ANIMATION_LEFT7("Jet_left_7.png");
 
-        final String imageFile;
+        private final String imageFile;
 
         JetAnimation(String imageFile) {
             this.imageFile = imageFile;

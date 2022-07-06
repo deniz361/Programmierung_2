@@ -9,20 +9,12 @@ import thd.gameobjects.movable.Chopper;
 import thd.gameobjects.movable.Jet;
 import thd.gameobjects.movable.People;
 import thd.gameobjects.movable.Tank;
-import thd.gameobjects.unmovable.Artillery;
-import thd.gameobjects.unmovable.Base;
-import thd.gameobjects.unmovable.House;
-import thd.gameobjects.unmovable.LandingPlace;
-import thd.gameview.*;
+import thd.gameobjects.unmovable.*;
+import thd.gameview.GameView;
 import thd.screens.EndScreen;
 import thd.screens.StartScreen;
 
-
-import java.io.File;
 import java.util.LinkedList;
-import java.util.Random;
-
-import static thd.game.managers.FileManager.writeDifficultyToDisc;
 
 
 /**
@@ -31,22 +23,16 @@ import static thd.game.managers.FileManager.writeDifficultyToDisc;
 public class GamePlayManager {
 
     private final GameView gameView;
-    private boolean first;
     /**
      * Um zu bestimmen, wann das Spiel vorbei ist.
      */
     boolean gameOver;
     private GameObjectManager gameObjectManager;
     private final LinkedList<GameObject> createdTanks;
-    private final LinkedList<GameObject> createdJets;
     private final LinkedList<GameObject> pickedUpPeople;
     private final LinkedList<GameObject> unloadedPeople;
     private final LinkedList<GameObject> savedPeople;
     private final LinkedList<GameObject> lostPeople;
-
-    private final Random random;
-    private int randomNumberX;
-    private int randomNumberY;
 
 
     private double landingplacePositionXWhenHit;
@@ -56,21 +42,22 @@ public class GamePlayManager {
 
     private LevelManager levelManager;
     private Level currentLevel;
+    private boolean first;
+
+    private boolean nextLevel;
 
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
         gameOver = false;
         createdTanks = new LinkedList<>();
-        createdJets = new LinkedList<>();
         pickedUpPeople = new LinkedList<>();
         unloadedPeople = new LinkedList<>();
         savedPeople = new LinkedList<>();
         lostPeople = new LinkedList<>();
         levelManager = new LevelManager(Level.Difficulty.STANDARD);
         currentLevel = levelManager.levels.getFirst();
-
-        random = new Random();
         first = true;
+        nextLevel = true;
     }
 
 
@@ -81,24 +68,33 @@ public class GamePlayManager {
         if (first) {
             initializeGame();
             first = false;
-        }
-        if (gameOver()) {
-            initializeGame();
         } else {
-            if (returnSavedPeopleSize() >= 7) {
-                try {
-                    currentLevel = levelManager.nextLevel();
+            if (gameOver()) {
+                initializeGame();
+            } else {
+                /*
+                if (!gameView.alarmIsSet("level", this)) {
+                    gameView.setAlarm("level", this, 3000);
+                } else if (gameView.alarm("level", this)) {
 
-                } catch (NoMoreLevelsAvailableException e) {
-                    System.out.println(currentLevel);
-                    gameView.showEndScreen("Score: " + returnScore());
-                    initializeGame();
+                 */
+                if (returnSavedPeopleSize() >= 7 && nextLevel) { //eventuell nextLevel anpassen
+                    try {
+                        nextLevel = false;
+                        currentLevel = levelManager.nextLevel();
+                        initializeLevel();
+
+
+
+                    } catch (NoMoreLevelsAvailableException ignore) {
+                        //gameOver = true;
+                        gameView.showEndScreen("Score: " + returnScore());
+                        initializeGame();
+
+                    }
                 }
-                initializeLevel();
             }
-
         }
-
         if (chopperHit) {
             if (!gameView.alarmIsSet("reset", this)) {
                 gameView.setAlarm("reset", this, 3000);
@@ -107,17 +103,16 @@ public class GamePlayManager {
                 moveWorldToLeft(distanceToBase);
                 chopperHit = false;
             }
-        }
 
-        spawnJets();
-        spawnTanks();
+
+        }
 
 
     }
 
     private void initializeLevel() {
         for (GameObject o : gameObjectManager.getGameObjects()) {
-            if (!(o instanceof Chopper)) {
+            if (!(o instanceof Chopper) && !(o instanceof Overlay)) {
                 destroy(o);
             }
         }
@@ -162,7 +157,10 @@ public class GamePlayManager {
 
 
             gameObjectManager.addGameObject(new Tank(gameView, this));
-            //gameObjectManager.addGameObject(new Jet(gameView, this));
+
+            //Base
+            gameObjectManager.addGameObject(new LandingPlace(gameView, this));
+            gameObjectManager.addGameObject(new Base(gameView, this));
         }
     }
 
@@ -172,13 +170,16 @@ public class GamePlayManager {
         FileManager.writeDifficultyToDisc(difficulty);
         levelManager = new LevelManager(difficulty);
         levelManager.resetLevelCounter();
-        //System.out.println("Level after reset level counter: " + currentLevel);
         currentLevel = levelManager.levels.getFirst();
-        //System.out.println("Level after reset current level is get first: " + currentLevel);
 
-        gameOver = false;
-        initializeLevel();
+        //gameOver = false;
+        //first = true;
         createdTanks.clear();
+        savedPeople.clear();
+        unloadedPeople.clear();
+        pickedUpPeople.clear();
+        lostPeople.clear();
+        initializeLevel();
 
     }
 
@@ -187,9 +188,8 @@ public class GamePlayManager {
             EndScreen.showEndScreen(gameView, gameObjectManager.chopper.score);
             gameObjectManager.chopper.health = 3;
             return true;
-
         } else {
-            return false;
+            return gameOver;
         }
 
 
@@ -235,37 +235,13 @@ public class GamePlayManager {
     }
 
 
-    /**
-     * spawnen immer bei der Hauptspielfigur.
-     */
     private void spawnTanks() {
-        if (!gameView.alarmIsSet("spawnTanks", this)) {
-            gameView.setAlarm("spawnTanks", this, 20000);
-        } else if (gameView.alarm("spawnTanks", this)) {
-            if (createdTanks.size() <= 5) {
-                GameObject o = new Tank(gameView, this);
-                createdTanks.add(o);
-                spawn(o);
-            }
-        }
-    }
-
-    /**
-     * spawnen random auf der Map.
-     */
-    private void spawnJets() {
-        randomNumberX = -(random.nextInt(4000));
-        randomNumberY = random.nextInt(100) + 50;
-
-
-        if (!gameView.alarmIsSet("spawnJets", this)) {
-            gameView.setAlarm("spawnJets", this, 5000);
-        } else if (gameView.alarm("spawnJets", this)) {
-            if (createdJets.size() <= 7) {
-                GameObject o = new Jet(gameView, this, randomNumberX, randomNumberY);
-                createdJets.add(o);
-                spawn(o);
-            }
+        if (!gameView.alarmIsSet("spawn", this)) {
+            gameView.setAlarm("spawn", this, 5000);
+        } else if (gameView.alarm("spawn", this)) {
+            GameObject o = new Tank(gameView, this);
+            createdTanks.add(o);
+            spawn(o);
         }
     }
 
@@ -331,7 +307,7 @@ public class GamePlayManager {
     public void storePeopleInBase(GameObject g) {
         savedPeople.add(g);
         destroy(g);
-        adjustScore(250);
+        adjustScore(250.0);
     }
 
     /**
@@ -344,10 +320,11 @@ public class GamePlayManager {
     }
 
     /**
-     * Increase score.
-     * @param score um wie viel der score verändert werden soll.
+     * Verändere score.
+     *
+     * @param score Um wie viel der score verändert werden soll
      */
-    public void adjustScore(int score) {
+    public void adjustScore(double score) {
         gameObjectManager.chopper.score += score;
     }
 
@@ -386,16 +363,17 @@ public class GamePlayManager {
     }
 
     /**
-     * Um diese Information beim Overlay anzeigen zu lassen.
-     * @return gibt die größe der Linked List "lostPeople" zurück.
+     * Um bei Overlay diese Information anzeigen zu lassen.
+     * @return gibt lostpeople.size zurück.
      */
     public int returnLostPeopleSize() {
         return lostPeople.size();
     }
 
+
     /**
-     * Um die Leben des Choppers beim Overlay anzeigen zu lassen.
-     * @return gibt die Leben des Choppers zurück.
+     * Um bei Overlay diese Information anzeigen zu lassen.
+     * @return gibt health des Choppers zurück
      */
     public double returnHealthChopper() {
         return gameObjectManager.chopper.health;
@@ -412,8 +390,8 @@ public class GamePlayManager {
     }
 
     /**
-     * Um den Score im Overlay anzeigen zu lassen.
-     * @return gibt des score aus.
+     * Um bei Overlay diese Information anzeigen zu lassen.
+     * @return gibt den score zurück
      */
     public double returnScore() {
         return gameObjectManager.chopper.score;
@@ -427,6 +405,5 @@ public class GamePlayManager {
      */
     void setGameObjectManager(GameObjectManager gameObjectManager) {
         this.gameObjectManager = gameObjectManager;
-        initializeLevel();
     }
 }

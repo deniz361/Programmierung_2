@@ -23,8 +23,9 @@ public class People extends CollidableGameObject implements AutoMovable {
     private Random random;
     private long duration;
     private double distanceToChopper;
+
     /**
-     * Ob eine Person gerade in die Basis läuft.
+     * Ob eine Person gerade in die Base läuft oder nicht.
      */
     public boolean runToBase;
 
@@ -67,7 +68,7 @@ public class People extends CollidableGameObject implements AutoMovable {
     public void reactToCollision(CollidableGameObject other) {
         if (other.getClass() == BulletEnemy.class) {
             gamePlayManager.addLostPeople(this);
-            gamePlayManager.adjustScore(-250);
+            gamePlayManager.adjustScore(-250.0);
             gamePlayManager.destroy(this);
         }
 

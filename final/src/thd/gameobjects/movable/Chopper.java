@@ -1,7 +1,7 @@
 package thd.gameobjects.movable;
 
 
-import thd.game.managers.*;
+import thd.game.managers.GameObjectManager;
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.CollidableGameObject;
 import thd.gameobjects.base.GameObject;

@@ -76,7 +76,7 @@ public class House extends CollidableGameObject {
                     gameView.setAlarm("spawnDelay", this, 1500);
                 } else if (gameView.alarm("spawnDelay", this)) {
                     gamePlayManager.spawn(new People(gameView, gamePlayManager, this.position.x + 50, this.position.y + height / 2d + 15));
-                    counter = counter + 1;
+                    counter++;
                 }
             }
             if (once) {
@@ -85,7 +85,7 @@ public class House extends CollidableGameObject {
                 } else if (gameView.alarm("delayAfterHouseHasBeenShot", this)) {
                     gamePlayManager.spawn(new People(gameView, gamePlayManager, this.position.x + 50, this.position.y + height / 2d + 15));
                     once = false;
-                    counter = counter + 1;
+                    counter++;
                 }
             }
         }
@@ -117,36 +117,45 @@ public class House extends CollidableGameObject {
     }
 
 
-
+    /**
+     * Fire Animation.
+     */
     public enum FireAnimation {
+        /**
+         * ????
+         */
         FIRE1("Fire 1.png"), FIRE2("Fire 2.png"), FIRE3("Fire 3.png");
 
-        public final String file;
+        private final String file;
 
         FireAnimation(String file) {
             this.file = file;
         }
     }
 
-    public void fireAnimation() {
-        //if (burning) {
-        if (!gameView.alarmIsSet("fireAnimation", this)) {
-            gameView.setAlarm("fireAnimation", this, 100);
-        } else if (gameView.alarm("fireAnimation", this)) {
-            switch (fireAnimation) {
-                case FIRE1:
-                    fireAnimation = FireAnimation.FIRE2;
-                    break;
-                case FIRE2:
-                    fireAnimation = FireAnimation.FIRE3;
-                    break;
-                case FIRE3:
-                    fireAnimation = FireAnimation.FIRE1;
-                    break;
-                default:
 
+    /**
+     * Fire Animation.
+     */
+    private void fireAnimation() {
+        //if (burning) {
+            if (!gameView.alarmIsSet("fireAnimation", this)) {
+                gameView.setAlarm("fireAnimation", this, 100);
+            } else if (gameView.alarm("fireAnimation", this)) {
+                switch (fireAnimation) {
+                    case FIRE1:
+                        fireAnimation = FireAnimation.FIRE2;
+                        break;
+                    case FIRE2:
+                        fireAnimation = FireAnimation.FIRE3;
+                        break;
+                    case FIRE3:
+                        fireAnimation = FireAnimation.FIRE1;
+                        break;
+                    default:
+
+                }
             }
-        }
         //}
     }
 

@@ -41,7 +41,7 @@ public class Overlay extends GameObject {
      */
     public void showMessage(String message, int secondsToShow) {
         text = message;
-        gameView.activateTimer("showMessage", this, secondsToShow * 1000L);
+        gameView.activateTimer(text, this, secondsToShow * 1000L);
     }
 
 
@@ -78,7 +78,7 @@ public class Overlay extends GameObject {
         gameView.addTextToCanvas("HEALTH:" + gamePlayManager.returnHealthChopper(), 0,0,15, Color.BLACK, 0);
 
 
-        if (gameView.timerIsActive("showMessage", this)) {
+        if (gameView.timerIsActive(text, this)) {
             final int size = 30;
             final double xCoordinate = GameView.WIDTH / 2.0 - size * 7;
             final double yCoordinate = GameView.HEIGHT / 2.0 - size / 2.0;

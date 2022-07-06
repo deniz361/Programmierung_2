@@ -25,7 +25,6 @@ public class Tank extends CollidableGameObject implements AutoMovable {
     private boolean flyFromLeftToRight;
 
     /** don't move the Tank while it's driving into the scene. */
-    public boolean doNotDisturb;
     private double positionXNotDynamic;
 
 
@@ -61,7 +60,6 @@ public class Tank extends CollidableGameObject implements AutoMovable {
         position.x = xStart;
         positionXNotDynamic = xStart;
         position.y = yStart;
-        doNotDisturb = true;
         tankLeft =
                 "     oOoOO\n" +
                         "LLLLLOOooOO\n" +
@@ -122,7 +120,6 @@ public class Tank extends CollidableGameObject implements AutoMovable {
             goIntoScene();
             speedInPixel = 0.25;
         } else {
-            doNotDisturb = false;
             speedInPixel = 0.5;
             if ((position.x + width) > GameView.WIDTH) {  //gameview width is 960
                 flyFromLeftToRight = false;
