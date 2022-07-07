@@ -3,6 +3,7 @@ package thd.game.managers;
 import thd.game.level.Level;
 import thd.game.level.Level1;
 import thd.game.level.Level2;
+import thd.game.utilities.NoMoreLevelsAvailableException;
 import thd.gameobjects.base.GameObject;
 import thd.gameobjects.base.Position;
 import thd.gameobjects.movable.Chopper;
@@ -156,7 +157,20 @@ public class GamePlayManager {
             gameObjectManager.background.setBackgroundImage("background_level2.png");
 
 
-            gameObjectManager.addGameObject(new Tank(gameView, this));
+            //House
+            gameObjectManager.addGameObject(new House(gameView, this, -500, 350));
+            gameObjectManager.addGameObject(new House(gameView, this, -1700, 350));
+            gameObjectManager.addGameObject(new House(gameView, this, -3200, 350));
+
+            //Artillery
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -100, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -150, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -900, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -1000, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -2300, 420));
+            gameObjectManager.addGameObject(new Artillery(gameView, this, -2500, 420));
+
+            //gameObjectManager.addGameObject(new Tank(gameView, this));
 
             //Base
             gameObjectManager.addGameObject(new LandingPlace(gameView, this));

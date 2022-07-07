@@ -387,6 +387,8 @@ public class Chopper extends CollidableGameObject {
         basicAnimation = BasicAnimation.STANDARD;
         exploded = false;
         chopperHit = false;
+        facingLeft = true;
+        //score = 0; // nur jetzt, später rauslöschen
     }
 
 

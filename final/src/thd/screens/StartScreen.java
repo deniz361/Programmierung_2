@@ -16,12 +16,13 @@ public class StartScreen {
      * @return Die Methode gibt den vom Spieler ausgewählten Schwierigkeitsgrad zurück.
      */
     public static Level.Difficulty showStartScreen(GameView gameView, Level.Difficulty difficulty) {
-        String title = "CHOPLIFTER";
-        String description = "Rette Kriegsgefangene mit dem Hubschrauber und setze sie \n" +
-                "in der Basis wieder ab. WASD um den Hubschrauber zu \n" +
-                "steuern, SPACE um zu schießen, F um nach unten zu \n" +
-                "schießen und Q oder E um die Richtung des \n" +
-                "Hubschraubers zu wechseln.";
+        String title = " CHOPLIFTER";
+        String description =
+                " Rette Kriegsgefangene mit dem Hubschrauber und setze sie \n" +
+                " in der Basis wieder ab. \n\n" +
+                " 'WASD' um den Hubschrauber zu steuern, 'SPACE' um zu \n" +
+                " schießen, 'F' um nach unten zu schießen und 'Q' oder \n" +
+                " 'E' um die Richtung des Hubschraubers zu wechseln.";
 
 
         boolean easy;

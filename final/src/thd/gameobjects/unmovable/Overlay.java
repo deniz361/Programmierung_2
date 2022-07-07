@@ -75,7 +75,7 @@ public class Overlay extends GameObject {
         gameView.addTextToCanvas(" LOAD:" + gamePlayManager.returnPickedUpPeopleSize() + "/7", 780, 20, 15, Color.BLACK, 0);
         gameView.addTextToCanvas(" SAFE:" + gamePlayManager.returnSavedPeopleSize(), 780, 40, 15, Color.BLACK, 0);
         gameView.addTextToCanvas(" LOST:" + gamePlayManager.returnLostPeopleSize(), 780, 60, 15, Color.BLACK, 0);
-        gameView.addTextToCanvas("HEALTH:" + gamePlayManager.returnHealthChopper(), 0,0,15, Color.BLACK, 0);
+        gameView.addTextToCanvas(" HEALTH:" + gamePlayManager.returnHealthChopper(), 0,0,15, Color.BLACK, 0);
 
 
         if (gameView.timerIsActive(text, this)) {

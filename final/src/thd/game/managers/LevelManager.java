@@ -3,6 +3,7 @@ package thd.game.managers;
 import thd.game.level.Level;
 import thd.game.level.Level1;
 import thd.game.level.Level2;
+import thd.game.utilities.NoMoreLevelsAvailableException;
 
 import java.util.LinkedList;
 

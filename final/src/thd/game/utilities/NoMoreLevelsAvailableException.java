@@ -1,4 +1,4 @@
-package thd.game.managers;
+package thd.game.utilities;
 
 
 /** Wenn keine Level mehr frei existieren, man aber trotzdem in das nächste Level springen möchte, wird diese Exception ausgeführt. */

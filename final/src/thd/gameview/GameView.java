@@ -1466,8 +1466,9 @@ public class GameView {
             this.bufferedImage = bufferedImages[currentBufferedImage];
             this.g2D = bufferedImage.createGraphics();
             Map<TextAttribute, Object> fontMap = new HashMap<>();
-            fontMap.put(TextAttribute.FAMILY, "Monospaced");
-            fontMap.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+            fontMap.put(TextAttribute.FAMILY, "Verdana");
+            fontMap.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD);
+            fontMap.put(TextAttribute.WIDTH, TextAttribute.WIDTH_SEMI_EXTENDED);
             this.font = new Font(fontMap);
             initColorMap();
             this.imageMap = new HashMap<>();
