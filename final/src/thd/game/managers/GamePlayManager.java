@@ -79,7 +79,7 @@ public class GamePlayManager {
                 } else if (gameView.alarm("level", this)) {
 
                  */
-                if (returnSavedPeopleSize() >= 7 && nextLevel) { //eventuell nextLevel anpassen
+                if (returnSavedPeopleSize() >= 18 && nextLevel) { //eventuell nextLevel anpassen
                     try {
                         nextLevel = false;
                         currentLevel = levelManager.nextLevel();
@@ -104,9 +104,10 @@ public class GamePlayManager {
                 moveWorldToLeft(distanceToBase);
                 chopperHit = false;
             }
-
-
         }
+
+        spawnTanks();
+        spawnJet();
 
 
     }
@@ -186,8 +187,6 @@ public class GamePlayManager {
         levelManager.resetLevelCounter();
         currentLevel = levelManager.levels.getFirst();
 
-        //gameOver = false;
-        //first = true;
         createdTanks.clear();
         savedPeople.clear();
         unloadedPeople.clear();
@@ -251,10 +250,19 @@ public class GamePlayManager {
 
     private void spawnTanks() {
         if (!gameView.alarmIsSet("spawn", this)) {
-            gameView.setAlarm("spawn", this, 5000);
+            gameView.setAlarm("spawn", this, 10000);
         } else if (gameView.alarm("spawn", this)) {
             GameObject o = new Tank(gameView, this);
             createdTanks.add(o);
+            spawn(o);
+        }
+    }
+
+    private void spawnJet() {
+        if (!gameView.alarmIsSet("spawnJet", this)) {
+            gameView.setAlarm("spawnJet", this, 10000);
+        } else if (gameView.alarm("spawnJet", this)) {
+            GameObject o = new Jet(gameView, this, (int) (gameObjectManager.chopper.getPosition().x - GameView.WIDTH), 100);
             spawn(o);
         }
     }

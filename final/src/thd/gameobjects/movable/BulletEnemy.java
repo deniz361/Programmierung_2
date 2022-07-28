@@ -62,7 +62,7 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
     @Override
     public void reactToCollision(CollidableGameObject other) {
         if (other.getClass() == Chopper.class) {
-            //gamePlayManager.chopperHasBeenHit();
+            gamePlayManager.chopperHasBeenHit();
         }
 
 
