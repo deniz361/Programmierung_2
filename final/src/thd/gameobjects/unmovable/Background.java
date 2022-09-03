@@ -22,6 +22,8 @@ public class Background extends GameObject {
         position.x = -800;
         position.y = 0;
         backgroundImage = "background.png";
+
+        positionInSort = 88;
     }
 
     /**
@@ -39,5 +41,10 @@ public class Background extends GameObject {
      * @param backgroundImage the new background image */
     public void setBackgroundImage(String backgroundImage) {
         this.backgroundImage = backgroundImage;
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 }

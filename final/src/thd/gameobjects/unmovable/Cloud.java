@@ -20,6 +20,8 @@ public class Cloud extends GameObject {
         super(gameView, gamePlayManager);
         position.x = 100;
         position.y = 100;
+
+        positionInSort = 90;
     }
 
 
@@ -65,5 +67,10 @@ public class Cloud extends GameObject {
         gameView.addImageToCanvas("Cloud.png", position.x - 4250, position.y, 2, 0);
         gameView.addImageToCanvas("Cloud.png", position.x - 4400, position.y + 50, 2, 0);
 
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 }

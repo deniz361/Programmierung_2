@@ -157,6 +157,7 @@ public class Chopper extends CollidableGameObject {
         basicAnimation = BasicAnimation.STANDARD;
         fireAnimation = House.FireAnimation.FIRE1;
 
+        positionInSort = 98;
 
     }
 
@@ -624,5 +625,8 @@ public class Chopper extends CollidableGameObject {
         return this.rotation;
     }
 
-
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
+    }
 }

@@ -1,5 +1,6 @@
 package thd.game.managers;
 
+import thd.game.utilities.Sorter;
 import thd.game.utilities.TooManyGameObjectsException;
 import thd.gameobjects.movable.*;
 import thd.gameobjects.unmovable.*;
@@ -90,24 +91,6 @@ public class GameObjectManager {
         }
     }
 
-    private void sortGameObjects() {
-        for (GameObject g : gameObjects) {
-            if (g instanceof Overlay) {
-                removeGameObject(g);
-                addGameObject(g);
-            }
-            if (g instanceof Chopper) {
-                removeGameObject(g);
-                addGameObject(g);
-            }
-            if (g instanceof Tank) {
-                removeGameObject(g);
-                addGameObject(g);
-            }
-
-        }
-    }
-
 
     void addGameObject(GameObject gameObject) {
         toAdd.add(gameObject);
@@ -121,7 +104,7 @@ public class GameObjectManager {
 
     private void modifyGameObjectsList() {
         if (toAdd.size() != 0) {
-            sortGameObjects();
+            gameObjects.sort(new Sorter());
         }
 
         gameObjects.removeAll(toRemove);

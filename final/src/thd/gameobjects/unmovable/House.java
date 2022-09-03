@@ -2,6 +2,7 @@ package thd.gameobjects.unmovable;
 
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.CollidableGameObject;
+import thd.gameobjects.base.GameObject;
 import thd.gameobjects.movable.Bullet;
 import thd.gameobjects.movable.People;
 import thd.gameview.GameView;
@@ -50,6 +51,8 @@ public class House extends CollidableGameObject {
         counter = 0;
         once = true;
         onceFire = true;
+
+        positionInSort = 91;
     }
 
     @Override
@@ -165,5 +168,10 @@ public class House extends CollidableGameObject {
      */
     public boolean isBroken() {
         return broken;
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 }

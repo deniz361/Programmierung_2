@@ -30,6 +30,8 @@ public class Overlay extends GameObject {
         text = "This is a test";
         executeThisOneTime = true;
         gameOverCounter = 0;
+
+        positionInSort = 100;
     }
 
 
@@ -93,5 +95,10 @@ public class Overlay extends GameObject {
         }
 
          */
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 }

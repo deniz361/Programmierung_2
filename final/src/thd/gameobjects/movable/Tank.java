@@ -91,6 +91,8 @@ public class Tank extends CollidableGameObject implements AutoMovable {
         shotsPerSecond = 1;
         createdBullets = new ArrayList<>();
 
+        positionInSort = 96;
+
     }
 
     /**
@@ -208,6 +210,11 @@ public class Tank extends CollidableGameObject implements AutoMovable {
         if (other.getClass() == Bullet.class) {
             gamePlayManager.destroy(this);
         }
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 
 }

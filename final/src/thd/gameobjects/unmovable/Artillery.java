@@ -53,6 +53,8 @@ public class Artillery extends CollidableGameObject {
         hitBoxWidth = width * size;
 
         differentDirections = DifferentDirections.RIGHT;
+
+        positionInSort = 95;
     }
 
 
@@ -162,5 +164,10 @@ public class Artillery extends CollidableGameObject {
         DifferentDirections(String imagefile) {
             this.imagefile = imagefile;
         }
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 }

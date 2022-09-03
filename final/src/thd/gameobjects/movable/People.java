@@ -3,6 +3,7 @@ package thd.gameobjects.movable;
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.AutoMovable;
 import thd.gameobjects.base.CollidableGameObject;
+import thd.gameobjects.base.GameObject;
 import thd.gameobjects.unmovable.Base;
 import thd.gameview.GameView;
 
@@ -57,6 +58,7 @@ public class People extends CollidableGameObject implements AutoMovable {
         random = new Random();
         runToBase = false;
 
+        positionInSort = 99;
     }
 
     /**
@@ -72,7 +74,7 @@ public class People extends CollidableGameObject implements AutoMovable {
             gamePlayManager.destroy(this);
         }
 
-        if (other.getClass() == Chopper.class) {
+        if (other.getClass() == Chopper.class && !gamePlayManager.chopperHit) {
             gamePlayManager.pickUpPeople(this);
         }
 
@@ -112,7 +114,7 @@ public class People extends CollidableGameObject implements AutoMovable {
         } else {
             distanceToChopper = distanceToChopper();
 
-            if (distanceToChopper < 250 && distanceToChopper > -250 && gamePlayManager.chopperLanded()) {
+            if (distanceToChopper < 250 && distanceToChopper > -250 && gamePlayManager.chopperLanded() && !gamePlayManager.chopperHit) {
                 if (distanceToChopper > 0) {
                     walkingRight(0.5);
                 } else {
@@ -228,5 +230,10 @@ public class People extends CollidableGameObject implements AutoMovable {
         WalkingAnimation(String imageFile) {
             this.imageFile = imageFile;
         }
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 }

@@ -38,7 +38,7 @@ public class GamePlayManager {
 
     private double landingplacePositionXWhenHit;
     private double distanceToBase;
-    private boolean chopperHit;
+    public boolean chopperHit;
 
 
     private LevelManager levelManager;

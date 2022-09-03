@@ -2,6 +2,7 @@ package thd.gameobjects.unmovable;
 
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.CollidableGameObject;
+import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 
@@ -29,6 +30,8 @@ public class Base extends CollidableGameObject {
         hitBoxOffsetY = height - 10 * size - 7;
         hitBoxHeight = 13 * size;
         hitBoxWidth = 10 * size;
+
+        positionInSort = 92;
     }
 
     /**
@@ -47,5 +50,10 @@ public class Base extends CollidableGameObject {
     @Override
     public void addToCanvas() {
         gameView.addImageToCanvas("Base - Choplifter.png", position.x, position.y, size, rotation);
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 }

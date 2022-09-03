@@ -4,6 +4,7 @@ import thd.game.managers.GamePlayManager;
 import thd.game.utilities.WrongInput;
 import thd.gameobjects.base.AutoMovable;
 import thd.gameobjects.base.CollidableGameObject;
+import thd.gameobjects.base.GameObject;
 import thd.gameview.GameView;
 
 import java.awt.*;
@@ -52,6 +53,8 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
         //AutoAim
         positionChopperX = gamePlayManager.positionChopper().x;
         positionChopperY = gamePlayManager.positionChopper().y;
+
+        positionInSort = 93;
     }
 
     /**
@@ -104,5 +107,8 @@ public class BulletEnemy extends CollidableGameObject implements AutoMovable {
         }
     }
 
-
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
+    }
 }

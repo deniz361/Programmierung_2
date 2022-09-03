@@ -95,6 +95,8 @@ public class Jet extends CollidableGameObject implements AutoMovable {
 
         //Animation
         jetAnimation = JetAnimation.JET_ANIMATION_RIGHT1;
+
+        positionInSort = 97;
     }
 
     /**
@@ -440,5 +442,10 @@ if (calculatedBezierPoints) {
         JetAnimation(String imageFile) {
             this.imageFile = imageFile;
         }
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 }

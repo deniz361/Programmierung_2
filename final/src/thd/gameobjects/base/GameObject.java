@@ -4,7 +4,7 @@ import thd.game.managers.GamePlayManager;
 import thd.gameview.GameView;
 
 /**Jedes Gameobject erbt von dieser Klasse.*/
-public abstract class GameObject {
+public abstract class GameObject implements Comparable<GameObject> {
 
     protected final GameView gameView;
     protected final Position position;
@@ -15,6 +15,11 @@ public abstract class GameObject {
     protected double width;
     protected double height;
     private double gameWidth;
+
+    /**
+     * Sortierung der gameobjects
+     */
+    public int positionInSort;
 
     /**
      * Mindestanforderung, das jedes GameObject haben muss.

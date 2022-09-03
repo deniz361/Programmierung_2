@@ -2,6 +2,7 @@ package thd.gameobjects.unmovable;
 
 import thd.game.managers.GamePlayManager;
 import thd.gameobjects.base.CollidableGameObject;
+import thd.gameobjects.base.GameObject;
 import thd.gameobjects.movable.Chopper;
 import thd.gameview.GameView;
 
@@ -29,6 +30,8 @@ public class LandingPlace extends CollidableGameObject {
         hitBoxOffsetY = 0;
         hitBoxHeight = 9 * size;
         hitBoxWidth = 59 * size;
+
+        positionInSort = 89;
     }
 
     /**
@@ -48,5 +51,10 @@ public class LandingPlace extends CollidableGameObject {
     public void addToCanvas() {
         gameView.addImageToCanvas("Landeplatz.png",position.x, position.y, size,0);
         //System.out.println(getPosition());
+    }
+
+    @Override
+    public int compareTo(GameObject o) {
+        return Integer.compare(positionInSort, o.positionInSort);
     }
 }
