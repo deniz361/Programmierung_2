@@ -36,7 +36,6 @@ public class GamePlayManager {
     private final LinkedList<GameObject> lostPeople;
 
 
-    private double landingplacePositionXWhenHit;
     private double distanceToBase;
     public boolean chopperHit;
 
@@ -273,18 +272,16 @@ public class GamePlayManager {
      */
     public void chopperHasBeenHit() {
         for (GameObject o : gameObjectManager.getGameObjects()) {
-            if (o instanceof Chopper) {
-                Chopper chopper = (Chopper) o;
+            if (o instanceof Chopper chopper) {
                 chopper.decreaseHealth();
                 chopper.chopperHit();
                 chopperHit = true;
 
 
             }
-            if (o instanceof LandingPlace) {
-                LandingPlace landingPlace = (LandingPlace) o;
-                landingplacePositionXWhenHit = landingPlace.getPosition().x;
-                distanceToBase = (landingplacePositionXWhenHit - 620);
+            if (o instanceof LandingPlace landingPlace) {
+                double landingPlacePositionXWhenHit = landingPlace.getPosition().x;
+                distanceToBase = (landingPlacePositionXWhenHit - 620);
 
 
             }
@@ -304,7 +301,7 @@ public class GamePlayManager {
     }
 
     /**
-     * Man kann nicht mehr die selben Objekte aus "pickedUpPeople" hinzufügen, da man die position schlecht verändern kann.
+     * Man kann nicht mehr dieselben Objekte aus "pickedUpPeople" hinzufügen, da man die position schlecht verändern kann.
      * --> einfache Lösung: neue Objekte mit Position des Choppers hinzufügen
      */
     public void unloadPeople() {
@@ -386,7 +383,7 @@ public class GamePlayManager {
 
     /**
      * Um bei Overlay diese Information anzeigen zu lassen.
-     * @return gibt lostpeople.size zurück.
+     * @return gibt lostPeople.size zurück.
      */
     public int returnLostPeopleSize() {
         return lostPeople.size();

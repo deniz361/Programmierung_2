@@ -18,16 +18,14 @@ public abstract class Level {
     //Design
     protected String backgroundImage;
 
+    protected Difficulty difficulty;
+
 
     /** Der verschiedenen Schwierigkeitsgräte. */
     public enum Difficulty {EASY, STANDARD}
 
 
-    /**
-     * Der Konstruktor.
-     * @param difficulty der Schwierigkeitsgrat, der übergeben wird.
-     */
-    Level(Difficulty difficulty) {
+    Level() {
 
     }
 

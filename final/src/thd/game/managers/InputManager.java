@@ -16,10 +16,6 @@ class InputManager {
     private final Chopper chopper;
 
 
-    //sounds
-    private int shootChopperSound;
-
-
     InputManager(GameView gameView, Chopper chopper) {
         this.gameView = gameView;
         this.chopper = chopper;
@@ -49,6 +45,8 @@ class InputManager {
     }
 
     private void shoot(int keyCode) {
+        //sounds
+        int shootChopperSound;
         if (keyCode == KeyEvent.VK_SPACE) {
             chopper.shootDown = false;
             chopper.shoot();

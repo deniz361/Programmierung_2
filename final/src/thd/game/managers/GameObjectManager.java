@@ -15,11 +15,11 @@ import java.util.LinkedList;
  */
 public class GameObjectManager {
 
-    private LinkedList<GameObject> gameObjects;
+    private final LinkedList<GameObject> gameObjects;
     private final LinkedList<GameObject> backgroundObjects;
     private final ArrayList<GameObject> toAdd;
     private final ArrayList<GameObject> toRemove;
-    private final ArrayList<GameObject> toAddBackground;
+    //private final ArrayList<GameObject> toAddBackground;
 
     Chopper chopper;
     Overlay overlay;
@@ -27,7 +27,7 @@ public class GameObjectManager {
 
     protected GameObjectManager(GameView gameView, GamePlayManager gamePlayManager) {
         toAdd = new ArrayList<>(120);
-        toAddBackground = new ArrayList<>(120);
+        // toAddBackground = new ArrayList<>(120);
         toRemove = new ArrayList<>(120);
         gameObjects = new LinkedList<>();
         backgroundObjects = new LinkedList<>();
@@ -109,7 +109,7 @@ public class GameObjectManager {
 
         gameObjects.removeAll(toRemove);
         gameObjects.addAll(toAdd);
-        backgroundObjects.addAll(toAddBackground);
+        // backgroundObjects.addAll(toAddBackground);
         toAdd.clear();
         toRemove.clear();
 
@@ -154,13 +154,4 @@ public class GameObjectManager {
     public LinkedList<GameObject> getGameObjects() {
         return gameObjects;
     }
-
-
-
-    /*
-    public LinkedList<GameObject> getBackgroundObjects() {
-        return backgroundObjects;
-    }
-
-     */
 }

@@ -38,7 +38,7 @@ public class GameLoopManager {
 
         Color sky = new Color(141, 191, 224);
         gameView.setBackgroundColor(sky);
-        int hintergrundmusik = gameView.playSound("Level 1 music.wav", true);
+        int backgroundMusic = gameView.playSound("Level 1 music.wav", true);
 
         //int id2 = gameView.playSound("Pang.wav", true);
     }
