@@ -46,7 +46,7 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
         hitBoxOffsetY = 0;
         hitBoxHeight = height;
         hitBoxWidth = width;
-        rotation = chopper.rotation();
+        rotation = chopper.getRotation();
         facingLeft = chopper.facingLeft;
         facingRight = chopper.facingRight;
         shootDown = chopper.shootDown;

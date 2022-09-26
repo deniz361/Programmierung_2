@@ -621,7 +621,7 @@ public class Chopper extends CollidableGameObject {
      *
      * @return gibt die Rotation zurück
      */
-    double rotation() {
+    double getRotation() {
         return this.rotation;
     }
 
