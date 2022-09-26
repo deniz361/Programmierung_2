@@ -27,7 +27,7 @@ public class Overlay extends GameObject {
     public Overlay(GameView gameView, GamePlayManager gamePlayManager) {
         super(gameView, gamePlayManager);
         size = 35;
-        text = "This is a test";
+        text = " ";
         executeThisOneTime = true;
         gameOverCounter = 0;
 
@@ -52,7 +52,7 @@ public class Overlay extends GameObject {
      * @param counter counter.
      * @param secondsToShow wie lange der counter angezeigt werden soll.
      */
-    private void showCounter(int counter, int secondsToShow) {
+    public void showCounter(int counter, int secondsToShow) {
         if (executeThisOneTime) {
             gameOverCounter = counter;
             executeThisOneTime = false;
@@ -62,8 +62,6 @@ public class Overlay extends GameObject {
         } else if (gameView.alarm("gameOverCounter", this)) {
             gameOverCounter--;
         }
-
-
     }
 
 
@@ -82,7 +80,7 @@ public class Overlay extends GameObject {
 
         if (gameView.timerIsActive(text, this)) {
             final int size = 30;
-            final double xCoordinate = GameView.WIDTH / 2.0 - size * 7;
+            final double xCoordinate = GameView.WIDTH / 2.0 - size * 7 + 100;
             final double yCoordinate = GameView.HEIGHT / 2.0 - size / 2.0;
             gameView.addTextToCanvas(text, xCoordinate, yCoordinate, size, Color.BLACK, rotation);
 
@@ -90,8 +88,8 @@ public class Overlay extends GameObject {
 
 
         /*
-        if (gameOverCounter >= 0) {
-            gameView.addTextToCanvas("The Game ends in: " + gameOverCounter, 500, 50, 20, Color.BLACK, rotation);
+        if (gameOverCounter >= 0 && gamePlayManager.pressedEnter) {
+            gameView.addTextToCanvas("The Game starts in: " + gameOverCounter, GameView.WIDTH / 2d - 300, GameView.HEIGHT / 2d, 30, Color.BLACK, rotation);
         }
 
          */

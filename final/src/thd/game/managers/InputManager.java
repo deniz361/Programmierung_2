@@ -4,6 +4,7 @@ import thd.gameobjects.movable.Chopper;
 import thd.gameview.GameView;
 
 import java.awt.event.KeyEvent;
+import java.security.Key;
 
 
 class InputManager {
@@ -14,11 +15,13 @@ class InputManager {
     public static final boolean DIAGONAL_MOVEMENT_ALLOWED = true;
     private final GameView gameView;
     private final Chopper chopper;
+    private final GamePlayManager gamePlayManager;
 
 
-    InputManager(GameView gameView, Chopper chopper) {
+    InputManager(GameView gameView, Chopper chopper, GamePlayManager gamePlayManager) {
         this.gameView = gameView;
         this.chopper = chopper;
+        this.gamePlayManager = gamePlayManager;
     }
 
     void updateUserInputs() {
@@ -33,27 +36,26 @@ class InputManager {
             changeDirection(keyCode);
             shoot(keyCode);
 
+            if (gamePlayManager.stopEverything) {
+                if (keyCode == KeyEvent.VK_ENTER) {
+                    gamePlayManager.pressedEnter = true;
+                }
+            }
 
             if (!DIAGONAL_MOVEMENT_ALLOWED){
                 break;
             }
-
-
-
-
         }
     }
 
     private void shoot(int keyCode) {
-        //sounds
-        int shootChopperSound;
         if (keyCode == KeyEvent.VK_SPACE) {
             chopper.shootDown = false;
             chopper.shoot();
 
             if (!gameView.timerIsActive("shootSoundChopper", this) && !chopper.chopperLanded()) {
                 gameView.activateTimer("shootSoundChopper", this, (long) (1000 / chopper.shotsPerSecond));
-                shootChopperSound = gameView.playSound("Pang.wav", false);
+                gameView.playSound("Pang.wav", false);
             }
 
         }
@@ -62,7 +64,7 @@ class InputManager {
             if (!gameView.timerIsActive("shootSoundChopperDown", this) && !chopper.chopperLanded()) {
                 gameView.activateTimer("shootSoundChopperDown", this, (long) (1000 / chopper.shotsPerSecond) * 5);
                 chopper.shoot();
-                shootChopperSound = gameView.playSound("Schuss nach unten.wav", false);
+                gameView.playSound("Schuss nach unten.wav", false);
             }
 
         }

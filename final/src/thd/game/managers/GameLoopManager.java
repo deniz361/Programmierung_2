@@ -17,6 +17,7 @@ public class GameLoopManager {
     private final GamePlayManager gamePlayManager;
     private InputManager inputManager;
 
+
     /**
      * Erstellt GameView und die extras.
      */
@@ -27,7 +28,7 @@ public class GameLoopManager {
         gamePlayManager.setGameObjectManager(gameObjectManager);
         for (GameObject o : gameObjectManager.getGameObjects()) {
             if (o instanceof Chopper) {
-                inputManager = new InputManager(gameView, (Chopper) o);
+                inputManager = new InputManager(gameView, (Chopper) o, gamePlayManager);
             }
         }
         //inputManager = new InputManager(gameView, (Chopper) gameObjectManager.getGameObjects().get(1));
@@ -38,7 +39,7 @@ public class GameLoopManager {
 
         Color sky = new Color(141, 191, 224);
         gameView.setBackgroundColor(sky);
-        int backgroundMusic = gameView.playSound("Level 1 music.wav", true);
+
 
         //int id2 = gameView.playSound("Pang.wav", true);
     }

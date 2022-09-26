@@ -27,10 +27,10 @@ public class GamePlayManager {
     /**
      * Um zu bestimmen, wann das Spiel vorbei ist.
      */
-    boolean gameOver;
+    public boolean gameOver;
     private GameObjectManager gameObjectManager;
     private final LinkedList<GameObject> createdTanks;
-    private final LinkedList<GameObject> pickedUpPeople;
+    public final LinkedList<GameObject> pickedUpPeople;
     private final LinkedList<GameObject> unloadedPeople;
     private final LinkedList<GameObject> savedPeople;
     private final LinkedList<GameObject> lostPeople;
@@ -46,8 +46,16 @@ public class GamePlayManager {
 
     private boolean nextLevel;
 
+    public boolean anythingHit;
+    public boolean playSoundHouse;
+    private final Overlay overlay;
+    boolean stopEverything;
+    public boolean pressedEnter;
+    int backgroundMusic;
+
     GamePlayManager(GameView gameView) {
         this.gameView = gameView;
+        backgroundMusic = gameView.playSound("Level 1 music.wav", true);
         gameOver = false;
         createdTanks = new LinkedList<>();
         pickedUpPeople = new LinkedList<>();
@@ -58,6 +66,9 @@ public class GamePlayManager {
         currentLevel = levelManager.levels.getFirst();
         first = true;
         nextLevel = true;
+        overlay = new Overlay(gameView, this);
+        stopEverything = false;
+        pressedEnter = false;
     }
 
 
@@ -72,18 +83,11 @@ public class GamePlayManager {
             if (gameOver()) {
                 initializeGame();
             } else {
-                /*
-                if (!gameView.alarmIsSet("level", this)) {
-                    gameView.setAlarm("level", this, 3000);
-                } else if (gameView.alarm("level", this)) {
-
-                 */
                 if (returnSavedPeopleSize() >= 18 && nextLevel) { //eventuell nextLevel anpassen
                     try {
                         nextLevel = false;
                         currentLevel = levelManager.nextLevel();
                         initializeLevel();
-
 
 
                     } catch (NoMoreLevelsAvailableException ignore) {
@@ -97,7 +101,8 @@ public class GamePlayManager {
         }
         if (chopperHit) {
             if (!gameView.alarmIsSet("reset", this)) {
-                gameView.setAlarm("reset", this, 3000);
+                gameView.setAlarm("reset", this, 2000);
+                gameView.playSound("Chopper wird zerstört.wav", false);
             } else if (gameView.alarm("reset", this)) {
                 gameObjectManager.chopper.reset();
                 moveWorldToLeft(distanceToBase);
@@ -105,10 +110,16 @@ public class GamePlayManager {
             }
         }
 
+        if (anythingHit) {
+            gameView.playSound("Irgendwas wird zerstört.wav", false);
+            anythingHit = false;
+        } else if (playSoundHouse) {
+            gameView.playSound("Haus brennt.wav", false);
+            playSoundHouse = false;
+        }
+
         spawnTanks();
         spawnJet();
-
-
     }
 
     private void initializeLevel() {
@@ -192,19 +203,21 @@ public class GamePlayManager {
         pickedUpPeople.clear();
         lostPeople.clear();
         initializeLevel();
-
     }
 
     private boolean gameOver() {
         if (returnHealthChopper() == 0) {
-            EndScreen.showEndScreen(gameView, gameObjectManager.chopper.score);
+            gameView.stopSound(backgroundMusic);
+            gameView.playSound("Game Over Sound.wav", false);
             gameObjectManager.chopper.health = 3;
+            chopperHit = false;
+            gameView.cancelAlarm("reset", this);
+            EndScreen.showEndScreen(gameView, gameObjectManager.chopper.score);
+            backgroundMusic = gameView.playSound("Level 1 music.wav", true);
             return true;
-        } else {
-            return gameOver;
         }
 
-
+        return gameOver;
     }
 
 
@@ -383,6 +396,7 @@ public class GamePlayManager {
 
     /**
      * Um bei Overlay diese Information anzeigen zu lassen.
+     *
      * @return gibt lostPeople.size zurück.
      */
     public int returnLostPeopleSize() {
@@ -392,6 +406,7 @@ public class GamePlayManager {
 
     /**
      * Um bei Overlay diese Information anzeigen zu lassen.
+     *
      * @return gibt health des Choppers zurück
      */
     public double returnHealthChopper() {
@@ -410,6 +425,7 @@ public class GamePlayManager {
 
     /**
      * Um bei Overlay diese Information anzeigen zu lassen.
+     *
      * @return gibt den score zurück
      */
     public double returnScore() {

@@ -119,7 +119,6 @@ public class Chopper extends CollidableGameObject {
         speedInPixel = 2;
 
         size = 1.5;
-        health = 100.0;
         flyDown = false;
         landed = true;
         gas = 100.0;
@@ -503,6 +502,7 @@ public class Chopper extends CollidableGameObject {
     public void chopperHit() {
         status = Status.EXPLODED;
         chopperHit = true;
+        gamePlayManager.pickedUpPeople.clear();
     }
 
     /**
@@ -526,73 +526,35 @@ public class Chopper extends CollidableGameObject {
 
     private void basicAnimationLeft() {
         switch (basicAnimation) {
-            case STANDARD:
-                basicAnimation = BasicAnimation.ANIMATION1;
-                break;
-            case ANIMATION1:
-                basicAnimation = BasicAnimation.ANIMATION2;
-                break;
-            case ANIMATION2:
-                basicAnimation = BasicAnimation.ANIMATION3;
-                break;
-            case ANIMATION3:
-                basicAnimation = BasicAnimation.ANIMATION4;
-                break;
-            case ANIMATION4:
-                basicAnimation = BasicAnimation.ANIMATION5;
-                break;
-            case ANIMATION5:
-                basicAnimation = BasicAnimation.ANIMATION6;
-                break;
-            case ANIMATION6:
-                basicAnimation = BasicAnimation.ANIMATION7;
-                break;
-            case ANIMATION7:
-                basicAnimation = BasicAnimation.ANIMATION8;
-                break;
-            case ANIMATION8:
-                basicAnimation = BasicAnimation.ANIMATION9;
-                break;
-            case ANIMATION9:
-                basicAnimation = BasicAnimation.STANDARD;
-                break;
-            default:
+            case STANDARD -> basicAnimation = BasicAnimation.ANIMATION1;
+            case ANIMATION1 -> basicAnimation = BasicAnimation.ANIMATION2;
+            case ANIMATION2 -> basicAnimation = BasicAnimation.ANIMATION3;
+            case ANIMATION3 -> basicAnimation = BasicAnimation.ANIMATION4;
+            case ANIMATION4 -> basicAnimation = BasicAnimation.ANIMATION5;
+            case ANIMATION5 -> basicAnimation = BasicAnimation.ANIMATION6;
+            case ANIMATION6 -> basicAnimation = BasicAnimation.ANIMATION7;
+            case ANIMATION7 -> basicAnimation = BasicAnimation.ANIMATION8;
+            case ANIMATION8 -> basicAnimation = BasicAnimation.ANIMATION9;
+            case ANIMATION9 -> basicAnimation = BasicAnimation.STANDARD;
+            default -> {
+            }
         }
     }
 
     private void basicAnimationRight() {
         switch (basicAnimation) {
-            case STANDARD_RIGHT:
-                basicAnimation = BasicAnimation.ANIMATION1_RIGHT;
-                break;
-            case ANIMATION1_RIGHT:
-                basicAnimation = BasicAnimation.ANIMATION2_RIGHT;
-                break;
-            case ANIMATION2_RIGHT:
-                basicAnimation = BasicAnimation.ANIMATION3_RIGHT;
-                break;
-            case ANIMATION3_RIGHT:
-                basicAnimation = BasicAnimation.ANIMATION4_RIGHT;
-                break;
-            case ANIMATION4_RIGHT:
-                basicAnimation = BasicAnimation.ANIMATION5_RIGHT;
-                break;
-            case ANIMATION5_RIGHT:
-                basicAnimation = BasicAnimation.ANIMATION6_RIGHT;
-                break;
-            case ANIMATION6_RIGHT:
-                basicAnimation = BasicAnimation.ANIMATION7_RIGHT;
-                break;
-            case ANIMATION7_RIGHT:
-                basicAnimation = BasicAnimation.ANIMATION8_RIGHT;
-                break;
-            case ANIMATION8_RIGHT:
-                basicAnimation = BasicAnimation.ANIMATION9_RIGHT;
-                break;
-            case ANIMATION9_RIGHT:
-                basicAnimation = BasicAnimation.STANDARD_RIGHT;
-                break;
-            default:
+            case STANDARD_RIGHT -> basicAnimation = BasicAnimation.ANIMATION1_RIGHT;
+            case ANIMATION1_RIGHT -> basicAnimation = BasicAnimation.ANIMATION2_RIGHT;
+            case ANIMATION2_RIGHT -> basicAnimation = BasicAnimation.ANIMATION3_RIGHT;
+            case ANIMATION3_RIGHT -> basicAnimation = BasicAnimation.ANIMATION4_RIGHT;
+            case ANIMATION4_RIGHT -> basicAnimation = BasicAnimation.ANIMATION5_RIGHT;
+            case ANIMATION5_RIGHT -> basicAnimation = BasicAnimation.ANIMATION6_RIGHT;
+            case ANIMATION6_RIGHT -> basicAnimation = BasicAnimation.ANIMATION7_RIGHT;
+            case ANIMATION7_RIGHT -> basicAnimation = BasicAnimation.ANIMATION8_RIGHT;
+            case ANIMATION8_RIGHT -> basicAnimation = BasicAnimation.ANIMATION9_RIGHT;
+            case ANIMATION9_RIGHT -> basicAnimation = BasicAnimation.STANDARD_RIGHT;
+            default -> {
+            }
         }
     }
 

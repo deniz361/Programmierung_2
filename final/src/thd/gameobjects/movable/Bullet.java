@@ -112,6 +112,7 @@ public class Bullet extends CollidableGameObject implements AutoMovable {
         if (other.getClass() == Jet.class || other.getClass() == Tank.class) {
             gamePlayManager.destroy(this);
             gamePlayManager.adjustScore(100.0);
+            gameView.playSound("Irgendwas wird zerstört.wav", false);
         }
     }
 

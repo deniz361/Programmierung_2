@@ -87,7 +87,10 @@ public class Artillery extends CollidableGameObject {
         if (other.getClass() == Bullet.class) {
             broken = true;
             exploding = true;
+            gamePlayManager.anythingHit = true;
             gamePlayManager.adjustScore(150.0);
+            hitBoxHeight = 0;
+            hitBoxWidth = 0;
         }
 
     }

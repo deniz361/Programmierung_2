@@ -116,6 +116,9 @@ public class House extends CollidableGameObject {
         if (other.getClass() == Bullet.class) {
             image = "house_broken.png";
             broken = true;
+            gamePlayManager.playSoundHouse = true;
+            hitBoxHeight = 0;
+            hitBoxWidth = 0;
         }
     }
 
